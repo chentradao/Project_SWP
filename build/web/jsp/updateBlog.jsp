@@ -176,22 +176,22 @@
 
                 <div class="meta-info">
                     <div class="meta-item">
-                        Tac gia:
+                        Tác giả:
                         <input type="number" id="blogAuthor" name="blogAuthor" required value="<%=blog.getBlogAuthor()%>">
 
                     </div>
                     <div class="meta-item">
-                        Danh muc: <select id="blogCategory" name="blogCategory" required value="<%=blog.getBlogCategory()%> ">
+                        Danh mục: <select id="blogCategoryID" name="blogCategoryID" required value="<%=blog.getBlogCategoryID()%> ">
                             <option value="1">Công nghệ</option>
                             <option value="2">Giáo dục</option>
                             <option value="3">Giải trí</option>
                         </select>
                     </div>
                     <div class="meta-item">
-                        Ngay dang: <%=blog.getDate()%>
+                        Ngày đăng: <%=blog.getDate()%>
                     </div>
                     <div class="meta-item">
-                        Trang thai: <select id="blogStatus" name="blogStatus" required value="<%=blog.getBlogStatus()%>">
+                        Trạng thái: <select id="blogStatus" name="blogStatus" required value="<%=blog.getBlogStatus()%>">
                             <option value="1">Đang chờ</option>
                             <option value="2">Đã đăng</option>
                             <option value="3">Đã ẩn</option>
@@ -209,8 +209,9 @@
                     </div>
                 </div>
                 <div class="content">
-                    Blog Description
-                    <textarea id="blogDescription" name="blogDescription" rows="3" value="<%=blog.getBlogDescription()%>"></textarea>
+                    Mô tả 
+                    <textarea id="blogDescription" name="blogDescription" rows="7" cols="100"><%= blog.getBlogDescription() %></textarea>
+
                 </div>
                 <button type="submit" class="btn btn-update" name="submit" value="updateBlog">Luu Blog</button>
             </form>

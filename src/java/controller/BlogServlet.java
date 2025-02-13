@@ -79,12 +79,12 @@ public class BlogServlet extends HttpServlet {
                     //Xử lý các dữ liệu còn lại
                     String blogTitle = request.getParameter("blogTitle");
                     String blogDescription = request.getParameter("blogDescription");
-                    int blogCategory = Integer.parseInt(request.getParameter("blogCategory"));
+                    int blogCategoryID = Integer.parseInt(request.getParameter("blogCategoryID"));
                     int blogAuthor = Integer.parseInt(request.getParameter("blogAuthor"));
                     Date date = java.sql.Date.valueOf(LocalDate.now());
                     int blogStatus = Integer.parseInt(request.getParameter("blogStatus"));
 
-                    Blog newBlog = new Blog(blogTitle, blogDescription, blogThumbnail, blogCategory, blogAuthor, date, image, blogStatus);
+                    Blog newBlog = new Blog(blogTitle, blogDescription, blogThumbnail, blogCategoryID, blogAuthor, date, image, blogStatus);
                     int n = dao.insertBlog(newBlog);
                     response.sendRedirect("Blog?service=listAllBlogs");
                 } catch (Exception e) {
@@ -132,12 +132,12 @@ public class BlogServlet extends HttpServlet {
                         int id = Integer.parseInt(request.getParameter("blogID"));
                         String blogTitle = request.getParameter("blogTitle");
                         String blogDescription = request.getParameter("blogDescription");
-                        int blogCategory = Integer.parseInt(request.getParameter("blogCategory"));
+                        int blogCategoryID = Integer.parseInt(request.getParameter("blogCategoryID"));
                         int blogAuthor = Integer.parseInt(request.getParameter("blogAuthor"));
                         Date date = java.sql.Date.valueOf(LocalDate.now());
                         int blogStatus = Integer.parseInt(request.getParameter("blogStatus"));
 
-                        Blog newBlog = new Blog(id, blogTitle, blogDescription, blogThumbnail, blogCategory, blogAuthor, date, image, blogStatus);
+                        Blog newBlog = new Blog(id, blogTitle, blogDescription, blogThumbnail, blogCategoryID, blogAuthor, date, image, blogStatus);
                         int n = dao.updateBlog(newBlog);
                         response.sendRedirect("Blog?service=listAllBlogs");
                     } catch (Exception e) {
@@ -155,7 +155,7 @@ public class BlogServlet extends HttpServlet {
                 String query = "SELECT * FROM Blog";
 
                 if (filterCategory != null && !filterCategory.equals("all")) {
-                    query += " WHERE [BlogCategory] = " + filterCategory;
+                    query += " WHERE [BlogCategoryID] = " + filterCategory;
                 }
 
                 if (filterDate != null) {

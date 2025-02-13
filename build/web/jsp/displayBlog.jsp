@@ -181,6 +181,25 @@
                     justify-content: center;
                 }
             }
+            #homePageButton {
+                top: 10px;
+                left: 10px;
+                padding: 10px 20px;
+                background-color: #4CAF50; /* Màu nền nút */
+                color: white; /* Màu chữ */
+                text-decoration: none; /* Loại bỏ gạch chân */
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                display: inline-block;
+                text-align: center;
+            }
+
+            
+            #homePageButton {
+                background-color: #45a049;
+            }
         </style>
     </head>
     <body>
@@ -189,13 +208,15 @@
             for (Blog blog : blogList) {
         %>
 
+
         <div class="blog-container">
+            <a href="Blog?service=listAllBlogs" id="homePageButton">Trang chủ</a>
             <!-- Header -->
             <div class="blog-header">
                 <h1 class="blog-title"><%=blog.getBlogTitle()%></h1>
                 <div class="blog-meta">
                     <span>📝 Đăng bởi: <%=blog.getBlogAuthor()%></span>
-                    <span>📁 Danh mục: <%=blog.getBlogCategory()%></span>
+                    <span>📁 Danh mục: <%=blog.getBlogCategoryID()%></span>
                     <span>📅 Ngày đăng: <%=blog.getDate()%></span>
                 </div>
             </div>
@@ -210,7 +231,7 @@
                     <p><%=blog.getBlogDescription()%></p>
                     <img src="<%=blog.getImage()%>" alt="Main content" class="main-image">
                 </div>
-                
+
                 <div class="action-buttons">
                     <a href="Blog?service=updateBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-update">✏️ Cập nhật</a>
                     <a href="Blog?service=deleteBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-delete">🗑️ Xóa bài</a>

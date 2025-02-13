@@ -46,13 +46,13 @@ public class DAOBlog extends DBConnection {
         int result = 0;
         try {
             String sql = "INSERT INTO [dbo].[Blog]\n"
-                    + "           ([BlogTitle],[BlogDescription],[BlogThumbnail],[BlogCategory],[BlogAuthor],[Date],[Image],[BlogStatus])"
+                    + "           ([BlogTitle],[BlogDescription],[BlogThumbnail],[BlogCategoryID],[BlogAuthor],[Date],[Image],[BlogStatus])"
                     + "     VALUES(?,?,?,?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, blog.getBlogTitle());
             ps.setString(2, blog.getBlogDescription());
             ps.setString(3, blog.getBlogThumbnail());
-            ps.setInt(4, blog.getBlogCategory());
+            ps.setInt(4, blog.getBlogCategoryID());
             ps.setInt(5, blog.getBlogAuthor());
             ps.setDate(6, (Date) blog.getDate());
             ps.setString(7, blog.getImage());
@@ -68,13 +68,13 @@ public class DAOBlog extends DBConnection {
     int result = 0;
     try {
         String sql = "UPDATE [dbo].[Blog]\n"
-                    + "   SET [BlogTitle] = ?,[BlogDescription] = ?,[BlogThumbnail] = ?,[BlogCategory] = ?,[BlogAuthor] = ?,[Date] = ?,[Image] = ?,[BlogStatus] = ?\n"
+                    + "   SET [BlogTitle] = ?,[BlogDescription] = ?,[BlogThumbnail] = ?,[BlogCategoryID] = ?,[BlogAuthor] = ?,[Date] = ?,[Image] = ?,[BlogStatus] = ?\n"
                 + "   WHERE BlogID = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, blog.getBlogTitle());
         ps.setString(2, blog.getBlogDescription());
         ps.setString(3, blog.getBlogThumbnail());
-        ps.setInt(4, blog.getBlogCategory());
+        ps.setInt(4, blog.getBlogCategoryID());
         ps.setInt(5, blog.getBlogAuthor());
             ps.setDate(6, (Date) blog.getDate());
         ps.setString(7, blog.getImage());
@@ -111,7 +111,7 @@ public class DAOBlog extends DBConnection {
                         rs.getString("BlogTitle"),
                         rs.getString("BlogDescription"),
                         rs.getString("BlogThumbnail"),
-                        rs.getInt("BlogCategory"),
+                        rs.getInt("BlogCategoryID"),
                         rs.getInt("BlogAuthor"),
                         rs.getDate("Date"),
                         rs.getString("Image"),
@@ -137,12 +137,12 @@ public class DAOBlog extends DBConnection {
                 String BlogTitle = rs.getString("BlogTitle");
                 String BlogDescription = rs.getString("BlogDescription");
                 String BlogThumbnail = rs.getString("BlogThumbnail");
-                int BlogCategory = rs.getInt("BlogCategory");
+                int BlogCategoryID = rs.getInt("BlogCategoryID");
                 int BlogAuthor = rs.getInt("BlogAuthor");
                 Date Date = rs.getDate("Date");
                 String Image = rs.getString("Image");
                 int BlogStatus = rs.getInt("BlogStatus");
-                Blog blog = new Blog(BlogID, BlogTitle, BlogDescription, BlogThumbnail, BlogCategory, BlogAuthor, Date, Image, BlogStatus);
+                Blog blog = new Blog(BlogID, BlogTitle, BlogDescription, BlogThumbnail, BlogCategoryID, BlogAuthor, Date, Image, BlogStatus);
                 vector.add(blog);
             }
         } catch (SQLException ex) {

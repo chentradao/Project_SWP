@@ -7,7 +7,7 @@ public class Blog {
     String BlogTitle;
     String BlogDescription;
     String BlogThumbnail;
-    int BlogCategory;
+    int BlogCategoryID;
     int BlogAuthor;
     Date Date;
     String Image;
@@ -16,12 +16,12 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(int BlogID, String BlogTitle, String BlogDescription, String BlogThumbnail, int BlogCategory, int BlogAuthor, Date Date, String Image, int BlogStatus) {
+    public Blog(int BlogID, String BlogTitle, String BlogDescription, String BlogThumbnail, int BlogCategoryID, int BlogAuthor, Date Date, String Image, int BlogStatus) {
         this.BlogID = BlogID;
         this.BlogTitle = BlogTitle;
         this.BlogDescription = BlogDescription;
         this.BlogThumbnail = BlogThumbnail;
-        this.BlogCategory = BlogCategory;
+        this.BlogCategoryID = BlogCategoryID;
         this.BlogAuthor = BlogAuthor;
         this.Date = Date;
         this.Image = Image;
@@ -36,11 +36,11 @@ public class Blog {
         this.Date = Date;
     }
 
-    public Blog(String BlogTitle, String BlogDescription, String BlogThumbnail, int BlogCategory, int BlogAuthor, Date Date, String Image, int BlogStatus) {
+    public Blog(String BlogTitle, String BlogDescription, String BlogThumbnail, int BlogCategoryID, int BlogAuthor, Date Date, String Image, int BlogStatus) {
         this.BlogTitle = BlogTitle;
         this.BlogDescription = BlogDescription;
         this.BlogThumbnail = BlogThumbnail;
-        this.BlogCategory = BlogCategory;
+        this.BlogCategoryID = BlogCategoryID;
         this.BlogAuthor = BlogAuthor;
         this.Date = Date;
         this.Image = Image;
@@ -77,19 +77,19 @@ public class Blog {
 
     @Override
     public String toString() {
-        return "Blog{" + "BlogID=" + BlogID + ", BlogTitle=" + BlogTitle + ", BlogDescription=" + BlogDescription + ", BlogThumbnail=" + BlogThumbnail + ", BlogCategory=" + BlogCategory + ", BlogAuthor=" + BlogAuthor + ", Date=" + Date + ", Image=" + Image + ", BlogStatus=" + BlogStatus + '}';
+        return "Blog{" + "BlogID=" + BlogID + ", BlogTitle=" + BlogTitle + ", BlogDescription=" + BlogDescription + ", BlogThumbnail=" + BlogThumbnail + ", BlogCategoryID=" + BlogCategoryID + ", BlogAuthor=" + BlogAuthor + ", Date=" + Date + ", Image=" + Image + ", BlogStatus=" + BlogStatus + '}';
     }
 
     public void setBlogThumbnail(String BlogThumbnail) {
         this.BlogThumbnail = BlogThumbnail;
     }
 
-    public int getBlogCategory() {
-        return BlogCategory;
+    public int getBlogCategoryID() {
+        return BlogCategoryID;
     }
 
     public void setBlogCategory(int BlogCategory) {
-        this.BlogCategory = BlogCategory;
+        this.BlogCategoryID = BlogCategory;
     }
 
     public int getBlogAuthor() {

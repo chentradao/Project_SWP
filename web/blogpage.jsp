@@ -141,7 +141,7 @@
                 </div>
                 <div class="form-group">
                     <label>Danh mục:</label>
-                    <select id="blogCategory" name="blogCategory" required>
+                    <select id="blogCategory" name="blogCategoryID" required>
                         <option value="1">Công nghệ</option>
                         <option value="2">Giáo dục</option>
                         <option value="3">Giải trí</option>
