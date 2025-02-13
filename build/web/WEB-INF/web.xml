@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <servlet>
+        <servlet-name>AddToWishlistServlet</servlet-name>
+        <servlet-class>controller.AddToWishlistServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteFromWishlistServlet</servlet-name>
+        <servlet-class>controller.DeleteFromWishlistServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetWishlistByAccountIDServlet</servlet-name>
+        <servlet-class>controller.GetWishlistByAccountIDServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductListServlet</servlet-name>
+        <servlet-class>controller.ProductListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductDetailListServlet</servlet-name>
+        <servlet-class>controller.ProductDetailListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddToWishlistServlet</servlet-name>
+        <url-pattern>/addToWishlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteFromWishlistServlet</servlet-name>
+        <url-pattern>/DeleteFromWishlistServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetWishlistByAccountIDServlet</servlet-name>
+        <url-pattern>/getwishlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductListServlet</servlet-name>
+        <url-pattern>/ProductListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDetailListServlet</servlet-name>
+        <url-pattern>/productdetailURL</url-pattern>
+    </servlet-mapping>
+</web-app>
