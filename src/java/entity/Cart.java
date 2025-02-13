@@ -11,8 +11,8 @@ package entity;
 public class Cart {
     private int ProductID;
     private String ProductName;
-    private int Quantity;
     private int ID;
+    private int Quantity;
     private String Size;
     private String Color;
     private int Price;
@@ -21,18 +21,16 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(int ProductID, String ProductName, int Quantity, int ID, String Size, String Color, int Price, String Image) {
+    public Cart(int ProductID, String ProductName, int ID, int Quantity, String Size, String Color, int Price, String Image) {
         this.ProductID = ProductID;
         this.ProductName = ProductName;
-        this.Quantity = Quantity;
         this.ID = ID;
+        this.Quantity = Quantity;
         this.Size = Size;
         this.Color = Color;
         this.Price = Price;
         this.Image = Image;
     }
-
-    
 
     public int getProductID() {
         return ProductID;

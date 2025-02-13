@@ -11,14 +11,14 @@ public class ProductRepository {
     private static final List<String> ALLOWED_SORT = Arrays.asList("Price", "Size", "Color", "original-order");
     private static final List<String> ALLOWED_FILTERS = Arrays.asList("Color", "Size", "minPrice", "maxPrice");
 
-    private static final String BASE_QUERY = "SELECT p.ProductID,p.ProductName,p.Quantity,pd.ID,pd.Size,pd.Color,pd.Price,pd.Image "
+    private static final String BASE_QUERY = "SELECT p.ProductID,p.ProductName,pd.ID,pd.Quantity,pd.Size,pd.Color,pd.Price,pd.Image "
             + "FROM ProductDetail pd "
             + "INNER JOIN Products p ON pd.ProductID = p.ProductID "
-            + "WHERE p.ProductStatus = 1 AND p.CategoryID = ?";
+            + "WHERE pd.ProductStatus = 1 AND p.CategoryID = ?";
 
     private static final String COUNT_QUERY = "SELECT COUNT(*) FROM ProductDetail pd "
             + "INNER JOIN Products p ON pd.ProductID = p.ProductID "
-            + "WHERE p.ProductStatus = 1 AND p.CategoryID = ?";
+            + "WHERE pd.ProductStatus = 1 AND p.CategoryID = ?";
 
     /**
      * Finds products by category applying pagination, filters, and sorting.
@@ -56,8 +56,8 @@ public class ProductRepository {
                     rs.getInt("ProductID"),
                     rs.getString("ProductName"),
                     rs.getInt("Price"),
-                    rs.getInt("Quantity"),
                     rs.getInt("ID"),
+                    rs.getInt("Quantity"),
                     rs.getString("Size"),
                     rs.getString("Color"),
                     rs.getString("Image")

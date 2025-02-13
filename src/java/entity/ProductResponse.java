@@ -5,18 +5,18 @@ public class ProductResponse {
     private int productId;
     private String productName;
     private Integer productPrice;
-    private int Quantity;
-    private int ID;
+    private int id;
+    private int quantity;
     private String productSize;
     private String productColor;
     private String productImage;
 
-    public ProductResponse(int productId, String productName, Integer productPrice, int Quantity, int ID, String productSize, String productColor, String productImage) {
+    public ProductResponse(int productId, String productName, Integer productPrice, int id, int quantity, String productSize, String productColor, String productImage) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.Quantity = Quantity;
-        this.ID = ID;
+        this.id = id;
+        this.quantity = quantity;
         this.productSize = productSize;
         this.productColor = productColor;
         this.productImage = productImage;
@@ -24,24 +24,22 @@ public class ProductResponse {
 
     
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getQuantity() {
-        return Quantity;
+        return quantity;
     }
 
-    public void setQuantity(int Quantity) {
-        this.Quantity = Quantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    
-    
 
     public int getProductId() {
         return productId;

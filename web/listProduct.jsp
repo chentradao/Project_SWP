@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="product_options">
-                <a href="CartURL?service=add2cart&id=<%=product.getID()%>"><div class="product_buy product_option"><img src="images/shopping-bag-white.svg" alt=""></div></a>
+                <a href="CartURL?service=add2cart&id=<%=product.getId()%>"><div class="product_buy product_option"><img src="images/shopping-bag-white.svg" alt=""></div></a>
                 <div class="product_fav product_option">+</div>
             </div>
         </div>

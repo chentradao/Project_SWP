@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class DAOCart extends DBConnection{
     public Cart getCart (int id){
         Cart cart = null;
-    String sql = "Select p.ProductID,p.ProductName,p.Quantity,pd.ID,pd.Size,pd.Color,pd.Price,pd.Image\n" +
+    String sql = "Select p.ProductID,p.ProductName,pd.ID,pd.Quantity,pd.Size,pd.Color,pd.Price,pd.Image\n" +
 "From Products p join ProductDetail pd on p.ProductID=pd.ProductID\n" +
 "Where pd.ID ="+id;
     try {
