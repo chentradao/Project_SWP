@@ -2,13 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/Project_SWP/src/java/entity/GoogleAccount.java</file>
-            <file>file:/E:/Project_SWP/src/java/controller/SignUp.java</file>
-            <file>file:/E:/Project_SWP/src/java/model/DAOAccounts.java</file>
-            <file>file:/E:/Project_SWP/src/java/constants/Iconstant.java</file>
-            <file>file:/E:/Project_SWP/src/java/entity/Accounts.java</file>
-            <file>file:/E:/Project_SWP/src/java/controller/LoginController.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
