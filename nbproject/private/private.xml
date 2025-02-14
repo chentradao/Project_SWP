@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/src/java/controller/BlogServlet.java</file>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/web/jsp/updateBlog.jsp</file>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/src/java/entity/Blog.java</file>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/web/jsp/displayBlog.jsp</file>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/src/java/model/DAOBlog.java</file>
-            <file>file:/C:/Users/admin/Documents/NetBeansProjects/Project_SWP/web/blogpage.jsp</file>
+            <file>file:/E:/Project_SWP/src/java/entity/GoogleAccount.java</file>
+            <file>file:/E:/Project_SWP/src/java/controller/SignUp.java</file>
+            <file>file:/E:/Project_SWP/src/java/model/DAOAccounts.java</file>
+            <file>file:/E:/Project_SWP/src/java/constants/Iconstant.java</file>
+            <file>file:/E:/Project_SWP/src/java/entity/Accounts.java</file>
+            <file>file:/E:/Project_SWP/src/java/controller/LoginController.java</file>
         </group>
     </open-files>
 </project-private>
