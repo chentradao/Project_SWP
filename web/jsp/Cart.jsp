@@ -103,7 +103,7 @@
                                                                     <%if(cart.getSize() != null){%>
                                                                          <span>Size: <%= cart.getSize() %></span> <%}%> |
                                                                     <%if(cart.getColor() != null){%>     
-                                                                         <span>Màu sắc: <%= cart.getColor() %></span><%}%>
+                                                                         <span>Màu Sắc: <%= cart.getColor() %></span><%}%>
                                                                         </div>
 								<div class="cart_product_info ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
