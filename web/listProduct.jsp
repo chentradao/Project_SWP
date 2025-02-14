@@ -7,6 +7,7 @@
 <%@page import="entity.PaginatedResponse"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.text.DecimalFormatSymbols"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
     // Retrieve categoryId from request, default to 1 if not provided
@@ -97,7 +98,7 @@
                 <div class="product_price"><%= formatter.format(product.getProductPrice()) %> VND</div>
                 <div class="product_details">
                     <span>Size: <%= product.getProductSize() %></span> |
-                    <span>Color: <%= product.getProductColor() %></span>
+                    <span>Màu Sắc: <%= product.getProductColor() %></span>
                 </div>
             </div>
             <div class="product_options">

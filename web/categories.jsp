@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
     <head>
         <title>Categories</title>
@@ -30,7 +31,7 @@
                                     <div class="home_title">Woman</div>
                                     <div class="breadcrumbs">
                                         <ul>
-                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="index.jsp">Home</a></li>
                                             <li>Woman</li>
                                             <li>Accessories</li>
                                         </ul>
@@ -53,23 +54,25 @@
                                     <div class="sidebar_title">Size</div>
                                     <div class="sidebar_section_content">
                                         <ul id="size-filter">
-                                            <li><a href="#" data-size="30ml">Small S (30ML)</a></li>
-                                            <li><a href="#" data-size="50ml">Medium M (50ML)</a></li>
-                                            <li><a href="#" data-size="100ml">Large L (100ML)</a></li>
+                                            <li><a href="#" data-size="15ml">15ML</a></li>
+                                            <li><a href="#" data-size="30ml">30ML</a></li>
+                                            <li><a href="#" data-size="50ml">50ML</a></li>
+                                            <li><a href="#" data-size="75ml">75ML</a></li>
+                                            <li><a href="#" data-size="100ml">100ML</a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <!-- Price Filter -->
                                 <div class="sidebar_section">
-                                    <div class="sidebar_title">Price</div>
+                                    <div class="sidebar_title">Khoảng Giá</div>
                                     <div class="sidebar_section_content">
                                         <div class="filter_price">
                                             <!-- Two input fields for min and max price -->
-                                            <input type="number" id="minPriceInput" placeholder="Min Price" style="width:45%; display:inline-block; margin-right:5%;">
-                                            <input type="number" id="maxPriceInput" placeholder="Max Price" style="width:45%; display:inline-block;">
+                                            <input type="number" id="minPriceInput" placeholder="Từ" style="width:45%; display:inline-block; margin-right:5%;">
+                                            <input type="number" id="maxPriceInput" placeholder="Đến" style="width:45%; display:inline-block;">
                                             <br/><br/>
-                                            <button id="applyPriceBtn">Apply Price</button>
-                                            <button id="clearPriceBtn">Clear Price</button>
+                                            <button id="applyPriceBtn">Áp Dụng</button>
+                                            <button id="clearPriceBtn">Xóa</button>
                                         </div>
                                     </div>
                                 </div>
