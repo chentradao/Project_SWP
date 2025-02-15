@@ -39,7 +39,7 @@ public class DAOWishlist extends DBConnection {
 
     public List<Wishlist> getWishlistByAccount(int accountId) {
         List<Wishlist> wishlistItems = new ArrayList<>();
-        String sql = "SELECT p.ProductID, p.ProductName, p.ProductImage, p.Description "
+        String sql = "SELECT p.ProductID, p.CategoryID, p.ProductName, p.Description "
                 + "FROM Wishlist w "
                 + "JOIN Products p ON w.ProductID = p.ProductID "
                 + "WHERE w.AccountID = ?";
@@ -53,10 +53,9 @@ public class DAOWishlist extends DBConnection {
                 while (rs.next()) {
                     int productId = rs.getInt("ProductID");
                     String productName = rs.getString("ProductName");
-                    String productImage = rs.getString("ProductImage");
                     String description = rs.getString("Description");
 
-                    Product product = new Product(productId, productName, productImage, description);
+                    Product product = new Product(productId, productName, description);
 
                     ProductDetail productDetail = productDetailDAO.getProductDetailByProductId(productId);
                     System.out.println("concacacac" + productDetail.getPrice());

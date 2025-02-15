@@ -14,7 +14,7 @@
         <div class="logo"><a href="#">Wish</a></div>
         <nav class="main_nav">
             <ul>
-                <li><a href="index.jsp">home</a></li>
+                <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>
                 <% for (Category category : categories) { %>
                         <li><a href="categories.jsp?category=<%= category.getCategoryId() %>">
                             <%= category.getCategoryName() %>
@@ -42,7 +42,7 @@
                     </div>
                 </a>
                 <!-- Star -->
-                <a href="#">
+                <a href="wishlist.jsp">
                     <div class="star">
                         <img src="images/star.svg" alt="">
                         <div class="star_num_container">
@@ -53,7 +53,7 @@
                     </div>
                 </a>
                 <!-- Avatar -->
-                <a href="#">
+                <a href="login.jsp">
                     <div class="avatar">
                         <img src="images/avatar.svg" alt="">
                     </div>

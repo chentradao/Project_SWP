@@ -62,7 +62,7 @@ public class ProductListServlet extends HttpServlet {
         DAOProducts productDAO = new DAOProducts();
         List<ProductDetail> productList = productDAO.getAllProductDetails(6);
         request.setAttribute("productDetails", productList);
-        request.getRequestDispatcher("homepage.jsp").forward(request, response);    
+        request.getRequestDispatcher("index.jsp").forward(request, response);    
     }
 
     /**

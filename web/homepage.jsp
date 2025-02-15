@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Estee Lauder</title>
+        <title>Estée Lauder</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Cosmetic shop project">
@@ -17,6 +17,14 @@
         <link rel="stylesheet" type="text/css" href="styles/main_styles.css">
         <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     </head>
+    <style>
+        .product_image img {
+            width: 300px; /* Chi?u r?ng ?nh */
+            height: 500px; /* Chi?u cao ?nh */
+            object-fit: contain; /* Gi? t? l? ?nh và c?t b?t n?u c?n ?? v?a v?i khung */
+        }
+
+    </style>
     <body>
 
         <div class="super_container">
@@ -25,14 +33,13 @@
 
             <header class="header">
                 <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo"><a href="homepage.jsp">Est?e lauder</a></div>
+                    <div class="logo"><a href="homepage.jsp">Estée lauder</a></div>
                     <nav class="main_nav">
                         <ul>
                             <li><a href="${pageContext.request.contextPath}/ProductListServlet">Product</a></li>
-                            <li><a href="categories.html">Categories</a></li>
-                            <li><a href="categories.html">Categories</a></li>
-                            <li><a href="categories.html">Categories</a></li>
-                            <li><a href="contact.html">contact</a></li>
+                            <li><a href="categories.jsp">Categories</a></li>
+                            <li><a href="categories.jsp">Categories</a></li>
+                            <li><a href="categories.jsp">Categories</a></li>
                         </ul>
                     </nav>
                     <div class="header_content ml-auto">
@@ -260,6 +267,7 @@
                                         <div class="product_image">
                                             <img src="${productDetail.product.productImage}" alt="${productDetail.product.productImage}">
                                         </div>
+
                                         <div class="rating rating_4">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
@@ -286,7 +294,6 @@
                                                         <button type="submit" class="wishlist_button" style="background: none; border: none; font-size: 24px; color: inherit; padding: 0;">+</button>
                                                     </form>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>

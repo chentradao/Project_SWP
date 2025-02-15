@@ -25,12 +25,8 @@ public class DAOProducts extends DBConnection {
                             rs.getInt("ProductID"),
                             rs.getString("ProductName"),
                             rs.getInt("CategoryID"),
-                            rs.getInt("Quantity"),
-                            rs.getInt("SoldQuantity"),
-                            rs.getDate("Date"),
                             rs.getString("Description"),
-                            rs.getString("ProductStatus"),
-                            rs.getString("ProductImage")
+                            rs.getString("ProductStatus")
                     );
                 }
             }
@@ -42,35 +38,34 @@ public class DAOProducts extends DBConnection {
 
     public List<ProductDetail> getAllProductDetails(int limit) {
         List<ProductDetail> productDetailList = new ArrayList<>();
-        String sql = "SELECT TOP (?) p.ProductID, p.ProductName, p.CategoryID, p.Quantity, p.SoldQuantity, p.Date, "
-                + "p.Description, p.ProductStatus, p.ProductImage, "
-                + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image "
+        String sql = "SELECT TOP " + limit + " p.ProductID, p.ProductName, p.CategoryID, "
+                + "p.Description, p.ProductStatus, pd.ID, pd.Size, pd.Color, "
+                + "pd.Quantity, pd.SoldQuantity, pd.DateCreate, pd.Price, pd.Image, pd.ProductStatus "
                 + "FROM Products p "
                 + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID";
 
         try ( PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, limit);  // Set the limit parameter
-
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int productId = rs.getInt("ProductID");
-                    String productName = rs.getString("ProductName");
-                    int categoryId = rs.getInt("CategoryID");
-                    int quantity = rs.getInt("Quantity");
-                    int soldQuantity = rs.getInt("SoldQuantity");
-                    java.sql.Date date = rs.getDate("Date");
-                    String description = rs.getString("Description");
-                    String productStatus = rs.getString("ProductStatus");
-                    String productImage = rs.getString("ProductImage");
-
-                    int productDetailId = rs.getInt("ID");
-                    String size = rs.getString("Size");
-                    String color = rs.getString("Color");
-                    int price = rs.getInt("Price");
-                    String detailImage = rs.getString("Image");
-
-                    Product product = new Product(productId, productName, categoryId, quantity, soldQuantity, date, description, productStatus, productImage);
-                    ProductDetail productDetail = new ProductDetail(productDetailId, product, size, color, price, detailImage);
+                    Product product = new Product(
+                            rs.getInt("ProductID"),
+                            rs.getString("ProductName"),
+                            rs.getInt("CategoryID"),
+                            rs.getInt("Quantity"),
+                            rs.getInt("SoldQuantity"),
+                            rs.getDate("DateCreate"),
+                            rs.getString("Description"),
+                            rs.getString("ProductStatus"),
+                            rs.getString("Image")
+                    );
+                    ProductDetail productDetail = new ProductDetail(
+                            rs.getInt("ID"),
+                            product,
+                            rs.getString("Size"),
+                            rs.getString("Color"),
+                            rs.getInt("Price"),
+                            rs.getString("Image")
+                    );
                     productDetailList.add(productDetail);
                 }
             }

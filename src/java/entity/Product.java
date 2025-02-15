@@ -46,6 +46,21 @@ public class Product {
 
     }
 
+    public Product(int productId, String productName, int categoryId, String productImage, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.description = description;
+        this.categoryId = categoryId;
+
+    }
+
+    public Product(int productId, String productName, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+    }
+
     public int getProductId() {
         return productId;
     }
