@@ -65,6 +65,7 @@
                     <div class="text-center" style="margin-top: 15px;">
                         Chưa có tài khoản? <a href="signup.jsp" class="link-to-help">Đăng kí</a>
                     </div>
+                    <a href="forgotPassword.jsp">Quên mật khẩu ?</a>
                 </form>
             </div>
         </div>
