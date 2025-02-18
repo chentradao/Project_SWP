@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html>
     <head>
 
@@ -30,7 +31,7 @@
                                 <h3>
                                     <i class="fa fa-lock fa-4x"></i>
                                 </h3>
-                                <h2 class="text-center">Enter OTP</h2>
+                                <h2 class="text-center">Nhập OTP</h2>
                                 <%
 if(request.getAttribute("message")!=null)
 {
@@ -48,14 +49,14 @@ if(request.getAttribute("message")!=null)
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i
                                                         class="glyphicon glyphicon-envelope color-blue"></i></span> <input
-                                                    id="opt" name="otp" placeholder="Enter OTP"
+                                                    id="opt" name="otp" placeholder="Nhập OTP"
                                                     class="form-control" type="text" required="required">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <input name="recover-submit"
                                                    class="btn btn-lg btn-primary btn-block"
-                                                   value="Reset Password" type="submit">
+                                                   value="Nhập lại mật khẩu" type="submit">
                                         </div>
 
                                         <input type="hidden" class="hide" name="token" id="token"

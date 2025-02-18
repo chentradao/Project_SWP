@@ -14,7 +14,7 @@
     </head>
 
     <body>
-        <div class="wrapper" style="background-image: url('images/bg-registration-form-3.jpg');">
+        <div class="wrapper" style="background-image: url('images/anh1.jpg');">
             <div class="inner">
                 <form action="signup" method="POST">
                     <h3>Đăng kí</h3>
@@ -44,6 +44,7 @@
                             <div class="form-holder">
                                 <i class="zmdi zmdi-account"></i>
                                 <input type="text" class="form-control" id="FullName" name="FullName" value="${FullName}" required>
+                                <p class="text-danger">${messFuName}</p>
                             </div>
                         </div>
                         <div class="form-wrapper">

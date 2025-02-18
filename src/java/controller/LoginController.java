@@ -56,7 +56,7 @@ public class LoginController extends HttpServlet {
                     }else if(acc.getRole().equals("staff")){
                         response.sendRedirect("Manager");
                     }else
-                    response.sendRedirect("homepage.jsp");
+                    response.sendRedirect("index.jsp");
                 }
             } else {
                 request.getRequestDispatcher("login.jsp").forward(request, response);

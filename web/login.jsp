@@ -33,7 +33,7 @@
         </style>
     </head>
     <body>
-        <div class="wrapper" style="background-image: url('images/bg-registration-form-3.jpg');">
+        <div class="wrapper" style="background-image: url('images/anh1.jpg');">
             <div class="inner">
                 <form action="login" method="POST">
                     <h3>Đăng nhập</h3>
@@ -59,7 +59,7 @@
 
                     <div class="button-container">
                         <button type="submit">Đăng nhập</button>
-                        <!--<button class="google-login"><a href="https:/accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http:/localhost:9999/ProjectSWP/login&response_type=code&client_id=544358352643-kqs8iv9ej4s52ni1vg8qhmfg18mghfl2.apps.googleusercontent.com&approval_prompt=force">Đăng nhập với Google</a></button>-->
+                        <button class="google-login"><a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/ProjectSWP/login&response_type=code&client_id=544358352643-kqs8iv9ej4s52ni1vg8qhmfg18mghfl2.apps.googleusercontent.com&approval_prompt=force">Đăng nhập với Google</a></button>
                     </div>
 
                     <div class="text-center" style="margin-top: 15px;">
