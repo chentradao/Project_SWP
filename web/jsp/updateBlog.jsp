@@ -3,6 +3,13 @@
         <%@ page import="java.util.Vector" %>
         <%@page contentType="text/html" pageEncoding="UTF-8"%>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Wish shop project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+        <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <title>Quản lý bài viết</title>
         <style>
             * {
@@ -13,7 +20,7 @@
             .card {
                 max-width: 800px;
                 margin: 2rem auto;
-                padding: 2rem;
+                padding: 80px;
                 border-radius: 12px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 background: white;
@@ -148,7 +155,11 @@
                 padding: 0 1rem;
                 font-size: 0.9rem;
             }
-
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
             @media (max-width: 480px) {
                 .thumbnail-section {
                     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -158,6 +169,34 @@
         </style>
     </head>
     <body>
+        <header class="header">
+                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="index.jsp">Quản lý đơn hàng</a></li>
+                            <li><a href="index.jsp">Quản lý kho hàng</a></li>
+                            <li><a href="index.jsp">Quản lý nhân viên</a></li>
+                            <li><a href="Blog?service=listAllBlogs">Quản lý bài đăng</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header_content ml-auto">
+
+                        <div class="shopping">
+
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tên tài khoản
+                        </span>
+                        <div id="collapsePages" class="dropdown-menu bg-white py-2 collapse-inner rounded" aria-labelledby="navbarDropdown">
+                            <a class="collapse-item" href="manager.html">Thông tin tài khoản</a>
+                            <a class="collapse-item" href="blank.html">Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
         <%      
             Vector<Blog> blogList = (Vector<Blog>) request.getAttribute("selectedBlog");
             for (Blog blog : blogList) {
@@ -182,9 +221,9 @@
                     </div>
                     <div class="meta-item">
                         Danh mục: <select id="blogCategoryID" name="blogCategoryID" required value="<%=blog.getBlogCategoryID()%> ">
-                            <option value="1">Công nghệ</option>
-                            <option value="2">Giáo dục</option>
-                            <option value="3">Giải trí</option>
+                            <option value="1">Làm đẹp</option>
+                            <option value="2">Môi trường</option>
+                            <option value="3">Sức khỏe</option>
                         </select>
                     </div>
                     <div class="meta-item">

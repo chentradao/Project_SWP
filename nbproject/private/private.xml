@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Kì%205/SWP/Project_SWP/web/login.jsp</file>
-            <file>file:/D:/Kì%205/SWP/Project_SWP/src/java/controller/LoginController.java</file>
-            <file>file:/D:/Kì%205/SWP/Project_SWP/src/java/entity/GoogleAccount.java</file>
-            <file>file:/D:/Kì%205/SWP/Project_SWP/web/signup.jsp</file>
-            <file>file:/D:/Kì%205/SWP/Project_SWP/src/java/controller/SignUp.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

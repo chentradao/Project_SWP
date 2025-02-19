@@ -90,7 +90,6 @@ public class BlogServlet extends HttpServlet {
                 } catch (Exception e) {
                     e.printStackTrace();
                     request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
-                    request.getRequestDispatcher("/error.jsp").forward(request, response);
                 }
 
             }  //update a blog

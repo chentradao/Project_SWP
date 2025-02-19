@@ -8,6 +8,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Wish shop project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+        <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <title>Quản lý Blog</title>
         <style>
             * {
@@ -23,60 +30,10 @@
                 min-height: 100vh;
             }
 
-            /* Sidebar */
-            .sidebar {
-                width: 300px;
-                background-color: #fff;
-                padding: 20px;
-                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .crud-actions {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .crud-btn {
-                padding: 12px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-
-            .crud-btn:hover {
-                background-color: #45a049;
-            }
-
-            .task-form {
-                display: none;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            input, select, textarea {
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                font-size: 14px;
-            }
-
             /* Main content */
             .main-content {
                 flex: 1;
-                padding: 20px;
+                padding: 100px;
                 background-color: #f9f9f9;
                 display: flex;
                 flex-direction: column;
@@ -89,6 +46,7 @@
             }
 
             .blog-item {
+                display: flex;
                 background-color: white;
                 padding: 15px;
                 border-radius: 6px;
@@ -101,117 +59,107 @@
                 transform: translateY(-2px);
             }
 
-            .blog-detail {
-                background-color: white;
-                padding: 20px;
-                border-radius: 6px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                display: none;
-            }
+            
 
             .selected {
                 background-color: #f0f9ff;
                 border: 2px solid #3498db;
             }
+            .post-image {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                margin-right: 15px;
+            }
+
         </style>
     </head>
     <body>
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="crud-actions">
-                <button class="crud-btn" onclick="showForm('add')">Thêm Blog</button>
-            </div>
+        <div class="super_container">
 
-            <!-- Add Form -->
-            <form action="Blog?service=add" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="service" value="add">
-                <h3 id="formTitle">Thêm Blog mới</h3>
-                <input type="hidden" id="blogID" name="blogID">
-                <div class="form-group">
-                    <label>Tiêu đề:</label>
-                    <input type="text" id="blogTitle" name="blogTitle" required>
-                </div>
-                <div class="form-group">
-                    <label>Mô tả:</label>
-                    <textarea id="blogDescription" name="blogDescription" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Thumbnail:</label>
-                    <input type="file" id="blogThumbnail" name="blogThumbnail" required>
-                </div>
-                <div class="form-group">
-                    <label>Danh mục:</label>
-                    <select id="blogCategory" name="blogCategoryID" required>
-                        <option value="1">Công nghệ</option>
-                        <option value="2">Giáo dục</option>
-                        <option value="3">Giải trí</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Tác giả:</label>
-                    <input type="number" id="blogAuthor" name="blogAuthor" required>
-                </div>
+            <<header class="header">
+                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="index.jsp">Quản lý đơn hàng</a></li>
+                            <li><a href="index.jsp">Quản lý kho hàng</a></li>
+                            <li><a href="index.jsp">Quản lý nhân viên</a></li>
+                            <li><a href="Blog?service=listAllBlogs">Quản lý bài đăng</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header_content ml-auto">
 
-                <div class="form-group">
-                    <label>Ảnh:</label>
-                    <input type="file" id="image" name="image" required>
+
+                    </div>
+                    <div class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tên tài khoản
+                        </a>
+                        <div id="collapsePages" class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="collapse-item" href="manager.html">Thông tin tài khoản</a>
+                            <a class="collapse-item" href="blank.html">Đăng xuất</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Trạng thái:</label>
-                    <select id="blogStatus" name="blogStatus" required>
-                        <option value="1">Đang chờ</option>
-                        <option value="2">Đã đăng</option>
-                        <option value="3">Đã ẩn</option>
-                    </select>
+            </header>
+
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <h1>Danh sách Blog</h1>
+                
+                <!-- Nút thêm bài viết & xuất Excel -->
+                <div class="button-container">
+                    <button onclick="location.href = 'addBlog.jsp'">Thêm bài viết</button>
+                    <button onclick="exportToExcel()">Xuất ra Excel</button>
                 </div>
-                <button type="submit" class="crud-btn" name="submit" value="add">Lưu Blog</button>
-            </form>
-        </div>
+                <!-- Thêm phần lọc -->
+                <div class="filter-section">
+                    <form action="Blog" method="get" class="filter-group">
+                        <input type="hidden" name="service" value="listAllBlogs">
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <h1>Danh sách Blog</h1>
-            
-            <!-- Thêm phần lọc -->
-            <div class="filter-section">
-                <form action="Blog" method="get" class="filter-group">
-                    <input type="hidden" name="service" value="listAllBlogs">
+                        <label class="filter-label">Sắp xếp theo:</label>
+                        <select name="filterDate" class="filter-select">
+                            <option value="newest" ${param.filterDate == 'newest' ? 'selected' : ''}>Mới nhất</option>
+                            <option value="oldest" ${param.filterDate == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
+                        </select>
 
-                    <label class="filter-label">Sắp xếp theo:</label>
-                    <select name="filterDate" class="filter-select">
-                        <option value="newest" ${param.filterDate == 'newest' ? 'selected' : ''}>Mới nhất</option>
-                        <option value="oldest" ${param.filterDate == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
-                    </select>
+                        <label class="filter-label">Danh mục:</label>
+                        <select name="filterCategory" class="filter-select">
+                            <option value="all" ${param.filterCategory == 'all' ? 'selected' : ''}>Tất cả</option>
+                            <option value="1" ${param.filterCategory == '1' ? 'selected' : ''}>Làm đẹp</option>
+                            <option value="2" ${param.filterCategory == '2' ? 'selected' : ''}>Môi trường</option>
+                            <option value="3" ${param.filterCategory == '3' ? 'selected' : ''}>Sức khỏe</option>
+                        </select>
 
-                    <label class="filter-label">Danh mục:</label>
-                    <select name="filterCategory" class="filter-select">
-                        <option value="all" ${param.filterCategory == 'all' ? 'selected' : ''}>Tất cả</option>
-                        <option value="1" ${param.filterCategory == '1' ? 'selected' : ''}>Công nghệ</option>
-                        <option value="2" ${param.filterCategory == '2' ? 'selected' : ''}>Giáo dục</option>
-                        <option value="3" ${param.filterCategory == '3' ? 'selected' : ''}>Giải trí</option>
-                    </select>
-
-                    <button type="submit" class="filter-button">Lọc</button>
-                </form>
-            </div>
-            <div class="blog-list" id="blogList">
-                <%      
-                    Vector<Blog> vectorBlog = (Vector<Blog>) request.getAttribute("vectorBlog");
-                    if (vectorBlog != null) {
-                        for (Blog blog : vectorBlog) {
-                %>
-                <div class="blog-item" onclick="selectBlog(<%= blog.getBlogID() %>)">
-                    <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
-                    <p><%= blog.getBlogDescription() %></p>
-                    <p>Ngày đăng: <%= blog.getDate() %></p>
-
+                        <button type="submit" class="filter-button">Lọc</button>
+                    </form>
                 </div>
-                <% 
+                <div class="blog-list" id="blogList">
+                    <%      
+                        Vector<Blog> vectorBlog = (Vector<Blog>) request.getAttribute("vectorBlog");
+                        if (vectorBlog != null) {
+                            for (Blog blog : vectorBlog) {
+                    %>
+                    <div class="blog-item" onclick="selectBlog(<%= blog.getBlogID() %>)">
+                        <img src="<%= blog.getBlogThumbnail() %>" class="post-image">
+                        <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
+                        <p><%= blog.getBlogDescription() %></p>
+                        <p>Ngày đăng: <%= blog.getDate() %></p>
+
+                    </div>
+                    <% 
+                            }
                         }
-                    }
-                %>
+                    %>
+                </div>
             </div>
-        </div>
-
+            <script src="js/jquery-3.2.1.min.js"></script>
+            <script src="styles/bootstrap4/popper.js"></script>
+            <script src="styles/bootstrap4/bootstrap.min.js"></script>
+            <script src="plugins/easing/easing.js"></script>
+            <script src="plugins/parallax-js-master/parallax.min.js"></script>
+            <script src="js/cart_custom.js"></script>
     </body>
 </html>
