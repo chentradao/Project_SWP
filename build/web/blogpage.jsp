@@ -15,7 +15,7 @@
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
-        <title>Quản lý bài viết</title>
+        <title>Quản lý Blog</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -107,13 +107,8 @@
 
             <!-- Main Content -->
             <div class="main-content">
-<<<<<<< HEAD
-                <h1>Danh sách bài viết</h1>
-
-=======
                 <h1>Danh sách Blog</h1>
                 
->>>>>>> parent of 1dae461 (upload admin+manager dashboard, update blogpage)
                 <!-- Nút thêm bài viết & xuất Excel -->
                 <div class="button-container">
                     <button onclick="location.href = 'addBlog.jsp'">Thêm bài viết</button>
