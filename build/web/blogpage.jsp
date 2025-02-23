@@ -15,7 +15,7 @@
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
-        <title>Quản lý bài viết</title>
+        <title>Quản lý Blog</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -59,11 +59,7 @@
                 transform: translateY(-2px);
             }
 
-<<<<<<< HEAD
-
-=======
             
->>>>>>> cc3b416d1622ddd11b97b076755a83fb0e3c0f5a
 
             .selected {
                 background-color: #f0f9ff;
@@ -111,18 +107,8 @@
 
             <!-- Main Content -->
             <div class="main-content">
-<<<<<<< HEAD
-                <h1>Danh sách bài viết</h1>
-
-=======
-<<<<<<< HEAD
-                <h1>Danh sách bài viết</h1>
-
-=======
                 <h1>Danh sách Blog</h1>
                 
->>>>>>> parent of 1dae461 (upload admin+manager dashboard, update blogpage)
->>>>>>> cc3b416d1622ddd11b97b076755a83fb0e3c0f5a
                 <!-- Nút thêm bài viết & xuất Excel -->
                 <div class="button-container">
                     <button onclick="location.href = 'addBlog.jsp'">Thêm bài viết</button>
@@ -157,28 +143,11 @@
                             for (Blog blog : vectorBlog) {
                     %>
                     <div class="blog-item" onclick="selectBlog(<%= blog.getBlogID() %>)">
-<<<<<<< HEAD
-                        <div class="col-1">
-                            <img src="<%= blog.getBlogThumbnail() %>" class="post-image">
-                        </div>
-                        <div class="col-11">
-                            <div class="col-12">
-                                <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
-                            </div>
-                            <div class="col-12">
-                               <p><%= blog.getBlogDescription() %></p>  
-                            </div>
-                            <div class="col-12">
-                               <p>Ngày đăng: <%= blog.getDate() %></p>
-                            </div>
-                        </div>
-=======
                         <img src="<%= blog.getBlogThumbnail() %>" class="post-image">
                         <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
                         <p><%= blog.getBlogDescription() %></p>
                         <p>Ngày đăng: <%= blog.getDate() %></p>
 
->>>>>>> cc3b416d1622ddd11b97b076755a83fb0e3c0f5a
                     </div>
                     <% 
                             }

@@ -7,8 +7,13 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
+<<<<<<< HEAD
 <project name="SWP_minhchien" default="default" basedir=".">
     <description>Builds, tests, and runs the project SWP_minhchien.</description>
+=======
+<project name="SWP_raw" default="default" basedir=".">
+    <description>Builds, tests, and runs the project SWP_raw.</description>
+>>>>>>> cc3b416d1622ddd11b97b076755a83fb0e3c0f5a
     <import file="nbproject/build-impl.xml"/>
     <!--
 

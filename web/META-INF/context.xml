@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <Context path="/SWP_minhchien"/>
+=======
+<Context path="/SWP_raw"/>
+>>>>>>> cc3b416d1622ddd11b97b076755a83fb0e3c0f5a
