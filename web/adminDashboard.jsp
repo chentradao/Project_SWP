@@ -190,9 +190,9 @@
         <tbody>
             <c:forEach var="order" items="${latestOrders}">
                 <tr>
-                    <td style="border: 1px solid black; padding: 8px;">${order.getCustomerName()}</td>
-                    <td style="border: 1px solid black; padding: 8px;">${order.getOrderDate()}</td>
-                    <td style="border: 1px solid black; padding: 8px;">${order.getTotalCost()}</td>
+                    <td style="border: 1px solid black; padding: 8px;"><a href="#">${order.getCustomerName()}</a></td>
+                    <td style="border: 1px solid black; padding: 8px;"><a href="#">${order.getOrderDate()}</td>
+                    <td style="border: 1px solid black; padding: 8px;"><a href="#">${order.getTotalCost()}</td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -231,9 +231,6 @@
                         }
                     });
                 </script>
-
-
-
 
             </div>
             <header class="header">
