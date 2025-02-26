@@ -53,7 +53,7 @@
                     </div>
                 </a>
                 <!-- Avatar -->
-                <a href="#">
+                <a href="login.jsp">
                     <div class="avatar">
                         <img src="images/avatar.svg" alt="">
                     </div>

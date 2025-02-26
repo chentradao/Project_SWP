@@ -197,7 +197,7 @@
                                             <div class="cart_total_price ml-auto"><%=grandTotal%>₫</div>
                                         </li>
                                     </ul>
-                                    <button class="cart_total_button">Mua Hàng</button>
+                                        <button type="button" class="cart_total_button" onclick="window.location.href = 'OrderURL?service=checkout'">Mua Hàng</button>
                                 </div>
                             </div>
                         </div>
