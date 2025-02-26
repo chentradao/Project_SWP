@@ -4,7 +4,6 @@
  */
 package model;
 
-
 import entity.ProductDetail;
 import java.sql.Date;
 import java.sql.PreparedStatement;

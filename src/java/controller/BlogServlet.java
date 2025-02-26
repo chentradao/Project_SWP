@@ -37,7 +37,7 @@ import model.DAOBlog;
 )
 public class BlogServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "web/P_images";
+    private static final String UPLOAD_DIR = "uploads";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,7 +51,7 @@ public class BlogServlet extends HttpServlet {
             if (service.equals("add")) {
                 try {
                     // Xử lý upload ảnh
-                    String uploadPath = getServletContext().getRealPath("/") + File.separator + UPLOAD_DIR;
+                    String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) {
                         uploadDir.mkdir();

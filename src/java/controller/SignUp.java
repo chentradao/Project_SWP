@@ -27,7 +27,7 @@ public class SignUp extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        
+
         String FullName = request.getParameter("FullName");
         String UserName = request.getParameter("UserName");
         String Password = request.getParameter("Password");
@@ -55,7 +55,12 @@ public class SignUp extends HttpServlet {
             boolean isNotValidPassword = !checkPassword(Password);
             if (isNotValidPassword) {
                 request.setAttribute("messP", "Password must have at least 6 characters, "
-                        + "including uppercase letters, lowercase letters, numbers, and special characters.");
+                        + "including uppercase letters, lowercase letters and numbers.");
+                isValidForm = false;
+            }
+
+            if (!checkFullName(FullName)) {
+                request.setAttribute("messFuName", "Full Name must have at least 10 characters and cannot contain numbers");
                 isValidForm = false;
             }
 
@@ -100,13 +105,24 @@ public class SignUp extends HttpServlet {
 
     }
 
+    private boolean checkFullName(String FullName) {
+        if (FullName.length() < 10) {
+            return false;
+        }
+        for (char c : FullName.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean checkPassword(String Password) {
         if (Password.length() < 6) {
             return false;
         }
 
-        boolean hasUpperCase = false, hasLowerCase = false, hasDigit = false, hasSpecialChar = false;
-        String specialCharacters = "!@#$%^&*()-+";
+        boolean hasUpperCase = false, hasLowerCase = false, hasDigit = false;
 
         for (char c : Password.toCharArray()) {
             if (Character.isUpperCase(c)) {
@@ -115,12 +131,11 @@ public class SignUp extends HttpServlet {
                 hasLowerCase = true;
             } else if (Character.isDigit(c)) {
                 hasDigit = true;
-            } else if (specialCharacters.contains(String.valueOf(c))) {
-                hasSpecialChar = true;
+
             }
         }
 
-        return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+        return hasUpperCase && hasLowerCase && hasDigit;
     }
 
     private boolean checkUserName(String UserName) {

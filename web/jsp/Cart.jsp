@@ -8,7 +8,7 @@
 <%@page import="java.util.Vector,entity.Cart" %>
 <!DOCTYPE html>
 <html>
-<head>
+    <head>
 <title>Cart</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

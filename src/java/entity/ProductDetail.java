@@ -25,7 +25,7 @@ public class ProductDetail {
     private String size;
     private String Color;
     private int Price;
-    private String Image;
+    private String image;
     private Product product;
 
     public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, String productStatus, String productImage, int ID, String Size, String Color, int Price, String Image) {
@@ -42,7 +42,7 @@ public class ProductDetail {
         this.size = Size;
         this.Color = Color;
         this.Price = Price;
-        this.Image = Image;
+        this.image = Image;
     }
 
     public ProductDetail(int id, Product product, String size, String color, int price, String image) {
@@ -51,7 +51,7 @@ public class ProductDetail {
         this.size = size;
         this.Color = color;
         this.Price = price;
-        this.Image = image;
+        this.image = image;
     }
 
     public ProductDetail(String size, String color, double price, String detailImage) {
@@ -64,7 +64,7 @@ public class ProductDetail {
         this.size = size;
         this.Color = color;
         this.Price = price;
-        this.Image = image;
+        this.image = image;
     }
 
     public int getproductId() {
@@ -172,11 +172,11 @@ public class ProductDetail {
     }
 
     public String getImage() {
-        return Image;
+        return image;
     }
 
     public void setImage(String Image) {
-        this.Image = Image;
+        this.image = Image;
     }
 
     public Product getProduct() {
@@ -193,7 +193,7 @@ public class ProductDetail {
 
     @Override
     public String toString() {
-        return "ProductDetail{" + "productId=" + productId + ", productName=" + productName + ", categoryId=" + categoryId + ", quantity=" + quantity + ", soldQuantity=" + soldQuantity + ", date=" + date + ", description=" + description + ", productStatus=" + productStatus + ", productImage=" + productImage + ", ID=" + ID + ", Size=" + size + ", Color=" + Color + ", Price=" + Price + ", Image=" + Image + '}';
+        return "ProductDetail{" + "productId=" + productId + ", productName=" + productName + ", categoryId=" + categoryId + ", quantity=" + quantity + ", soldQuantity=" + soldQuantity + ", date=" + date + ", description=" + description + ", productStatus=" + productStatus + ", productImage=" + productImage + ", ID=" + ID + ", Size=" + size + ", Color=" + Color + ", Price=" + Price + ", Image=" + image + '}';
     }
 
 }

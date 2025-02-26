@@ -56,7 +56,7 @@ public class LoginController extends HttpServlet {
                     }else if(acc.getRole().equals("staff")){
                         response.sendRedirect("Manager");
                     }else
-                    response.sendRedirect("homepage.jsp");
+                    response.sendRedirect("index.jsp");
                 }
             } else {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -80,6 +80,15 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String ac = request.getParameter("ac");
+
+        // Kiểm tra nếu 'ac' không phải là null và có giá trị là 'logout'
+        if (ac != null && ac.equals("logout")) {
+            HttpSession session = request.getSession();
+            session.removeAttribute("acc");
+            session.removeAttribute("mess"); // Xóa thông báo lỗi
+
+        }
         processRequest(request, response);
     }
 

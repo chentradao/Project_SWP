@@ -32,7 +32,7 @@
 //        public static GoogleAccount getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
 //        String link = Iconstant.GOOGLE_LINK_GET_USER_INFO + accessToken;
 //        String response = Request.Get(link).execute().returnContent().asString();
-//        GoogleAccount googlePojo = new Gson().fromJson(response, GoogleAccount.class);
-//        return googlePojo;
+//       GoogleAccount googlePojo = new Gson().fromJson(response, GoogleAccount.class);
+//       return googlePojo;
 //    }
 //}

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+import java.time.LocalDate;
 
 /**
  *
@@ -25,7 +26,21 @@ public class DAOBlog extends DBConnection {
         // conn = DriverManager.getConnection(url, "username", "password");
     }
 
-    
+//    public int insertBlog(Blog blog) {
+//        int n = 0;
+//        String sql = "INSERT INTO [dbo].[Blog] " +
+//             "([BlogTitle], [BlogDescription], [BlogThumbnail], [BlogCategory], [BlogAuthor], [Date], [Image], [BlogStatus]) " +
+//             "VALUES ('" + blog.getBlogTitle() + "', '" + blog.getBlogDescription() + "', '" + blog.getBlogThumbnail() + "', '" +
+//             blog.getBlogCategory() + "', '" + blog.getBlogAuthor() + "', '" + blog.getDate() + "', '" + blog.getImage() + "', '" +
+//             blog.getBlogStatus() + "')";
+//        try {
+//            Statement state = conn.createStatement();
+//            n = state.executeUpdate(sql);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return n;
+//    }
 
     public int insertBlog(Blog blog) {
         int result = 0;
@@ -139,6 +154,19 @@ public class DAOBlog extends DBConnection {
     
     public static void main(String[] args) { 
         DAOBlog dao = new DAOBlog();
+        Blog blog = new Blog(34, 
+            "Updated Title", 
+            "Updated Description", 
+            null, 
+            2, 
+            2, 
+            null, 
+            null, 
+            2);
+        int n = dao.updateBlog(blog);
+        System.out.println(n);
+        Vector<Blog> blogList = dao.getAllBlogs("select * from Blog");
+        System.out.println(blogList.size());
 
     } 
     

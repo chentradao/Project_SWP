@@ -14,14 +14,21 @@
         <div class="logo"><a href="#">Wish</a></div>
         <nav class="main_nav">
             <ul>
-                <li><a href="index.jsp">Quản lý đơn hàng</a></li>
-                <li><a href="index.jsp">Quản lý kho hàng</a></li>
-                <li><a href="index.jsp">Quản lý nhân viên</a></li>
-                <li><a href="index.jsp">Quản lý bài đăng</a></li>
+                <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>
+                <% for (Category category : categories) { %>
+                        <li><a href="categories.jsp?category=<%= category.getCategoryId() %>">
+                            <%= category.getCategoryName() %>
+                        </a></li>
+                    <% } %>
             </ul>
         </nav>
         <div class="header_content ml-auto">
-            
+            <div class="search header_search">
+                <form action="#">
+                    <input type="search" class="search_input" required="required">
+                    <button type="submit" id="search_button" class="search_button"><img src="images/magnifying-glass.svg" alt=""></button>
+                </form>
+            </div>
             <div class="shopping">
                 <!-- Cart -->
                 <a href="CartURL?service=showCart">
@@ -35,7 +42,7 @@
                     </div>
                 </a>
                 <!-- Star -->
-                <a href="#">
+                <a href="wishlist.jsp">
                     <div class="star">
                         <img src="images/star.svg" alt="">
                         <div class="star_num_container">
@@ -46,7 +53,7 @@
                     </div>
                 </a>
                 <!-- Avatar -->
-                <a href="#">
+                <a href="login.jsp">
                     <div class="avatar">
                         <img src="images/avatar.svg" alt="">
                     </div>
@@ -54,5 +61,6 @@
             </div>
         </div>
 
+        <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
     </div>
 </header>

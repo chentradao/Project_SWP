@@ -24,10 +24,9 @@
                     <div class="logo"><a href="homepage.jsp">Estée Lauder</a></div>
                     <nav class="main_nav">
                         <ul>
-                            <li><a href="homepage.jsp">Home</a></li>
+                            <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>
                             <li><a href="${pageContext.request.contextPath}/ProductListServlet">Product</a></li>
                             <li><a href="categories.html">categories</a></li>
-                            <li><a href="categories.html">accessories</a></li>
                             <li><a href="categories.html">lingerie</a></li>
                             <li><a href="contact.html">contact</a></li>
                         </ul>
@@ -151,8 +150,8 @@
                                         <li class="cart_product d-flex flex-row align-items-center justify-content-between">
                                             <!-- C?t Image -->
                                             <div class="cart_product_image" style="width: 100px;">
-                                                <img src="${wishlistItem.product.productImage}" 
-                                                     alt="${wishlistItem.product.productName}" 
+                                                <img src="${wishlistItem.product.productDetail.image}" 
+                                                     alt="${wishlistItem.product.productDetail.image}" 
                                                      style="width: 100px; height: 100px;">
                                             </div>
 

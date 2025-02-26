@@ -194,6 +194,6 @@ public class DAOAccounts extends DBConnection {
 
     public static void main(String[] args) {
         DAOAccounts acc = new DAOAccounts();
-        acc.createAccount("minhchien", "Chien123456@", "DoMinhChien", "0987654333", "hihi1@gmail.com", "Staff", 1);
+        acc.createAccount("minhday", "30122004", "NguyenQuangMinh", "0987654333", "hihi1@gmail.com", "customer", 1);
     }
 }
