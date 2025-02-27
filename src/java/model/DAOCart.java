@@ -16,13 +16,13 @@ import java.util.logging.Logger;
 public class DAOCart extends DBConnection{
     public Cart getCart (int id){
         Cart cart = null;
-    String sql = "Select p.ProductID,p.ProductName,pd.ID,pd.Quantity,pd.Size,pd.Color,pd.Price,pd.Image\n" +
+    String sql = "Select p.ProductID,p.ProductName,pd.ID,pd.IdentityCode,pd.Quantity,pd.Size,pd.Color,pd.Price,pd.Image\n" +
 "From Products p join ProductDetail pd on p.ProductID=pd.ProductID\n" +
 "Where pd.ID ="+id;
     try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
             if(rs.next()){
-                cart = new Cart(rs.getInt("ProductID"), rs.getString("ProductName"), rs.getInt("Quantity"), rs.getInt("ID"), rs.getString("Size"), rs.getString("Color"), rs.getInt("Price"), rs.getString("Image"));
+                cart = new Cart(rs.getInt("ProductID"), rs.getString("ProductName"), rs.getInt("Quantity"), rs.getInt("ID"), rs.getString("IdentityCode"), rs.getString("Size"), rs.getString("Color"), rs.getInt("Price"), rs.getString("Image"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOCart.class.getName()).log(Level.SEVERE, null, ex);

@@ -18,23 +18,35 @@ public class Order {
     private Date OrderDate;
     private Date ShippedDate;
     private int TotalCost;
+    private String Email;
     private String Phone;
     private String ShipAddress;
-    private String ShipCity;
     private int OrderStatus;
 
-    public Order(int OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int TotalCost, String Phone, String ShipAddress, String ShipCity, int OrderStatus) {
+    public Order(int OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int TotalCost, String Email, String Phone, String ShipAddress, int OrderStatus) {
         this.OrderID = OrderID;
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
         this.OrderDate = OrderDate;
         this.ShippedDate = ShippedDate;
         this.TotalCost = TotalCost;
+        this.Email = Email;
         this.Phone = Phone;
         this.ShipAddress = ShipAddress;
-        this.ShipCity = ShipCity;
         this.OrderStatus = OrderStatus;
     }
+
+    
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+
+    
 
     public int getOrderID() {
         return OrderID;
@@ -100,14 +112,6 @@ public class Order {
         this.ShipAddress = ShipAddress;
     }
 
-    public String getShipCity() {
-        return ShipCity;
-    }
-
-    public void setShipCity(String ShipCity) {
-        this.ShipCity = ShipCity;
-    }
-
     public int getOrderStatus() {
         return OrderStatus;
     }
@@ -118,8 +122,12 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "OrderID=" + OrderID + ", CustomerID=" + CustomerID + ", CustomerName=" + CustomerName + ", OrderDate=" + OrderDate + ", ShippedDate=" + ShippedDate + ", TotalCost=" + TotalCost + ", Phone=" + Phone + ", ShipAddress=" + ShipAddress + ", ShipCity=" + ShipCity + ", OrderStatus=" + OrderStatus + '}';
+        return "Order{" + "OrderID=" + OrderID + ", CustomerID=" + CustomerID + ", CustomerName=" + CustomerName + ", OrderDate=" + OrderDate + ", ShippedDate=" + ShippedDate + ", TotalCost=" + TotalCost + ", Email=" + Email + ", Phone=" + Phone + ", ShipAddress=" + ShipAddress + ", OrderStatus=" + OrderStatus + '}';
     }
+
+    
+
+    
     
     
 }

@@ -29,13 +29,13 @@ public class DAOOrder extends DBConnection {
                 + "           ,[OrderDate]\n"
                 + "           ,[ShippedDate]\n"
                 + "           ,[TotalCost]\n"
+                + "           ,[Email]\n"
                 + "           ,[Phone]\n"
                 + "           ,[ShipAddress]\n"
-                + "           ,[ShipCity]\n"
                 + "           ,[OrderStatus])\n"
                 + "     VALUES('" + o.getCustomerID() + "','" + o.getCustomerName() + "','" + o.getOrderDate() + "',"
-                + "'" + o.getShippedDate() + "','" + o.getTotalCost() + "','" + o.getPhone() + "',"
-                + "'" + o.getShipAddress() + "','" + o.getShipCity() + "','" + o.getOrderStatus() + "')";
+                + "'" + o.getShippedDate() + "','" + o.getTotalCost() + "','" + o.getEmail() + "','" + o.getPhone() + "',"
+                + "'" + o.getShipAddress() + "','" + o.getOrderStatus() + "')";
         try {
             Statement state = conn.createStatement();
             n = state.executeUpdate(sql);
@@ -78,7 +78,7 @@ public class DAOOrder extends DBConnection {
         int n = 0;
         String sql = "UPDATE [dbo].[Orders]\n"
                 + "   SET [CustomerID] = ?,[CustomerName] = ?,[OrderDate] = ?\n"
-                + "      ,[ShippedDate] = ?,[TotalCost] = ?,[Phone] = <?\n"
+                + "      ,[ShippedDate] = ?,[TotalCost] = ?,[Email] = ?,[Phone] = ?\n"
                 + "      ,[ShipAddress] = ?,[ShipCity] = ?,[OrderStatus] = ?\n"
                 + " WHERE [OrderID] = ?";
         try {
@@ -88,9 +88,9 @@ public class DAOOrder extends DBConnection {
             pre.setObject(3, o.getOrderDate());
             pre.setObject(4, o.getShippedDate());
             pre.setObject(5, o.getTotalCost());
-            pre.setObject(6, o.getPhone());
-            pre.setObject(7, o.getShipAddress());
-            pre.setObject(8, o.getShipCity());
+            pre.setObject(6, o.getEmail());
+            pre.setObject(7, o.getPhone());
+            pre.setObject(8, o.getShipAddress());
             pre.setObject(9, o.getOrderStatus());
             pre.setObject(10, o.getOrderID());
             n = pre.executeUpdate();
@@ -112,11 +112,11 @@ public class DAOOrder extends DBConnection {
                 Date OrderDate = rs.getDate("OrderDate");
                 Date ShippedDate = rs.getDate("ShippedDate");
                 int TotalCost = rs.getInt("TotalCost");
+                String Email = rs.getString("Email");
                 String Phone = rs.getString("Phone");
                 String ShipAddress = rs.getString("ShipAddress");
-                String ShipCity = rs.getString("ShipCity");
                 int OrderStatus = rs.getInt("OrderStatus");
-                Order or = new Order(OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, TotalCost, Phone, ShipAddress, ShipCity, OrderStatus);
+                Order or = new Order(OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, TotalCost, Email, Phone, ShipAddress, OrderStatus);
                 vector.add(or);
             }
         } catch (SQLException ex) {
@@ -124,32 +124,33 @@ public class DAOOrder extends DBConnection {
         }
         return vector;
     }
-    public void addToOrder(Cart cart){
-        String sql ="select top 1 OrderID from Orders order by OrderID desc";
+
+    public void addToOrder(Cart cart) {
+        String sql = "select top 1 OrderID from Orders order by OrderID desc";
         PreparedStatement pre;
         try {
             pre = conn.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-        if(rs.next()){
-            int oid = rs.getInt(1);
-            String sql2 = "INSERT INTO [dbo].[Order Details]\n" +
-"           ([OrderID]\n" +
-"           ,[ProductID]\n" +
-"           ,[UnitPrice]\n" +
-"           ,[Quantity]\n" +
-"           ,[Discount])\n" +
-"     VALUES(?,?,?,?,?)";
-            PreparedStatement state = conn.prepareStatement(sql2);
-            state.setObject(1, oid);
-            state.setObject(2, cart.getID());
-            state.setObject(3, cart.getQuantity());
-            state.setObject(4, cart.getPrice());
-            state.setObject(5, "null");
-            state.executeQuery();
-        }
+            if (rs.next()) {
+                int oid = rs.getInt(1);
+                String sql2 = "INSERT INTO [dbo].[Order Details]\n"
+                        + "           ([OrderID]\n"
+                        + "           ,[ProductID]\n"
+                        + "           ,[UnitPrice]\n"
+                        + "           ,[Quantity]\n"
+                        + "           ,[Discount])\n"
+                        + "     VALUES(?,?,?,?,?)";
+                PreparedStatement state = conn.prepareStatement(sql2);
+                state.setObject(1, oid);
+                state.setObject(2, cart.getID());
+                state.setObject(3, cart.getQuantity());
+                state.setObject(4, cart.getPrice());
+                state.setObject(5, "null");
+                state.executeQuery();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 }

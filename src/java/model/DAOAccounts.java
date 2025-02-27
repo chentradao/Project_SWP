@@ -56,7 +56,6 @@ public class DAOAccounts extends DBConnection {
                             rs.getString("Phone"),
                             rs.getString("Email"),
                             rs.getString("Address"),
-                            rs.getString("City"),
                             rs.getString("Role"),
                             rs.getString("Image"),
                             rs.getString("GoogleID"),
@@ -85,14 +84,13 @@ public class DAOAccounts extends DBConnection {
                 String Phone = rs.getString("Phone");
                 String Email = rs.getString("Email");
                 String Address = rs.getString("Address");
-                String City = rs.getString("City");
                 String Role = rs.getString("Role");
                 String Image = rs.getString("Image");
                 String GoogleID = rs.getString("GoogleID");
                 Date CreateDate = rs.getDate("CreateDate");
                 int AccountStatus = rs.getInt("AccountStatus");
                 // Tạo đối tượng Accounts với dữ liệu đúng
-                Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender, Phone, Email, Address, City, Role, Image, GoogleID, CreateDate, AccountStatus);
+                Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender, Phone, Email, Address, Role, Image, GoogleID, CreateDate, AccountStatus);
                 vector.add(acc);
             }
         } catch (SQLException ex) {
@@ -116,7 +114,6 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),
@@ -146,7 +143,6 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),
@@ -177,7 +173,6 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),

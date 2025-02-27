@@ -20,7 +20,6 @@ public class Accounts {
     private String Phone;
     private String Email;
     private String Address;
-    private String City;
     private String Role;
     private String Image;
     private String GoogleID;
@@ -30,7 +29,7 @@ public class Accounts {
     public Accounts() {
     }
 
-    public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String City, String Role, String Image, String GoogleID, Date CreateDate, int AccountStatus) {
+    public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String Role, String Image, String GoogleID, Date CreateDate, int AccountStatus) {
         this.AccountID = AccountID;
         this.UserName = UserName;
         this.Password = Password;
@@ -39,13 +38,14 @@ public class Accounts {
         this.Phone = Phone;
         this.Email = Email;
         this.Address = Address;
-        this.City = City;
         this.Role = Role;
         this.Image = Image;
         this.GoogleID = GoogleID;
         this.CreateDate = CreateDate;
         this.AccountStatus = AccountStatus;
     }
+
+    
 
     public int getAccountID() {
         return AccountID;
@@ -111,13 +111,6 @@ public class Accounts {
         this.Address = Address;
     }
 
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String City) {
-        this.City = City;
-    }
 
     public String getRole() {
         return Role;
@@ -174,7 +167,6 @@ public class Accounts {
             ", Phone='" + Phone + '\'' +
             ", Email='" + Email + '\'' +
             ", Address='" + Address + '\'' +
-            ", City='" + City + '\'' +
             ", Role=" + Role +
             ", Image='" + Image + '\'' +
             ", GoogleID='" + GoogleID + '\'' +

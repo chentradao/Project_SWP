@@ -13,6 +13,7 @@ public class Cart {
     private String ProductName;
     private int ID;
     private int Quantity;
+    private String IdentityCode;
     private String Size;
     private String Color;
     private int Price;
@@ -21,16 +22,19 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(int ProductID, String ProductName, int ID, int Quantity, String Size, String Color, int Price, String Image) {
+    public Cart(int ProductID, String ProductName, int ID, int Quantity, String IdentityCode, String Size, String Color, int Price, String Image) {
         this.ProductID = ProductID;
         this.ProductName = ProductName;
         this.ID = ID;
         this.Quantity = Quantity;
+        this.IdentityCode = IdentityCode;
         this.Size = Size;
         this.Color = Color;
         this.Price = Price;
         this.Image = Image;
     }
+
+
 
     public int getProductID() {
         return ProductID;
@@ -38,6 +42,14 @@ public class Cart {
 
     public void setProductID(int ProductID) {
         this.ProductID = ProductID;
+    }
+
+    public String getIdentityCode() {
+        return IdentityCode;
+    }
+
+    public void setIdentityCode(String IdentityCode) {
+        this.IdentityCode = IdentityCode;
     }
 
     public String getProductName() {

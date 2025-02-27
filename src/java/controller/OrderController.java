@@ -26,7 +26,7 @@ import model.DAOOrder;
  */
 @WebServlet(name = "OrderController", urlPatterns = {"/OrderURL"})
 public class OrderController extends HttpServlet {
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -41,32 +41,32 @@ public class OrderController extends HttpServlet {
                     request.setAttribute("acc", acc);
                     request.getRequestDispatcher("/jsp/Checkout.jsp").forward(request, response);
                 } else {
-                    int CustomerID = Integer.parseInt(request.getParameter("CustomerID"));
+                    int CustomerID = acc.getAccountID();
                     String CustomerName = request.getParameter("CustomerName");
                     Date OrderDate = Date.valueOf(LocalDate.now());
                     Date ShippedDate = null;
                     int TotalCost = Integer.parseInt(request.getParameter("TotalCost"));
+                    String Email = request.getParameter("Email");
                     String Phone = request.getParameter("Phone");
                     String ShipAddress = request.getParameter("ShipAddress");
-                    String ShipCity = request.getParameter("ShipCity");
                     int OrderStatus = 1;
-                    Order o = new Order(OrderStatus, CustomerID, CustomerName, OrderDate, ShippedDate, TotalCost, Phone, ShipAddress, ShipCity, OrderStatus);
-                    int n=dao.insertOrder(o);
-                if (n > 0) {
-            // Insert các mục giỏ hàng vào OrderDetails
-            Enumeration<String> enu = session.getAttributeNames();
-            while (enu.hasMoreElements()) {
-                String key = enu.nextElement();
-                Object obj = session.getAttribute(key);
-                
-                if (obj instanceof Cart) {
-                    Cart cart = (Cart) obj;
-                    dao.addToOrder(cart);  
-                    session.removeAttribute(key);
-                }
-            }
-            response.sendRedirect("index.jsp");
-        }
+                    Order o = new Order(OrderStatus, CustomerID, CustomerName, OrderDate, ShippedDate, TotalCost, Email, Phone, ShipAddress, OrderStatus);
+                    int n = dao.insertOrder(o);
+                    if (n > 0) {
+                        // Insert các mục giỏ hàng vào OrderDetails
+                        Enumeration<String> enu = session.getAttributeNames();
+                        while (enu.hasMoreElements()) {
+                            String key = enu.nextElement();
+                            Object obj = session.getAttribute(key);
+                            
+                            if (obj instanceof Cart) {
+                                Cart cart = (Cart) obj;
+                                dao.addToOrder(cart);                                
+                                session.removeAttribute(key);
+                            }
+                        }
+                        response.sendRedirect("index.jsp");
+                    }
                 }
             }
         }
