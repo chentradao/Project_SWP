@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector" %>
+<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +21,14 @@
         <link rel="stylesheet" type="text/css" href="styles/checkout_responsive.css">
     </head>
     <body>
-        <%Accounts acc = (Accounts)request.getAttribute("acc");%>
+        <%
+            Accounts acc = (Accounts)request.getAttribute("acc");
+            Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
+            int total = 0;
+             for(Cart cart : vector){
+                total += (cart.getPrice() * cart.getQuantity());
+            }
+        %>
         <div class="super_container">
 
             <!-- Header -->
@@ -77,11 +84,18 @@
                                                                                         </div>-->
                                             <input type="text" class="checkout_input" placeholder="Họ Tên" required="required"  name="CustomerName" value="<%=acc.getUserName()%>">
                                             <input type="text" class="checkout_input" placeholder="E-mail" required="required" name="Email" value="<%=acc.getEmail()%>">
-                                            <select name="ShipCity" id="ShipCity" class="country_select checkout_input">
-                                                <option value="Hà Nội">Hà Nội</option>
-                                                <option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh</option>
+                                            <select name="city" id="city" onchange='getProvinces(event)' class="country_select checkout_input">
+                                                <option >Tỉnh / Thành phố</option>
                                             </select>
-                                            <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="ShipAddress" value="<%=acc.getAddress()%>">
+                                            <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
+                                                <select name="district" id="district" class="country_select checkout_input">
+                                                    <option >Quận / Huyện</option>
+                                                </select>
+                                                <select name="ward" id="ward" class="country_select checkout_input">
+                                                    <option >Phường / Xã</option>
+                                                </select>
+                                            </div>
+                                            <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="address">
                                             <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="ShipCity" value="<%=acc.getPhone()%>">
                                             <!--                                            <input type="text" class="checkout_input" placeholder="Town" required="required">
                                                                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
@@ -104,7 +118,7 @@
                                             <%}else{%>
                                             <input type="text" class="checkout_input" placeholder="Họ Tên" name="CustomerName">
                                             <input type="text" class="checkout_input" placeholder="E-mail" required="required" name="Email">
-                                            <select name="city" id="city" onchange='getProvinces(event)' class="country_select checkout_input">
+                                            <select name="city" id="city" class="country_select checkout_input">
                                                 <option value="">Tỉnh / Thành phố</option>
                                             </select>
                                             <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
@@ -115,7 +129,7 @@
                                                     <option value="">Phường / Xã</option>
                                                 </select>
                                             </div>
-                                            <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="ShipAddress">
+                                            <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="address">
                                             <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="Phone">
 
                                             <textarea name="checkout_comment" id="checkout_comment" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
@@ -153,26 +167,29 @@
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Subtotal</div>
-                                                <div class="cart_total_price ml-auto">$35.00</div>
+                                                <div class="cart_total_price ml-auto"><%=total%>₫</div>
+                                                <input type="hidden" name="total" id="total" value="<%=total%>">
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Shipping</div>
-                                                <div class="cart_total_price ml-auto">$5.00</div>
+                                                <div class="cart_total_price ml-auto" id="shippingFee" name="shippingFee" value="">0₫</div>
+                                                <input type="hidden" id="shippingFee1" name="shippingFee1" value="ShippingFee1">
                                             </li>
                                             <li class="d-flex flex-row align-items-start justify-content-start total_row">
                                                 <div class="cart_total_title">Total</div>
-                                                <div class="cart_total_price ml-auto">$40.00</div>
+                                                <div class="cart_total_price ml-auto" id="totalPrice" name="totalPrice" value=""></div>
+                                                <input type="hidden" id="totalPrice1" name="totalPrice1" value="">
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="payment_options">
                                         <div>
-                                            <input type="radio" id="radio_payment_1" name="regular_radio" class="regular_radio">
-                                            <label for="radio_payment_1">cash on delivery</label>
+                                            <input type="radio" id="cod" name="payment" value="cod" class="regular_radio" onclick="updatePaymentInfo('COD')" checked>
+                                            <label for="radio_payment_1">Thanh toán khi nhận hàng</label>
                                         </div>
                                         <div>
-                                            <input type="radio" id="radio_payment_2" name="regular_radio" class="regular_radio" checked>
-                                            <label for="radio_payment_2">paypal</label>
+                                            <input type="radio" id="vnpay" name="payment" value="vnpay" class="regular_radio" onclick="updatePaymentInfo('VNPay')">
+                                            <label for="radio_payment_2">VNpay</label>
                                             <div class="visa payment_option"><a href="#"><img src="images/visa.jpg" alt=""></a></div>
                                             <div class="master payment_option"><a href="#"><img src="images/master.jpg" alt=""></a></div>
                                         </div>
@@ -188,7 +205,42 @@
 
             <%@ include file="/Footer.jsp" %>
         </div>
+        <script>
+            //api lay tinh thanh pho
+            document.addEventListener("DOMContentLoaded", function () {
+                function updateShippingFee() {
+                    let city = document.getElementById("city").value;
+                    let district = document.getElementById("district").value;
+                    let ward = document.getElementById("ward").value;
+                    let total = document.getElementById("total").value;
 
+                    if (city !== "Chọn" && district !== "Chọn" && ward !== "Chọn") {
+                        $.ajax({
+                            url: "ShippingURL",
+                            type: "GET",
+                            data: {city: city, district: district, ward: ward, total: total},
+                            success: function (response) {
+                                let shippingFee = response.shippingFee || 1;
+                                document.getElementById("shippingFee").innerText = shippingFee + "₫";
+                                let totalPrice = parseInt(total) + shippingFee;
+                                console.log(shippingFee);
+                                console.log(total);
+                            document.getElementById("shippingFee1").value = shippingFee;
+                            document.getElementById("totalPrice").innerText = totalPrice+ "₫";
+                            document.getElementById("totalPrice1").value = totalPrice;
+                            },
+                            error: function () {
+                                document.getElementById("shippingFee").innerText = "Không thể tính phí";
+                            }
+                        });
+                    }
+                }
+
+                document.getElementById("city").addEventListener("change", updateShippingFee);
+                document.getElementById("district").addEventListener("change", updateShippingFee);
+                document.getElementById("ward").addEventListener("change", updateShippingFee);
+            });
+        </script>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>
