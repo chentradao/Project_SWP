@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Order {
     private int OrderID;
-    private int CustomerID;
+    private Integer CustomerID;
     private String CustomerName;
     private Date OrderDate;
     private Date ShippedDate;
@@ -28,7 +28,7 @@ public class Order {
     private String PaymentMethod;
     private int OrderStatus;
 
-    public Order(int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+    public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
         this.OrderDate = OrderDate;
@@ -45,7 +45,7 @@ public class Order {
         this.OrderStatus = OrderStatus;
     }
 
-    public Order(int OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+    public Order(Integer OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
         this.OrderID = OrderID;
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
@@ -89,7 +89,7 @@ public class Order {
         this.OrderID = OrderID;
     }
 
-    public int getCustomerID() {
+    public Integer getCustomerID() {
         return CustomerID;
     }
 

@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/Cosmetic"/>
+<Context path="/Cosmetic">
+<Environment name="email" override="false" type="java.lang.String" value="esteelauder046@gmail.com"/>
+  <Environment name="password" override="false" type="java.lang.String" value="Nhom6@123"/>
+</Context>

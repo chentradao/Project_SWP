@@ -7,6 +7,7 @@ package controller;
 import entity.Accounts;
 import entity.Cart;
 import entity.Order;
+import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -25,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import model.DAOOrder;
+import model.DAOVoucher;
 import model.EmailHandler;
 
 /**
@@ -40,6 +43,7 @@ public class OrderController extends HttpServlet {
         HttpSession session = request.getSession(true);
         Accounts acc = (Accounts) session.getAttribute("acc");
         DAOOrder dao = new DAOOrder();
+        DAOVoucher d = new DAOVoucher();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
             if (service.equals("checkout")) {
@@ -49,6 +53,7 @@ public class OrderController extends HttpServlet {
                 if (vid != null && !vid.isEmpty()) {
                     VoucherID = Integer.parseInt(vid);
                 }
+                
                 if (submit == null) {
                     Vector<Cart> vector = new Vector<>();
                     Enumeration enu = session.getAttributeNames();
@@ -60,6 +65,8 @@ public class OrderController extends HttpServlet {
                             vector.add(cart);
                         }
                     }
+                    Voucher voucher = d.getVoucherByID(VoucherID);
+                    request.setAttribute("voucher", voucher);
                     request.setAttribute("vectorCart", vector);
                     request.setAttribute("acc", acc);
                     request.getRequestDispatcher("/jsp/Checkout.jsp").forward(request, response);

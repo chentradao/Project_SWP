@@ -14,41 +14,62 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Types;
 
 /**
  *
  * @author nguye
  */
 public class DAOOrder extends DBConnection {
-    
     public int insertOrder(Order o) {
-        int n = 0;
-        String sql = "INSERT INTO [dbo].[Orders]\n"
-                + "           ([CustomerID]\n"
-                + "           ,[CustomerName]\n"
-                + "           ,[OrderDate]\n"
-                + "           ,[ShippedDate]\n"
-                + "           ,[ShippingFee]\n"
-                + "           ,[TotalCost]\n"
-                + "           ,[Email]\n"
-                + "           ,[Phone]\n"
-                + "           ,[ShipAddress]\n"
-                + "           ,[VoucherID]\n"
-                + "           ,[CancelNotification]\n"
-                + "           ,[Note]\n"
-                + "           ,[PaymentMethod]\n"
-                + "           ,[OrderStatus])\n"
-                + "     VALUES('" + o.getCustomerID() + "','" + o.getCustomerName() + "','" + o.getOrderDate() + "',"
-                + "'" + o.getShippedDate() + "','" + o.getShippingFee() + "','" + o.getTotalCost() + "','" + o.getEmail() + "','" + o.getPhone() + "',"
-                + "'" + o.getShipAddress() + "','" + o.getVoucherID() + "','" + o.getCancelNotification() + "','" + o.getNote() + "','" + o.getPaymentMethod() + "','" + o.getOrderStatus() + "')";
-        try {
-            Statement state = conn.createStatement();
-            n = state.executeUpdate(sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
+    int n = 0;
+    String sql = "INSERT INTO [dbo].[Orders] "
+            + "([CustomerID], [CustomerName], [OrderDate], [ShippedDate], [ShippingFee], "
+            + "[TotalCost], [Email], [Phone], [ShipAddress], [VoucherID], "
+            + "[CancelNotification], [Note], [PaymentMethod], [OrderStatus]) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    try {
+        PreparedStatement ps = conn.prepareStatement(sql);
+        
+        // ✅ Kiểm tra nếu CustomerID là null thì đặt NULL vào SQL
+        if (o.getCustomerID() != null) {
+            ps.setInt(1, o.getCustomerID());
+        } else {
+            ps.setNull(1, Types.INTEGER);
         }
-        return n;
+
+        ps.setString(2, o.getCustomerName());
+        if (o.getOrderDate() != null) {
+            ps.setDate(3, new java.sql.Date(o.getOrderDate().getTime()));
+        } else {
+            ps.setNull(3, Types.DATE);
+        }
+
+        if (o.getShippedDate() != null) {
+            ps.setDate(4, new java.sql.Date(o.getShippedDate().getTime()));
+        } else {
+            ps.setNull(4, Types.DATE);
+        }
+        ps.setInt(5, o.getShippingFee());
+        ps.setInt(6, o.getTotalCost());
+        ps.setString(7, o.getEmail());
+        ps.setString(8, o.getPhone());
+        ps.setString(9, o.getShipAddress());
+        ps.setInt(10, o.getVoucherID());
+        ps.setString(11, o.getCancelNotification());
+        ps.setString(12, o.getNote());
+        ps.setString(13, o.getPaymentMethod());
+        ps.setInt(14, o.getOrderStatus());
+
+        // ✅ Thực thi truy vấn
+        n = ps.executeUpdate();
+
+    } catch (SQLException ex) {
+        Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return n;
+}
     
     public void changeStatus(int oid, int newNumber) {
         String sql = "update Orders set OrderStatus=" + newNumber + " where OrderID=" + oid;
@@ -62,7 +83,7 @@ public class DAOOrder extends DBConnection {
     
     public int deleteOrder(int oid) {
         int n = 0;
-        String sqlCheck = "Select * from [Order Details] where OrderID=" + oid;
+        String sqlCheck = "Select * from [OrderDetail] where OrderID=" + oid;
         ResultSet rs = getData(sqlCheck);
         try {
             if (rs.next()) {
@@ -148,11 +169,11 @@ public class DAOOrder extends DBConnection {
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
                 int oid = rs.getInt(1);
-                String sql2 = "INSERT INTO [dbo].[Order Details]\n"
+                String sql2 = "INSERT INTO [dbo].[OrderDetail]\n"
                         + "           ([OrderID]\n"
                         + "           ,[ProductID]\n"
                         + "           ,[UnitPrice]\n"
-                        + "           ,[Quantity]\n"
+                        + "           ,[Quantity])\n"
                         + "     VALUES(?,?,?,?)";
                 PreparedStatement state = conn.prepareStatement(sql2);
                 state.setObject(1, oid);
@@ -164,6 +185,15 @@ public class DAOOrder extends DBConnection {
         } catch (SQLException ex) {
             Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+    }
+    public static void main(String[] args) {
+        DAOOrder dao = new DAOOrder();
+        int n = 0;
+//        n = dao.insertOrder(new Order(null, "hank", null, null, 0, 0, "hanh", "0123", "hà nội", 1, null, null, "COD", 1));
+        n = dao.deleteOrder(8);
+        if(n >0){
+            System.out.println("inserted");
+        }
     }
 }
+

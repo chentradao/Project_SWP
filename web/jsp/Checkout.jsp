@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart" %>
+<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart,entity.Voucher" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,10 +24,13 @@
         <%
             Accounts acc = (Accounts)request.getAttribute("acc");
             Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
-            int total = 0;
+            Voucher voucher = (Voucher)request.getAttribute("voucher");
+            int subtotal = 0;
              for(Cart cart : vector){
-                total += (cart.getPrice() * cart.getQuantity());
+                subtotal += (cart.getPrice() * cart.getQuantity());
             }
+            int discount = (voucher.getDiscount() * subtotal)/100;
+            int total = subtotal - discount;
         %>
         <div class="super_container">
 
@@ -161,14 +164,18 @@
                                                 <div class="cart_total_title">Product</div>
                                                 <div class="cart_total_price ml-auto">Total</div>
                                             </li>
+                                            <!--                                            <li class="d-flex flex-row align-items-center justify-content-start">
+                                                                                            <div class="cart_total_title">2 Piece Swimsuit x1</div>
+                                                                                            <div class="cart_total_price ml-auto">$35.00</div>
+                                                                                        </li>-->
                                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                                <div class="cart_total_title">2 Piece Swimsuit x1</div>
-                                                <div class="cart_total_price ml-auto">$35.00</div>
+                                                <div class="cart_total_title">Tổng Tiền Hàng</div>
+                                                <div class="cart_total_price ml-auto"><%=subtotal%>₫</div>
+                                                <input type="hidden" name="total" id="total" value="<%=total%>">
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                                <div class="cart_total_title">Subtotal</div>
-                                                <div class="cart_total_price ml-auto"><%=total%>₫</div>
-                                                <input type="hidden" name="total" id="total" value="<%=total%>">
+                                                <div class="cart_total_title">Giảm Giá</div>
+                                                <div class="cart_total_price ml-auto"><%=discount%>₫</div>
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Shipping</div>
@@ -225,9 +232,9 @@
                                 let totalPrice = parseInt(total) + shippingFee;
                                 console.log(shippingFee);
                                 console.log(total);
-                            document.getElementById("shippingFee1").value = shippingFee;
-                            document.getElementById("totalPrice").innerText = totalPrice+ "₫";
-                            document.getElementById("totalPrice1").value = totalPrice;
+                                document.getElementById("shippingFee1").value = shippingFee;
+                                document.getElementById("totalPrice").innerText = totalPrice + "₫";
+                                document.getElementById("totalPrice1").value = totalPrice;
                             },
                             error: function () {
                                 document.getElementById("shippingFee").innerText = "Không thể tính phí";
