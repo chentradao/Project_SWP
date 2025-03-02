@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [SWP]    Script Date: 3/1/2025 9:11:44 AM ******/
+/****** Object:  Database [SWP]    Script Date: 3/2/2025 8:13:49 PM ******/
 CREATE DATABASE [SWP]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -84,7 +84,7 @@ ALTER DATABASE [SWP] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLIC
 GO
 USE [SWP]
 GO
-/****** Object:  Table [dbo].[Accounts]    Script Date: 3/1/2025 9:11:44 AM ******/
+/****** Object:  Table [dbo].[Accounts]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -109,7 +109,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Blog]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Blog]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +130,7 @@ CREATE TABLE [dbo].[Blog](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[BlogCategory]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[BlogCategory]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -144,7 +144,7 @@ CREATE TABLE [dbo].[BlogCategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Categories]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Categories]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -159,7 +159,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedback]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Feedback]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -178,7 +178,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderDetail]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[OrderDetail]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -195,7 +195,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Orders]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Orders]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -214,6 +214,7 @@ CREATE TABLE [dbo].[Orders](
 	[VoucherID] [int] NULL,
 	[Note] [nvarchar](100) NULL,
 	[CancelNotification] [nvarchar](100) NULL,
+	[PaymentMethod] [nvarchar](15) NULL,
 	[OrderStatus] [smallint] NULL,
  CONSTRAINT [PK__Orders__C3905BAF3F8061BB] PRIMARY KEY CLUSTERED 
 (
@@ -221,7 +222,7 @@ CREATE TABLE [dbo].[Orders](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductDetail]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[ProductDetail]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -244,7 +245,7 @@ CREATE TABLE [dbo].[ProductDetail](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Products]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Products]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -262,7 +263,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Reply]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Reply]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -279,7 +280,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Slider]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Slider]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -298,23 +299,27 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Voucher]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Voucher]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Voucher](
 	[VoucherID] [int] IDENTITY(1,1) NOT NULL,
+	[VoucherName] [nvarchar](50) NULL,
 	[Discount] [int] NULL,
+	[Quantity] [int] NULL,
 	[StartDate] [date] NULL,
 	[EndDate] [date] NULL,
-PRIMARY KEY CLUSTERED 
+	[Description] [nvarchar](255) NULL,
+	[VoucherStatus] [int] NULL,
+ CONSTRAINT [PK__Voucher__3AEE79C1FFBD7167] PRIMARY KEY CLUSTERED 
 (
 	[VoucherID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wishlist]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Table [dbo].[Wishlist]    Script Date: 3/2/2025 8:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -344,6 +349,17 @@ INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [CategoryStatus]) VALUE
 INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [CategoryStatus]) VALUES (3, N'Nước hoa', 1)
 INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [CategoryStatus]) VALUES (4, N'Chăm sóc mắt', 1)
 SET IDENTITY_INSERT [dbo].[Categories] OFF
+GO
+INSERT [dbo].[OrderDetail] ([OrderID], [ProductID], [Quantity], [UnitPrice]) VALUES (7, 9, 1800000, 1)
+INSERT [dbo].[OrderDetail] ([OrderID], [ProductID], [Quantity], [UnitPrice]) VALUES (7, 12, 2200000, 1)
+INSERT [dbo].[OrderDetail] ([OrderID], [ProductID], [Quantity], [UnitPrice]) VALUES (7, 30, 1800000, 1)
+INSERT [dbo].[OrderDetail] ([OrderID], [ProductID], [Quantity], [UnitPrice]) VALUES (9, 30, 1800000, 1)
+GO
+SET IDENTITY_INSERT [dbo].[Orders] ON 
+
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [CustomerName], [OrderDate], [ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], [VoucherID], [Note], [CancelNotification], [PaymentMethod], [OrderStatus]) VALUES (7, NULL, N'Xuân Hanh', CAST(N'2025-03-02' AS Date), NULL, 0, 5800001, N'nguyenxuanhanh0440@gmail.com', N'0926310999', N'Hanoi, Xã Mậu Long, Huyện Yên Minh, Tỉnh Hà Giang', 1, NULL, NULL, N'VNPay', 1)
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [CustomerName], [OrderDate], [ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], [VoucherID], [Note], [CancelNotification], [PaymentMethod], [OrderStatus]) VALUES (9, NULL, N'Xuân Hanh', CAST(N'2025-03-02' AS Date), NULL, 0, 1800001, N'nguyenxuanhanh0440@gmail.com', N'0926310999', N'Hanoi, Xã Sơn Vĩ, Huyện Mèo Vạc, Tỉnh Hà Giang', 1, NULL, NULL, N'cod', 1)
+SET IDENTITY_INSERT [dbo].[Orders] OFF
 GO
 SET IDENTITY_INSERT [dbo].[ProductDetail] ON 
 
@@ -398,62 +414,67 @@ INSERT [dbo].[Products] ([ProductID], [ProductName], [CategoryID], [Date], [Desc
 INSERT [dbo].[Products] ([ProductID], [ProductName], [CategoryID], [Date], [Description], [ProductStatus]) VALUES (13, N'Synchronized Multi-Recovery Eye Cream', 4, CAST(N'2025-02-04' AS Date), N'Dưỡng ẩm, chống lão hóa, làm sáng và săn chắc vùng da quanh mắt', 1)
 SET IDENTITY_INSERT [dbo].[Products] OFF
 GO
-/****** Object:  Index [UQ__Accounts__349DA5870C0B83B7]    Script Date: 3/1/2025 9:11:45 AM ******/
+SET IDENTITY_INSERT [dbo].[Voucher] ON 
+
+INSERT [dbo].[Voucher] ([VoucherID], [VoucherName], [Discount], [Quantity], [StartDate], [EndDate], [Description], [VoucherStatus]) VALUES (1, N'None', 0, NULL, NULL, NULL, NULL, 1)
+SET IDENTITY_INSERT [dbo].[Voucher] OFF
+GO
+/****** Object:  Index [UQ__Accounts__349DA5870C0B83B7]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Accounts] ADD UNIQUE NONCLUSTERED 
 (
 	[AccountID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Blog__54379E518166C2D8]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Blog__54379E518166C2D8]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Blog] ADD  CONSTRAINT [UQ__Blog__54379E518166C2D8] UNIQUE NONCLUSTERED 
 (
 	[BlogID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Categori__19093A2A80A4EF6C]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Categori__19093A2A80A4EF6C]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Categories] ADD UNIQUE NONCLUSTERED 
 (
 	[CategoryID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Feedback__6A4BEDF7388CC5ED]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Feedback__6A4BEDF7388CC5ED]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Feedback] ADD UNIQUE NONCLUSTERED 
 (
 	[FeedbackID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Orders__C3905BAE87AF8A35]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Orders__C3905BAE87AF8A35]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Orders] ADD  CONSTRAINT [UQ__Orders__C3905BAE87AF8A35] UNIQUE NONCLUSTERED 
 (
 	[OrderID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__ProductD__3214EC26561F0FC4]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__ProductD__3214EC26561F0FC4]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[ProductDetail] ADD  CONSTRAINT [UQ__ProductD__3214EC26561F0FC4] UNIQUE NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Products__B40CC6ECAA05BAD0]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Products__B40CC6ECAA05BAD0]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Products] ADD UNIQUE NONCLUSTERED 
 (
 	[ProductID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Reply__C25E4628F7A9317F]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Reply__C25E4628F7A9317F]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Reply] ADD UNIQUE NONCLUSTERED 
 (
 	[ReplyID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Slider__24BC9711577E7CC4]    Script Date: 3/1/2025 9:11:45 AM ******/
+/****** Object:  Index [UQ__Slider__24BC9711577E7CC4]    Script Date: 3/2/2025 8:13:50 PM ******/
 ALTER TABLE [dbo].[Slider] ADD UNIQUE NONCLUSTERED 
 (
 	[SliderID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ__Voucher__3AEE79C0E4B42789]    Script Date: 3/1/2025 9:11:45 AM ******/
-ALTER TABLE [dbo].[Voucher] ADD UNIQUE NONCLUSTERED 
+/****** Object:  Index [UQ__Voucher__3AEE79C0E4B42789]    Script Date: 3/2/2025 8:13:50 PM ******/
+ALTER TABLE [dbo].[Voucher] ADD  CONSTRAINT [UQ__Voucher__3AEE79C0E4B42789] UNIQUE NONCLUSTERED 
 (
 	[VoucherID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
