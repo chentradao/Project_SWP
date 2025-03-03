@@ -40,16 +40,18 @@ public class ShippingFeeController extends HttpServlet {
         }
     } 
 
-  
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
         HttpSession session = request.getSession(true);
-        int total = 0;
+        int total = Integer.parseInt(request.getParameter("total"));
         String city = request.getParameter("city");
         String district = request.getParameter("district");
         String ward = request.getParameter("ward");
+        response.getWriter().print(city + " " + district + " " + ward);
+        
          Vector<Cart> vector = new Vector<>();
                 Enumeration enu = session.getAttributeNames();
                 while (enu.hasMoreElements()){
@@ -63,7 +65,6 @@ public class ShippingFeeController extends HttpServlet {
         int totalQuantity = 0;
         for(Cart c : vector){
             totalQuantity += c.getQuantity();
-            total += (c.getQuantity() * c.getPrice());
         }
         int weight = totalQuantity * 500;
         
@@ -79,7 +80,7 @@ public class ShippingFeeController extends HttpServlet {
     public double getShippingFee(String city, String district, String ward, int weight, int value) {
         try {
             String API_URL = "https://services.giaohangtietkiem.vn/services/shipment/fee";
-            String TOKEN = "16LVGcpuRjfbd5VB2Gcc3AeqDZYNLUBb7sNRLvx";
+            String TOKEN = "W8BGwj6ped2keP01GFm77liHsGSgPPASqVdLGV";
             String encodedPickCity = URLEncoder.encode("Hà Nội", "UTF-8");
             String encodedPickDistrict = URLEncoder.encode("Hà Đông", "UTF-8");
             
@@ -114,7 +115,6 @@ public class ShippingFeeController extends HttpServlet {
                     response.append(inputLine);
                 }
                 in.close();
-
                 // chuyen doi phan hoi thanh json
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 if (jsonResponse.has("fee")) {
@@ -132,7 +132,6 @@ public class ShippingFeeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     @Override

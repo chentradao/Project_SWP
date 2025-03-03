@@ -77,7 +77,7 @@
                             <!-- Billing Details -->
                             <div class="col-lg-6">
                                 <div class="billing">
-                                    <div class="checkout_title">billing details</div>
+                                    <div class="checkout_title">Chi Tiết Thanh Toán</div>
                                     <div class="checkout_form_container">
                                         <form action="#" id="checkout_form">
                                             <%if(acc != null){%>
@@ -99,7 +99,7 @@
                                                 </select>
                                             </div>
                                             <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="address">
-                                            <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="ShipCity" value="<%=acc.getPhone()%>">
+                                            <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="Phone" value="<%=acc.getPhone()%>">
                                             <!--                                            <input type="text" class="checkout_input" placeholder="Town" required="required">
                                                                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                                                                             <input type="text" class="checkout_input checkout_input_50" placeholder="Zipcode" required="required">
@@ -136,7 +136,7 @@
                                             <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="Phone">
 
                                             <textarea name="checkout_comment" id="checkout_comment" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
-                                            <div class="billing_options">
+<!--                                            <div class="billing_options">
                                                 <div class="billing_account">
                                                     <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox checkbox_account">
                                                     <label for="checkbox_account"><img src="images/checked.png" alt=""></label>
@@ -147,7 +147,7 @@
                                                     <label for="checkbox_shipping"><img src="images/checked.png" alt=""></label>
                                                     <span>Ship to a different address</span>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <%}%>
                                         </form>
                                     </div>
@@ -178,13 +178,13 @@
                                                 <div class="cart_total_price ml-auto"><%=discount%>₫</div>
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                                <div class="cart_total_title">Shipping</div>
+                                                <div class="cart_total_title">Phí Ship</div>
                                                 <div class="cart_total_price ml-auto" id="shippingFee" name="shippingFee" value="">0₫</div>
                                                 <input type="hidden" id="shippingFee1" name="shippingFee1" value="ShippingFee1">
                                             </li>
                                             <li class="d-flex flex-row align-items-start justify-content-start total_row">
-                                                <div class="cart_total_title">Total</div>
-                                                <div class="cart_total_price ml-auto" id="totalPrice" name="totalPrice" value=""></div>
+                                                <div class="cart_total_title">Tổng Thanh Toán</div>
+                                                <div class="cart_total_price ml-auto" id="totalPrice" name="totalPrice" value=""><%=total%>₫</div>
                                                 <input type="hidden" id="totalPrice1" name="totalPrice1" value="">
                                             </li>
                                         </ul>
@@ -195,12 +195,12 @@
                                             <label for="radio_payment_1">Thanh toán khi nhận hàng</label>
                                         </div>
                                         <div>
-                                            <input type="radio" id="vnpay" name="payment" value="vnpay" class="regular_radio" onclick="updatePaymentInfo('VNPay')">
-                                            <label for="radio_payment_2">VNpay</label>
+                                            <input type="radio" id="vnpay" name="payment" value="vnpay" class="regular_radio" onclick="updatePaymentInfo('VNPAY')">
+                                            <label for="radio_payment_2">VNPAY</label>
                                             <div class="visa payment_option"><a href="#"><img src="images/visa.jpg" alt=""></a></div>
                                             <div class="master payment_option"><a href="#"><img src="images/master.jpg" alt=""></a></div>
                                         </div>
-                                        <button type="submit" name="submit" value="purchase" class="cart_total_button">place order</button>
+                                        <button type="submit" name="submit" value="purchase" class="cart_total_button">Đặt hàng</button>
                                     </div>
                                 </div>
                             </div>
@@ -227,11 +227,12 @@
                             type: "GET",
                             data: {city: city, district: district, ward: ward, total: total},
                             success: function (response) {
-                                let shippingFee = response.shippingFee || 1;
+                                let shippingFee = response.shippingFee || 0;
                                 document.getElementById("shippingFee").innerText = shippingFee + "₫";
                                 let totalPrice = parseInt(total) + shippingFee;
                                 console.log(shippingFee);
                                 console.log(total);
+                                console.log(city + " " + district + " " + ward);
                                 document.getElementById("shippingFee1").value = shippingFee;
                                 document.getElementById("totalPrice").innerText = totalPrice + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;

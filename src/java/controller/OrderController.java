@@ -8,6 +8,7 @@ import entity.Accounts;
 import entity.Cart;
 import entity.Order;
 import entity.Voucher;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -46,6 +47,19 @@ public class OrderController extends HttpServlet {
         DAOVoucher d = new DAOVoucher();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
+            if(service.equals("deleteOrder")){
+                dao.deleteOrder(Integer.parseInt(request.getParameter("oid")));
+                response.sendRedirect(request.getHeader("Referer"));
+            }
+            if(service.equals("orderHistory")){
+                if(acc!=null){
+                 Vector<Order> vector = dao.getOrders("select * from Orders where CustomerID =" + acc.getAccountID());
+                 request.setAttribute("vector", vector);
+                 request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
+                }else{
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }
+            }
             if (service.equals("checkout")) {
                 String submit = request.getParameter("submit");
                 String vid = request.getParameter("vid");
