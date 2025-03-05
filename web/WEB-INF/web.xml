@@ -12,7 +12,7 @@
         <servlet-name>GetWishlistByAccountIDServlet</servlet-name>
         <servlet-class>controller.GetWishlistByAccountIDServlet</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
         <servlet-name>ProductDetail</servlet-name>
         <servlet-class>controller.ProductDetailController</servlet-class>
     </servlet>
@@ -23,6 +23,10 @@
     <servlet>
         <servlet-name>ProductDetailListServlet</servlet-name>
         <servlet-class>controller.ProductDetailListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VoucherServlet</servlet-name>
+        <servlet-class>controller.VoucherServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddToWishlistServlet</servlet-name>
@@ -47,5 +51,9 @@
     <servlet-mapping>
         <servlet-name>ProductDetail</servlet-name>
         <url-pattern>/ProductDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VoucherServlet</servlet-name>
+        <url-pattern>/VoucherServlet</url-pattern>
     </servlet-mapping>
 </web-app>
