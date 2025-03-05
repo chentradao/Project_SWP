@@ -38,9 +38,10 @@ public class ProductRepository {
         validateSort(sortBy);
 
         String sql = buildCategoryQuery(filters, sortBy, sortOrder);
+        System.out.println("sqlll " + sql);
         List<Object> params = buildParams(categoryId, filters, page, pageSize);
 
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             setParameters(stmt, params);
             ResultSet rs = stmt.executeQuery();
             return mapProductResponses(rs);
@@ -131,7 +132,7 @@ public class ProductRepository {
         StringBuilder sql = new StringBuilder(COUNT_QUERY);
         appendFilters(sql, filters);
 
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
             List<Object> params = new ArrayList<>();
             params.add(categoryId);
@@ -155,6 +156,29 @@ public class ProductRepository {
             throw new RuntimeException("Database error while counting products by category", e);
         }
         return 0;
+    }
+
+    public List<ProductResponse> findAllProducts(int page, int pageSize, Map<String, String> filters, String sortBy, String sortOrder) {
+        validateFilters(filters);
+        validateSort(sortBy);
+
+        String sql = buildAllProductsQuery(filters, sortBy, sortOrder);
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            return mapProductResponses(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error while fetching all products", e);
+        }
+    }
+
+    private String buildAllProductsQuery(Map<String, String> filters, String sortBy, String sortOrder) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT p.ProductID, p.ProductName, pd.ID, pd.Quantity, pd.Size, pd.Color, pd.Price, pd.Image "
+                + "FROM ProductDetail pd "
+                + "INNER JOIN Products p ON pd.ProductID = p.ProductID "
+                + "WHERE pd.ProductStatus = 1");
+
+        return sql.toString();
     }
 
     /**
@@ -197,4 +221,29 @@ public class ProductRepository {
             throw new IllegalArgumentException("Invalid sort attribute: " + sortBy);
         }
     }
+    // In ProductRepository.java
+
+    public List<String> findAvailableSizesByCategory() {
+        String sql = "SELECT Size FROM ( "
+                + "    SELECT DISTINCT pd.Size, "
+                + "    TRY_CAST(LEFT(pd.Size, PATINDEX('%[^0-9]%', pd.Size + 'x') - 1) AS INT) AS NumericSize "
+                + "    FROM ProductDetail pd "
+                + "    INNER JOIN Products p ON pd.ProductID = p.ProductID "
+                + "    WHERE pd.ProductStatus = 1 "
+                + ") AS SortedSizes "
+                + "WHERE NumericSize IS NOT NULL "
+                + "ORDER BY NumericSize ASC";
+
+        List<String> sizes = new ArrayList<>();
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                sizes.add(rs.getString("Size"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching available sizes", e);
+        }
+        return sizes;
+    }
+
 }

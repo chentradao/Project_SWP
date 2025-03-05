@@ -12,6 +12,10 @@
         <servlet-name>GetWishlistByAccountIDServlet</servlet-name>
         <servlet-class>controller.GetWishlistByAccountIDServlet</servlet-class>
     </servlet>
+     <servlet>
+        <servlet-name>ProductDetail</servlet-name>
+        <servlet-class>controller.ProductDetailController</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>ProductListServlet</servlet-name>
         <servlet-class>controller.ProductListServlet</servlet-class>
@@ -39,5 +43,9 @@
     <servlet-mapping>
         <servlet-name>ProductDetailListServlet</servlet-name>
         <url-pattern>/productdetailURL</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDetail</servlet-name>
+        <url-pattern>/ProductDetail</url-pattern>
     </servlet-mapping>
 </web-app>

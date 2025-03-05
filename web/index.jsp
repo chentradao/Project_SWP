@@ -1,8 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Es�e Lauder</title>
+        <title>Esée Lauder</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Wish shop project">
@@ -15,6 +20,7 @@
         <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/main_styles.css">
         <link rel="stylesheet" type="text/css" href="styles/responsive.css">
+
     </head>
     <body>
 
@@ -40,39 +46,39 @@
                         <!-- Home Slider Item -->
                         <div class="owl-item">
                             <a href="product.html">
-                            <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                            <div class="home_slider_content">
-                                <div class="home_slider_content_inner">
-                                    <div class="home_slider_subtitle">Promo Prices</div>
-                                    <div class="home_slider_title">New Collection</div>
-                                </div>	
-                            </div>
+                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
+                                <div class="home_slider_content">
+                                    <div class="home_slider_content_inner">
+                                        <div class="home_slider_subtitle">Promo Prices</div>
+                                        <div class="home_slider_title">New Collection</div>
+                                    </div>	
+                                </div>
                             </a>
                         </div>
 
                         <!-- Home Slider Item -->
                         <div class="owl-item">
                             <a href="product.html">
-                            <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                            <div class="home_slider_content">
-                                <div class="home_slider_content_inner">
-                                    <div class="home_slider_subtitle">Promo Prices</div>
-                                    <div class="home_slider_title">New Collection</div>
-                                </div>	
-                            </div>
+                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
+                                <div class="home_slider_content">
+                                    <div class="home_slider_content_inner">
+                                        <div class="home_slider_subtitle">Promo Prices</div>
+                                        <div class="home_slider_title">New Collection</div>
+                                    </div>	
+                                </div>
                             </a>
                         </div>
 
                         <!-- Home Slider Item -->
                         <div class="owl-item">
                             <a href="product.html">
-                            <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                            <div class="home_slider_content">
-                                <div class="home_slider_content_inner">
-                                    <div class="home_slider_subtitle">Promo Prices</div>
-                                    <div class="home_slider_title">New Collection</div>
-                                </div>	
-                            </div>
+                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
+                                <div class="home_slider_content">
+                                    <div class="home_slider_content_inner">
+                                        <div class="home_slider_subtitle">Promo Prices</div>
+                                        <div class="home_slider_title">New Collection</div>
+                                    </div>	
+                                </div>
                             </a>
                         </div>
 
@@ -174,47 +180,47 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row products_container">
-                        <!-- Product -->
-                        <c:forEach var="productDetail" items="${productDetails}">
-                                <div class="col-lg-4 product_col">
+                    <div class="product-container">
+                        <c:choose>
+                            <c:when test="${empty products}">
+                                <p>No products found.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach items="${products}" var="product">
                                     <div class="product">
                                         <div class="product_image">
-                                            <img src="${productDetail.product.productImage}" alt="${productDetail.product.productImage}">
+                                            <img src="${not empty product.productImage ? product.productImage : 'images/default-product.jpg'}" 
+                                                 alt="">
                                         </div>
+                                        <div class="product_content">
+                                            <div class="product_name">
+                                                <a href="${pageContext.request.contextPath}/ProductDetail?productId=${product.productId}">
+                                                    ${product.productName}
+                                                </a>
+                                            </div>
+                                            <div class="product_price">
 
-                                        <div class="rating rating_4">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="product_content clearfix">
-                                            <div class="product_info">
-                                                <div class="product_name">
-                                                    <a href="product-detail.jsp?productId=${productDetail.product.productId}">${productDetail.product.productName}</a>
-                                                </div>
-                                                ${productDetail.product.description}
-                                                <div class="product_price">Gi�: ${productDetail.price} VND</div>
+                                                <fmt:formatNumber value="${product.productPrice}" pattern="#,##0" /> VND
 
                                             </div>
-                                            <div class="product_options">
+                                            <div class="product_details" >
+                                                <span>Size: ${product.productSize}</span> |
+                                                <span>Màu sắc: ${product.productColor}</span>
+                                            </div>
+                                        </div>
+                                        <div class="product_options">
+                                            <a href="${pageContext.request.contextPath}/CartURL?service=add2cart&id=${product.id}">
                                                 <div class="product_buy product_option">
                                                     <img src="images/shopping-bag-white.svg" alt="">
                                                 </div>
-                                                <div class="product_fav product_option">
-                                                    <form action="${pageContext.request.contextPath}/addToWishlist" method="post">
-                                                        <input type="hidden" name="productId" value="${productDetail.product.productId}" />
-                                                        <button type="submit" class="wishlist_button" style="background: none; border: none; font-size: 24px; color: inherit; padding: 0;">+</button>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                            </a>
+                                            <div class="product_fav product_option">+</div>
                                         </div>
                                     </div>
-                                </div>
-                            </c:forEach>
-                    </div>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>  
                 </div>
             </div>
 
@@ -334,7 +340,7 @@
 
                                 <!-- Testimonial Item -->
                                 <div class="owl-item">
-                                    <div class="test_text">“Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.”</div>
+                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
                                     <div class="test_content">
                                         <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
                                         <div class="test_name">Christinne Smith</div>
@@ -344,7 +350,7 @@
 
                                 <!-- Testimonial Item -->
                                 <div class="owl-item">
-                                    <div class="test_text">“Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.”</div>
+                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
                                     <div class="test_content">
                                         <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
                                         <div class="test_name">Christinne Smith</div>
@@ -354,7 +360,7 @@
 
                                 <!-- Testimonial Item -->
                                 <div class="owl-item">
-                                    <div class="test_text">“Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.”</div>
+                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
                                     <div class="test_content">
                                         <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
                                         <div class="test_name">Christinne Smith</div>
@@ -379,7 +385,7 @@
                             <div class="col">
                                 <div class="section_title_container text-center">
                                     <div class="section_subtitle">only the best</div>
-                                    <div class="section_title">đăng ký để được giảm giá 20%</div>
+                                    <div class="section_title">ÄÄng kÃ½ Äá» ÄÆ°á»£c giáº£m giÃ¡ 20%</div>
                                 </div>
                             </div>
                         </div>
@@ -431,7 +437,70 @@
                 </div>
             </footer>
         </div>
+        <style>
+            .product-container {
+                margin-top: 20px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
 
+            .product {
+                width: calc(33.33% - 20px); /* Ensures 3 items per row */
+                max-width: 300px; /* Limits the max size */
+                height: 350px; /* Set a fixed height for consistency */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .product_image {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 250px; /* Fixed image container height */
+                overflow: hidden;
+                width: 100%; /* Ensure full width */
+            }
+
+            .product_image img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* Ensures full image is displayed */
+            }
+
+            .product_content {
+                flex-grow: 1;
+                padding: 10px;
+                text-align: center;
+            }
+
+            .product_name a {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                text-decoration: none;
+            }
+
+            .product_price {
+                font-size: 18px;
+                color: #e60023;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+
+            .product_details {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .product_options {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+        </style>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>

@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Categories</title>
@@ -31,7 +31,7 @@
                                     <div class="home_title">Woman</div>
                                     <div class="breadcrumbs">
                                         <ul>
-                                            <li><a href="index.jsp">Home</a></li>
+                                            <li><a href="index.html">Home</a></li>
                                             <li>Woman</li>
                                             <li>Accessories</li>
                                         </ul>
@@ -54,29 +54,32 @@
                                     <div class="sidebar_title">Size</div>
                                     <div class="sidebar_section_content">
                                         <ul id="size-filter">
-                                            <li><a href="#" data-size="15ml">15ML</a></li>
-                                            <li><a href="#" data-size="30ml">30ML</a></li>
-                                            <li><a href="#" data-size="50ml">50ML</a></li>
-                                            <li><a href="#" data-size="75ml">75ML</a></li>
-                                            <li><a href="#" data-size="100ml">100ML</a></li>
+                                            <%
+                                                ProductService productService = new ProductService();
+                                                List<String> availableSizes = productService.getAvailableSizes();
+                                                for (String size : availableSizes) {
+                                            %>
+                                            <li><a href="#" data-size="<%=size%>"><%= size %></a></li>
+                                                <% } %>
                                         </ul>
                                     </div>
                                 </div>
                                 <!-- Price Filter -->
                                 <div class="sidebar_section">
-                                    <div class="sidebar_title">Khoảng Giá</div>
+                                    <div class="sidebar_title">Giá</div>
                                     <div class="sidebar_section_content">
                                         <div class="filter_price">
-                                            <!-- Two input fields for min and max price -->
-                                            <input type="number" id="minPriceInput" placeholder="Từ" style="width:45%; display:inline-block; margin-right:5%;">
-                                            <input type="number" id="maxPriceInput" placeholder="Đến" style="width:45%; display:inline-block;">
+                                            <!-- Hai ô nhập giá trị tối thiểu và tối đa -->
+                                            <input type="number" id="minPriceInput" placeholder="Giá tối thiểu">
+                                            <input type="number" id="maxPriceInput" placeholder="Giá tối đa">
                                             <br/><br/>
-                                            <button id="applyPriceBtn">Áp Dụng</button>
-                                            <button id="clearPriceBtn">Xóa</button>
+                                            <div class="price-buttons">
+                                                <button id="applyPriceBtn">Áp dụng giá</button>
+                                                <button id="clearPriceBtn">Xóa giá</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- (Additional filter options can be added here) -->
                             </div>
                             <div class="current_page">Woman's Fashion</div>
                         </div>
@@ -86,30 +89,7 @@
                                     <div class="view_box box_view"><i class="fa fa-th-large" aria-hidden="true"></i></div>
                                     <div class="view_box detail_view"><i class="fa fa-bars" aria-hidden="true"></i></div>
                                 </div>
-                                <div class="sorting">
-                                    <ul class="item_sorting">
-                                        <li>
-                                            <span class="sorting_text">Sort by</span>
-                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                            <ul>
-                                                <!-- Updated sorting options -->
-                                                <li class="product_sorting_btn" data-isotope-option='{"sortBy": "original-order"}'><span>Default</span></li>
-                                                <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>Price</span></li>
-                                                <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>Size</span></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <span class="sorting_text">Show</span>
-                                            <span class="num_sorting_text">12</span>
-                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                            <ul>
-                                                <li class="num_sorting_btn"><span>3</span></li>
-                                                <li class="num_sorting_btn"><span>6</span></li>
-                                                <li class="num_sorting_btn"><span>12</span></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -119,14 +99,61 @@
                             <%@ include file="listProduct.jsp" %>
                         </div>
                     </div>
+                    <div class="sorting">
+                        <ul class="item_sorting">
+                            <li>
+                                            <span class="sorting_text">Sắp xếp </span>
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                <ul>
+                                    <!-- Updated sorting options -->
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>giá</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>kích cỡ</span></li>
+                                </ul>
+                            </li>
+                            <li>
+                                            <span class="sorting_text">Hiển thị</span>
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                <ul>
+                                    <li class="num_sorting_btn"><span>3</span></li>
+                                    <li class="num_sorting_btn"><span>6</span></li>
+                                    <li class="num_sorting_btn"><span>12</span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <%
+                        // Generate pagination links based on total pages
+                        int totalPages = productResponse.getTotalPages();
+
+                        // Build base query string (excluding the "page" parameter) to preserve filters, sorting, etc.
+                        StringBuilder baseQuery = new StringBuilder();
+                        java.util.Enumeration<String> parameterNames = request.getParameterNames();
+                        while (parameterNames.hasMoreElements()) {
+                            String paramName = parameterNames.nextElement();
+                            if (!"page".equals(paramName)) {
+                                String[] values = request.getParameterValues(paramName);
+                                for (String value : values) {
+                                    if (baseQuery.length() > 0) {
+                                        baseQuery.append("&");
+                                    }
+                                    baseQuery.append(paramName).append("=").append(value);
+                                }
+                            }
+                        }
+                        String baseQueryString = baseQuery.toString();
+                    %>
+
+                    <!-- Pagination -->
                     <div class="row page_num_container">
                         <div class="col text-right">
                             <ul class="page_nums">
-                                <li><a href="#">01</a></li>
-                                <li class="active"><a href="#">02</a></li>
-                                <li><a href="#">03</a></li>
-                                <li><a href="#">04</a></li>
-                                <li><a href="#">05</a></li>
+                                <% for (int i = 1; i <= totalPages; i++) { %>
+                                <li class="<%= (i == currentPage) ? "active" : "" %>">
+                                    <a href="categories.jsp?<%= (baseQueryString != null && !baseQueryString.isEmpty()) ? "&" + baseQueryString : "" %>&page=<%= i %>">
+                                        <%= (i < 10 ? "0" + i : i) %>
+                                    </a>
+                                </li>
+                                <% } %>
                             </ul>
                         </div>
                     </div>
@@ -240,7 +267,11 @@
                                             var selectedSize = $(this).data('size');
                                             applyFilters({size: selectedSize});
                                         });
-
+                                        $('.num_sorting_btn').on('click', function (e) {
+                                            e.preventDefault();
+                                            var selectedPageSize = $(this).find('span').text();
+                                            applyFilters({pageSize: selectedPageSize});
+                                        });
                                         // --- Price Filter: Apply Button ---
                                         $('#applyPriceBtn').on('click', function (e) {
                                             e.preventDefault();
@@ -291,7 +322,12 @@
                                             params.delete('minPrice');
                                             params.delete('maxPrice');
                                         }
-
+                                        if (filters.pageSize) {
+                                            params.set('pageSize', filters.pageSize);
+                                            params.delete('page'); // Reset to first page
+                                        } else {
+                                            params.delete('pageSize');
+                                        }
                                         // Update the sorting parameter
                                         if (filters.sortBy) {
                                             params.set('sortBy', filters.sortBy);
@@ -303,7 +339,32 @@
                                         window.location.href = url.pathname + "?" + params.toString();
                                     }
         </script>
+        <style>
+            .filter_price input {
+                width: 48%;
+                display: inline-block;
+                margin-bottom: 10px;
+                padding: 8px;
+                font-size: 16px;
+            }
 
+            .price-buttons {
+                display: flex;
+                gap: 10px; /* Khoảng cách giữa các nút */
+                flex-wrap: wrap;
+            }
+
+            .price-buttons button {
+                flex: 1; /* Chia đều chiều rộng */
+                min-width: 120px; /* Đảm bảo nút không quá bé */
+                padding: 10px;
+                font-size: 16px;
+                border: none;
+                color: white;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+        </style>
         <script src="js/categories_custom.js"></script>
     </body>
 </html>

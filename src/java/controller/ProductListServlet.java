@@ -4,8 +4,7 @@
  */
 package controller;
 
-import entity.Product;
-import entity.ProductDetail;
+import entity.ProductResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,8 +12,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.DAOProducts;
-import model.DAOProductDetail;
+import java.util.Map;
+import model.ProductRepository;
+
 /**
  *
  * @author Administrator
@@ -59,10 +59,41 @@ public class ProductListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOProducts productDAO = new DAOProducts();
-        List<ProductDetail> productList = productDAO.getAllProductDetails(6);
-        request.setAttribute("productDetails", productList);
-        request.getRequestDispatcher("index.jsp").forward(request, response);    
+
+        ProductRepository productRepository = new ProductRepository();
+
+        // Extract filters from request
+        Map<String, String> filters = ProductRepository.extractFilters(request);
+
+        int page = 1; // Default page number
+        int pageSize = 10; // Default page size
+        String sortBy = "original-order"; // Default sort column
+        String sortOrder = "ASC"; // Default sort order
+
+        try {
+            if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            if (request.getParameter("pageSize") != null && !request.getParameter("pageSize").isEmpty()) {
+                pageSize = Integer.parseInt(request.getParameter("pageSize"));
+            }
+            if (request.getParameter("sortBy") != null && !request.getParameter("sortBy").isEmpty()) {
+                sortBy = request.getParameter("sortBy");
+            }
+            if (request.getParameter("sortOrder") != null && !request.getParameter("sortOrder").isEmpty()) {
+                sortOrder = request.getParameter("sortOrder");
+            }
+        } catch (NumberFormatException e) {
+            // Handle invalid number format gracefully
+            page = 1;
+            pageSize = 10;
+        }
+
+        // Get product list from repository
+        List<ProductResponse> productList = productRepository.findAllProducts(page, pageSize, filters, sortBy, sortOrder);
+        // Set attributes and forward to JSP
+        request.setAttribute("products", productList);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     /**
