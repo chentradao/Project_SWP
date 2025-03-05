@@ -29,7 +29,10 @@
              for(Cart cart : vector){
                 subtotal += (cart.getPrice() * cart.getQuantity());
             }
-            int discount = (voucher.getDiscount() * subtotal)/100;
+            int discount = 0;
+            if(voucher != null){
+            discount = (voucher.getDiscount() * subtotal)/100;
+            }
             int total = subtotal - discount;
         %>
         <div class="super_container">
@@ -79,14 +82,16 @@
                                 <div class="billing">
                                     <div class="checkout_title">Chi Tiết Thanh Toán</div>
                                     <div class="checkout_form_container">
-                                        <form action="#" id="checkout_form">
+                                        
                                             <%if(acc != null){%>
+                                            <form name="checkoutForm" id="checkoutForm" action="checkout" method="post" onsubmit="return validateForm()">
+                                            <div id="errorMessage" style="color: red;"></div>
                                             <!--                                            <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                                                                             <input type="text" class="checkout_input checkout_input_50" placeholder="First Name" required="required">
                                                                                             <input type="text" class="checkout_input checkout_input_50" placeholder="Last Name" required="required">
                                                                                         </div>-->
-                                            <input type="text" class="checkout_input" placeholder="Họ Tên" required="required"  name="CustomerName" value="<%=acc.getUserName()%>">
-                                            <input type="text" class="checkout_input" placeholder="E-mail" required="required" name="Email" value="<%=acc.getEmail()%>">
+                                            <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" required="required"  name="CustomerName" value="<%=acc.getUserName()%>">
+                                            <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" required="required" name="Email" value="<%=acc.getEmail()%>">
                                             <select name="city" id="city" onchange='getProvinces(event)' class="country_select checkout_input">
                                                 <option >Tỉnh / Thành phố</option>
                                             </select>
@@ -98,29 +103,20 @@
                                                     <option >Phường / Xã</option>
                                                 </select>
                                             </div>
-                                            <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="address">
-                                            <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="Phone" value="<%=acc.getPhone()%>">
+                                            <input type="text" class="checkout_input" id="address" placeholder="Địa Chỉ" required="required" name="address">
+                                            <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại" required="required" name="Phone" value="<%=acc.getPhone()%>">
                                             <!--                                            <input type="text" class="checkout_input" placeholder="Town" required="required">
                                                                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                                                                             <input type="text" class="checkout_input checkout_input_50" placeholder="Zipcode" required="required">
                                                                                             <input type="text" class="checkout_input checkout_input_50" placeholder="Phone No" required="required">
                                                                                         </div>-->
-                                            <textarea name="checkout_comment" id="checkout_comment" class="checkout_comment" placeholder="Leave a comment about your order"></textarea>
-                                            <div class="billing_options">
-                                                <div class="billing_account">
-                                                    <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox checkbox_account">
-                                                    <label for="checkbox_account"><img src="images/checked.png" alt=""></label>
-                                                    <span>Create an account</span>
-                                                </div>
-                                                <div class="billing_shipping">
-                                                    <input type="checkbox" id="checkbox_shipping" name="regular_checkbox" class="regular_checkbox checkbox_shipping">
-                                                    <label for="checkbox_shipping"><img src="images/checked.png" alt=""></label>
-                                                    <span>Ship to a different address</span>
-                                                </div>
-                                            </div>
+                                            <textarea name="checkout_comment" id="note" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
+                                            </form>
                                             <%}else{%>
-                                            <input type="text" class="checkout_input" placeholder="Họ Tên" name="CustomerName">
-                                            <input type="text" class="checkout_input" placeholder="E-mail" required="required" name="Email">
+                                            <form name="checkoutForm" id="checkoutForm" action="checkout" method="post" onsubmit="return validateForm()">
+                                            <div id="errorMessage" style="color: red;"></div>
+                                            <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" name="CustomerName">
+                                            <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" required="required" name="Email">
                                             <select name="city" id="city" class="country_select checkout_input">
                                                 <option value="">Tỉnh / Thành phố</option>
                                             </select>
@@ -133,23 +129,24 @@
                                                 </select>
                                             </div>
                                             <input type="text" class="checkout_input" placeholder="Địa Chỉ" required="required" name="address">
-                                            <input type="text" class="checkout_input" placeholder="Số Điện Thoại" required="required" name="Phone">
+                                            <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại" required="required" name="Phone">
 
-                                            <textarea name="checkout_comment" id="checkout_comment" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
-<!--                                            <div class="billing_options">
-                                                <div class="billing_account">
-                                                    <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox checkbox_account">
-                                                    <label for="checkbox_account"><img src="images/checked.png" alt=""></label>
-                                                    <span>Create an account</span>
-                                                </div>
-                                                <div class="billing_shipping">
-                                                    <input type="checkbox" id="checkbox_shipping" name="regular_checkbox" class="regular_checkbox checkbox_shipping">
-                                                    <label for="checkbox_shipping"><img src="images/checked.png" alt=""></label>
-                                                    <span>Ship to a different address</span>
-                                                </div>
-                                            </div>-->
+                                            <textarea name="checkout_comment" id="note" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
+                                            <!--                                            <div class="billing_options">
+                                                                                            <div class="billing_account">
+                                                                                                <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox checkbox_account">
+                                                                                                <label for="checkbox_account"><img src="images/checked.png" alt=""></label>
+                                                                                                <span>Create an account</span>
+                                                                                            </div>
+                                                                                            <div class="billing_shipping">
+                                                                                                <input type="checkbox" id="checkbox_shipping" name="regular_checkbox" class="regular_checkbox checkbox_shipping">
+                                                                                                <label for="checkbox_shipping"><img src="images/checked.png" alt=""></label>
+                                                                                                <span>Ship to a different address</span>
+                                                                                            </div>
+                                                                                        </div>-->
+                                            </form>
                                             <%}%>
-                                        </form>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -157,12 +154,12 @@
                             <!-- Cart Details -->
                             <div class="col-lg-6">
                                 <div class="cart_details">
-                                    <div class="checkout_title">cart total</div>
+                                    <div class="checkout_title">Tổng Thanh Toán</div>
                                     <div class="cart_total">
                                         <ul>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                                <div class="cart_total_title">Product</div>
-                                                <div class="cart_total_price ml-auto">Total</div>
+                                                <div class="cart_total_title">Mục Thanh Toán</div>
+                                                <div class="cart_total_price ml-auto">Thành Tiền</div>
                                             </li>
                                             <!--                                            <li class="d-flex flex-row align-items-center justify-content-start">
                                                                                             <div class="cart_total_title">2 Piece Swimsuit x1</div>
@@ -191,11 +188,11 @@
                                     </div>
                                     <div class="payment_options">
                                         <div>
-                                            <input type="radio" id="cod" name="payment" value="cod" class="regular_radio" onclick="updatePaymentInfo('COD')" checked>
+                                            <input type="radio" id="COD" name="payment" value="COD" class="regular_radio" onclick="updatePaymentInfo('COD')" checked>
                                             <label for="radio_payment_1">Thanh toán khi nhận hàng</label>
                                         </div>
                                         <div>
-                                            <input type="radio" id="vnpay" name="payment" value="vnpay" class="regular_radio" onclick="updatePaymentInfo('VNPAY')">
+                                            <input type="radio" id="VNPAY" name="payment" value="VNPAY" class="regular_radio" onclick="updatePaymentInfo('VNPAY')">
                                             <label for="radio_payment_2">VNPAY</label>
                                             <div class="visa payment_option"><a href="#"><img src="images/visa.jpg" alt=""></a></div>
                                             <div class="master payment_option"><a href="#"><img src="images/master.jpg" alt=""></a></div>
@@ -233,6 +230,7 @@
                                 console.log(shippingFee);
                                 console.log(total);
                                 console.log(city + " " + district + " " + ward);
+                                console.log(response.requestUrl);
                                 document.getElementById("shippingFee1").value = shippingFee;
                                 document.getElementById("totalPrice").innerText = totalPrice + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;
@@ -248,6 +246,68 @@
                 document.getElementById("district").addEventListener("change", updateShippingFee);
                 document.getElementById("ward").addEventListener("change", updateShippingFee);
             });
+        </script>
+        <script>
+            function validateForm() {
+                var errorMessage = document.getElementById("errorMessage");
+                var name = document.getElementById("name").value.trim();
+                var address = document.getElementById("address").value.trim();
+                var email = document.getElementById("email").value.trim();
+                var phone = document.getElementById("phone").value.trim();
+                var note = document.getElementById("note").value.trim();
+                var namePattern = /^[a-zA-Z\s]+$/;
+                var emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+                var phonePattern = /^(0[35789][0-9]{8}|\+84[35789][0-9]{8})$/;
+
+                // Reset error message
+                errorMessage.textContent = "";
+
+                if (name === "") {
+                    errorMessage.textContent = "Vui lòng nhập họ và tên.";
+                    return false;
+                } else if (!namePattern.test(name)) {
+                    errorMessage.textContent = "Họ và tên chỉ được chứa chữ cái.";
+                    return false;
+                } else if (name.length > 50) {
+                    errorMessage.textContent = "Họ và tên phải có độ dài dưới 50 kí tự.";
+                    return false;
+                }
+
+                if (email === "") {
+                    errorMessage.textContent = "Vui lòng nhập email.";
+                    return false;
+                } else if (!emailPattern.test(email)) {
+                    errorMessage.textContent = "Vui lòng nhập đúng định dạng email.";
+                    return false;
+                } else if (email.length < 5 || email.length > 60) {
+                    errorMessage.textContent = "Email phải có độ dài từ 5 - 60 kí tự.";
+                    return false;
+                }
+
+                if (phone === "") {
+                    errorMessage.textContent = "Vui lòng nhập số điện thoại.";
+                    return false;
+                } else if (!phonePattern.test(phone)) {
+                    errorMessage.textContent = "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam (10 số hoặc +84).";
+                    return false;
+                }
+
+                if (address === "") {
+                    errorMessage.textContent = "Vui lòng nhập địa chỉ.";
+                    return false;
+                } else if (address.length > 100) {
+                    errorMessage.textContent = "Địa chỉ không được vượt quá 100 kí tự.";
+                    return false;
+                }
+
+                if (note.length > 150) {
+                    errorMessage.textContent = "Ghi chú không được vượt quá 150 kí tự.";
+                    return false;
+                }
+
+                return true;
+            }
+
         </script>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>

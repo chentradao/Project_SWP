@@ -45,18 +45,15 @@ public class ShippingFeeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-        HttpSession session = request.getSession(true);
         int total = Integer.parseInt(request.getParameter("total"));
         String city = request.getParameter("city");
         String district = request.getParameter("district");
-        String ward = request.getParameter("ward");
-        response.getWriter().print(city + " " + district + " " + ward);
-        
+    String ward = request.getParameter("ward");
          Vector<Cart> vector = new Vector<>();
-                Enumeration enu = session.getAttributeNames();
+                Enumeration enu = request.getSession().getAttributeNames();
                 while (enu.hasMoreElements()){
                     String key = (String) enu.nextElement();
-                    Object obj = session.getAttribute(key);
+                    Object obj = request.getSession().getAttribute(key);
                     if(obj instanceof Cart){
                         Cart cart = (Cart) obj;
                         vector.add(cart);
@@ -69,7 +66,6 @@ public class ShippingFeeController extends HttpServlet {
         int weight = totalQuantity * 500;
         
         double shippingFee = getShippingFee(city, district, ward, weight, total);
-        
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -138,5 +134,5 @@ public class ShippingFeeController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
+

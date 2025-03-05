@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
@@ -43,31 +44,49 @@ public class OrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
         Accounts acc = (Accounts) session.getAttribute("acc");
+        Voucher voucher = (Voucher) session.getAttribute("voucher");
         DAOOrder dao = new DAOOrder();
         DAOVoucher d = new DAOVoucher();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
-            if(service.equals("deleteOrder")){
+
+            if (service.equals("deleteOrder")) {
                 dao.deleteOrder(Integer.parseInt(request.getParameter("oid")));
                 response.sendRedirect(request.getHeader("Referer"));
             }
-            if(service.equals("orderHistory")){
-                if(acc!=null){
-                 Vector<Order> vector = dao.getOrders("select * from Orders where CustomerID =" + acc.getAccountID());
-                 request.setAttribute("vector", vector);
-                 request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
-                }else{
+
+            if (service.equals("orderHistory")) {
+                if (acc != null) {
+                    Vector<Order> vector = dao.getOrders("select * from Orders where CustomerID =" + acc.getAccountID());
+                    request.setAttribute("vector", vector);
+                    request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
+                } else {
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 }
             }
+
+            if (service.equals("orderFilter")) {
+                String status = request.getParameter("status");
+                String startDate = request.getParameter("start");
+                String endDate = request.getParameter("end");
+                String payment = request.getParameter("payment");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate now = LocalDate.now();
+                if (endDate == null) {
+                endDate = now.format(formatter);
+            }
+            if (startDate == null) {
+                startDate = "2025-01-01";
+            }
+                Vector<Order> vector = dao.getOrders("SELECT * \n"
+                        + "FROM Orders\n"
+                        + "WHERE OrderStatus like '%"+status+"%' and orderdate BETWEEN '"+startDate+"'and '"+endDate+"'  and PaymentMethod LIKE '%"+payment+"%' and CustomerID = "+acc.getAccountID());
+                request.setAttribute("vector", vector);
+                request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
+            }
+
             if (service.equals("checkout")) {
                 String submit = request.getParameter("submit");
-                String vid = request.getParameter("vid");
-                int VoucherID = 1;
-                if (vid != null && !vid.isEmpty()) {
-                    VoucherID = Integer.parseInt(vid);
-                }
-                
                 if (submit == null) {
                     Vector<Cart> vector = new Vector<>();
                     Enumeration enu = session.getAttributeNames();
@@ -79,7 +98,6 @@ public class OrderController extends HttpServlet {
                             vector.add(cart);
                         }
                     }
-                    Voucher voucher = d.getVoucherByID(VoucherID);
                     request.setAttribute("voucher", voucher);
                     request.setAttribute("vectorCart", vector);
                     request.setAttribute("acc", acc);
@@ -88,6 +106,10 @@ public class OrderController extends HttpServlet {
                     Integer CustomerID = null;
                     if (acc != null) {
                         CustomerID = acc.getAccountID();
+                    }
+                    int VoucherID = 1;
+                    if (voucher != null) {
+                        VoucherID = voucher.getVoucherID();
                     }
                     String CustomerName = request.getParameter("CustomerName");
                     Date OrderDate = Date.valueOf(LocalDate.now());
@@ -134,7 +156,6 @@ public class OrderController extends HttpServlet {
                         session.setAttribute("Email", Email);
                         session.setAttribute("Phone", Phone);
                         session.setAttribute("ShipAddress", ShipAddress);
-                        session.setAttribute("VoucherID", VoucherID);
                         session.setAttribute("Note", Note);
                         response.sendRedirect("paymentvnpay");
                     }
@@ -149,7 +170,7 @@ public class OrderController extends HttpServlet {
     private void sendOrderConfirmationEmail(HttpSession session, String name, String address, String phone, String email, int shipping, int total, String note) {
         NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN")); // Sử dụng getNumberInstance thay vì getCurrencyInstance
         formatter.setGroupingUsed(true); // Bật tính năng nhóm số
-
+        Voucher voucher = (Voucher) session.getAttribute("voucher");
         String subject = "ESTÉE LAUDER - Xác nhận đơn hàng!";
         int shippingFee = shipping;
         String content = "<!DOCTYPE html>"
@@ -185,10 +206,10 @@ public class OrderController extends HttpServlet {
                 + "        <table style=\"border-collapse:collapse;width:100%;color:#333; margin-top: 50px\" border=\"1\">"
                 + "            <tbody>"
                 + "                <tr style=\"background-color:#ce0707;font-weight:bold;color:white\">"
-                + "                    <td style=\"padding:10px;width: 30%;\">Sản phẩm</td>"
-                + "                    <td style=\"padding:10px;width: 30%;\">Màu sắc | Size</td>"
-                + "                    <td style=\"padding:10px;width: 25%;\">Giá Tiền</td>"
-                + "                    <td style=\"padding:10px;width: 20%;\">Số lượng</td>"
+                + "                    <td style=\"padding:10px;width: 25%;\">Sản phẩm</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Màu sắc | Size</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Giá Tiền</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Số lượng</td>"
                 + "                    <td style=\"padding:10px;width: 25%;\">Thành tiền</td>"
                 + "                </tr>";
         Vector<Cart> vector = new Vector<>();
@@ -201,21 +222,31 @@ public class OrderController extends HttpServlet {
                 vector.add(cart);
             }
         }
+        int subtotal = 0;
         for (Cart cart : vector) {
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"
                     + "    <td style=\"padding:4px;\">" + cart.getColor() + "|" + cart.getSize() + "</td>"
-                    + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + cart.getPrice() + " VNĐ</td>"
+                    + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice()) + " VNĐ</td>"
                     + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + cart.getQuantity() + "</td>"
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
+            subtotal += cart.getPrice() * cart.getQuantity();
+        }
+        int discount = 0;
+        if (voucher != null) {
+            discount = (voucher.getDiscount() * subtotal) / 100;
         }
         content += "<tr>"
                 + "<tr>"
-                + "    <td colspan=\"3\" style=\"padding:4px;text-align:right\"> Phí vận chuyển </td>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Giảm giá  </td>"
+                + "    <td class=\"price\">" + formatter.format(discount) + " VNĐ</td>"
+                + "</tr>"
+                + "<tr>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Phí vận chuyển </td>"
                 + "    <td class=\"price\">" + formatter.format(shippingFee) + " VNĐ</td>"
                 + "</tr>"
-                + "    <td colspan=\"3\" style=\"padding:4px;text-align:right\"> Tổng thanh toán </td>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Tổng thanh toán </td>"
                 + "    <td class=\"price\">" + formatter.format(total) + " VNĐ</td>"
                 + "</tr>"
                 + "<tr>"
@@ -226,7 +257,7 @@ public class OrderController extends HttpServlet {
                 + "    </div>"
                 + "</body>"
                 + "</html>";
-
+        session.removeAttribute("voucher");
         try {
             EmailHandler.sendEmail(email, subject, content);
         } catch (AddressException ex) {

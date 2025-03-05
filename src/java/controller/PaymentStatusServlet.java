@@ -22,6 +22,7 @@ import javax.mail.internet.AddressException;
 import entity.Accounts;
 import entity.Cart;
 import entity.Order;
+import entity.Voucher;
 import model.EmailHandler;
 import java.util.Date;
 import java.util.Enumeration;
@@ -47,35 +48,38 @@ public class PaymentStatusServlet extends HttpServlet {
         String Email = (String) session.getAttribute("Email");
         String Phone = (String) session.getAttribute("Phone");
         String ShipAddress = (String) session.getAttribute("ShipAddress");
-        int VoucherID = (int) session.getAttribute("VoucherID");
+        Voucher voucher = (Voucher) session.getAttribute("voucher");
+        int VoucherID = 1;
+        if (voucher != null) {
+            VoucherID = voucher.getVoucherID();
+        }
         String Note = (String) session.getAttribute("Note");
         Accounts acc = (Accounts) session.getAttribute("acc");
         Integer CustomerID = null;
         if (acc != null) {
             CustomerID = acc.getAccountID();
         }
-            DAOOrder dao = new DAOOrder();
-            Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, null, Note, "VNPay", 1);
-                        int n = dao.insertOrder(o);
-                        if (n > 0) {
-                            // Insert các mục giỏ hàng vào OrderDetails
-                            Enumeration<String> enu = session.getAttributeNames();
-                            while (enu.hasMoreElements()) {
-                                String key = enu.nextElement();
-                                Object obj = session.getAttribute(key);
+        DAOOrder dao = new DAOOrder();
+        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, null, Note, "VNPay", 1);
+        int n = dao.insertOrder(o);
+        if (n > 0) {
+            // Insert các mục giỏ hàng vào OrderDetails
+            Enumeration<String> enu = session.getAttributeNames();
+            while (enu.hasMoreElements()) {
+                String key = enu.nextElement();
+                Object obj = session.getAttribute(key);
 
-                                if (obj instanceof Cart) {
-                                    Cart cart = (Cart) obj;
-                                    dao.addToOrder(cart);
-                                    session.removeAttribute(key);
-                                }
-                            }
-                        }
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            String subject = "ESTÉE LAUDER - Xác nhận đơn hàng";
+                if (obj instanceof Cart) {
+                    Cart cart = (Cart) obj;
+                    dao.addToOrder(cart);
+                }
+            }
+        }
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String subject = "ESTÉE LAUDER - Xác nhận đơn hàng";
 
-            // Build the HTML content for email
-            String content = "<!DOCTYPE html>"
+        // Build the HTML content for email
+        String content = "<!DOCTYPE html>"
                 + "<html>"
                 + "<head>"
                 + "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
@@ -102,43 +106,54 @@ public class PaymentStatusServlet extends HttpServlet {
                 + "                <td style=\"padding:10px;border-right:1px solid #ddd;\">Số điện thoại : " + Phone + "</td>"
                 + "            </tr>"
                 + "            <tr style=\"color:#ce0707\">"
-                + "                <td style=\"padding:10px;border-right:1px solid #ddd;\">Hình thức thanh toán : VNPay</td>"
+                + "                <td style=\"padding:10px;border-right:1px solid #ddd;\">Hình thức thanh toán : VNPAY</td>"
                 + "            </tr>"
                 + "        </table>"
                 + "        <table style=\"border-collapse:collapse;width:100%;color:#333; margin-top: 50px\" border=\"1\">"
                 + "            <tbody>"
                 + "                <tr style=\"background-color:#ce0707;font-weight:bold;color:white\">"
-                + "                    <td style=\"padding:10px;width: 30%;\">Sản phẩm</td>"
-                + "                    <td style=\"padding:10px;width: 30%;\">Màu sắc | Size</td>"
-                + "                    <td style=\"padding:10px;width: 25%;\">Giá Tiền</td>"
-                + "                    <td style=\"padding:10px;width: 20%;\">Số lượng</td>"
+                + "                    <td style=\"padding:10px;width: 25%;\">Sản phẩm</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Màu sắc | Size</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Giá Tiền</td>"
+                + "                    <td style=\"padding:10px;width: 15%;\">Số lượng</td>"
                 + "                    <td style=\"padding:10px;width: 25%;\">Thành tiền</td>"
                 + "                </tr>";
         Vector<Cart> vector = new Vector<>();
-                    Enumeration enu = session.getAttributeNames();
-                    while (enu.hasMoreElements()) {
-                        String key = (String) enu.nextElement();
-                        Object obj = session.getAttribute(key);
-                        if (obj instanceof Cart) {
-                            Cart cart = (Cart) obj;
-                            vector.add(cart);
-                        }
-                    }
+        Enumeration enu = session.getAttributeNames();
+        while (enu.hasMoreElements()) {
+            String key = (String) enu.nextElement();
+            Object obj = session.getAttribute(key);
+            if (obj instanceof Cart) {
+                Cart cart = (Cart) obj;
+                vector.add(cart);
+                session.removeAttribute(key);
+            }
+        }
+        int subtotal = 0;
         for (Cart cart : vector) {
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"
-                    + "    <td style=\"padding:4px;\">" + cart.getColor() +"|"+ cart.getSize() + "</td>"
-                    + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + cart.getPrice() + " VNĐ</td>"
+                    + "    <td style=\"padding:4px;\">" + cart.getColor() + "|" + cart.getSize() + "</td>"
+                    + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice()) + " VNĐ</td>"
                     + "    <td style=\"padding:4px;align-content: center;justify-content: center\">" + cart.getQuantity() + "</td>"
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
+            subtotal += cart.getPrice() * cart.getQuantity();
+        }
+        int discount =0;
+        if(voucher != null){
+            discount = (voucher.getDiscount() * subtotal) / 100;
         }
         content += "<tr>"
                 + "<tr>"
-                + "    <td colspan=\"3\" style=\"padding:4px;text-align:right\"> Phí vận chuyển </td>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Giảm giá  </td>"
+                + "    <td class=\"price\">" + formatter.format(discount) + " VNĐ</td>"
+                + "</tr>"
+                + "<tr>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Phí vận chuyển </td>"
                 + "    <td class=\"price\">" + formatter.format(ShippingFee) + " VNĐ</td>"
                 + "</tr>"
-                + "    <td colspan=\"3\" style=\"padding:4px;text-align:right\"> Tổng thanh toán </td>"
+                + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Tổng thanh toán </td>"
                 + "    <td class=\"price\">" + formatter.format(TotalCost) + " VNĐ</td>"
                 + "</tr>"
                 + "<tr>"
@@ -149,7 +164,7 @@ public class PaymentStatusServlet extends HttpServlet {
                 + "    </div>"
                 + "</body>"
                 + "</html>";
-
+        session.removeAttribute("voucher");
         try {
             EmailHandler.sendEmail(Email, subject, content);
         } catch (AddressException ex) {

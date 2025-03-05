@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.Vector,entity.Cart" %>
+<%@page import="java.util.Vector,entity.Cart,entity.Voucher" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,10 +18,13 @@
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     </head>
     <body>
         <%
                     Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
+                    Voucher voucher = (Voucher)request.getAttribute("voucher");
+                    String error = (String)request.getAttribute("error");
         %>
         <div class="super_container">
 
@@ -82,11 +85,11 @@
                             </div>
                         </div>
                         <%
-                            int grandTotal = 0;
+                            int subTotal = 0;
                         
                             for(Cart cart : vector){
                             int total = cart.getPrice() * cart.getQuantity();
-                            grandTotal += total;
+                            subTotal += total;
                         %>
                         <div class="row">
                             <div class="col">
@@ -94,7 +97,7 @@
                                     <ul>
                                         <li class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
                                             <!-- Product Image -->
-                                            <div class="cart_product_image" style="display: flex; justify-content: center; align-items: center; height: 150px; overflow: hidden; width: 90px">
+                                            <div class="cart_product_image" style="display: flex; justify-content: center; align-items: center; height: 140px; overflow: hidden; width: 110px">
                                                 <img src="<%= cart.getImage() != null ? cart.getImage() : "images/default-product.jpg" %>" alt=""style="object-fit: contain; width: auto; max-height: 150px;">
                                             </div>
                                             <!-- Product Name -->
@@ -113,18 +116,14 @@
                                                     <div class="product_quantity_container">
                                                         <div class="product_quantity clearfix">
                                                             <input id="quantity_input" type="number" name="Quantity_<%=cart.getID()%>"  value="<%=cart.getQuantity()%>">
-                                                            <div class="quantity_buttons">
-                                                                <div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
-                                                                <div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                     <!-- Products Total Price -->
                                                     <div class="cart_product_total"><%=total%>₫</div>
                                                     <!-- Product Cart Trash Button -->
                                                     <div class="cart_product_button">
-                                                        <div class="cart_product_remove"><a href="CartURL?service=removeCart&id=<%=cart.getID()%>"><img src="images/trash.png" alt=""></a></div>
-<!--                                                                                    <button class="cart_product_remove" onclick="window.location.href='CartURL?service=removeCart&id=<%=cart.getID()%>'"><img src="images/trash.png" alt=""></button>-->
+                                                        <button type="button" class="cart_product_remove" title="Xóa sản phẩm" onclick="window.location.href='CartURL?service=removeCart&id=<%=cart.getID()%>'"><img src="images/trash.png" alt=""></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,7 +132,23 @@
                                 </div>
                             </div>
                         </div>
-                        <%}%>
+                        <%
+                            }
+                                if(subTotal == 0){
+                                    session.removeAttribute("voucher");
+                        %>
+
+                        <div class="py-12 flex flex-col items-center justify-center text-center">
+                            <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                                <img src="P_images/cart.png" width="300px" height="250px" alt="Không tìm thấy ảnh"/>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Không có sản phẩm nào được tìm thấy</h3>
+                            <p class="text-gray-500 max-w-md">Bạn chưa thêm bất kỳ sản phẩm nào vào giỏ hàng. Hãy đặt đơn ngay hôm nay để nhận ưu đãi đặc biệt!</p>
+                            <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                                <i class="fas fa-plus mr-1"></i> Thêm sản phẩm vào giỏ hàng
+                            </a>
+                        </div>
+                        <%}else{%>
                         <div class="row">
                             <div class="col">
                                 <div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
@@ -166,19 +181,29 @@
                             });
                         </script> 
                         </form>
-
                         <div class="row cart_extra">
                             <!-- Cart Coupon -->
                             <div class="col-lg-6">
                                 <div class="cart_coupon">
                                     <div class="cart_title">Mã Giảm Giá</div>
-                                    <form action="#" class="cart_coupon_form d-flex flex-row align-items-start justify-content-start" id="cart_coupon_form">
-                                        <input type="text" class="cart_coupon_input" placeholder="Mã Giảm Giá" required="required">
-                                        <button class="button_clear cart_button_2">Áp Dụng</button>
+                                    <form action="CartURL" class="cart_coupon_form d-flex flex-row align-items-start justify-content-start" id="cart_coupon_form" method="post">
+                                        <input type="hidden" name="service" value="addVoucher">
+                                        <input type="number" name="VoucherID" class="cart_coupon_input" placeholder="Mã Giảm Giá" required="required">
+                                        <button type="submit" class="button_clear cart_button_2">Áp Dụng</button>
                                     </form>
+                                    <%if(error != null){%>
+                                        <div class="error-message" style="color: red;"><%=error%></div>
+                                        <%session.removeAttribute("error");
+                                            }%>
                                 </div>
                             </div>
-
+                            <%
+                                int discount = 0;
+                                if(voucher != null){
+                                        discount = (voucher.getDiscount() * subTotal)/100;
+                                }
+                                int total = subTotal - discount;
+                            %>
                             <!-- Cart Total -->
                             <div class="col-lg-5 offset-lg-1">
                                 <div class="cart_total">
@@ -186,21 +211,22 @@
                                     <ul>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Tổng Tiền Hàng</div>
-                                            <div class="cart_total_price ml-auto"><%=grandTotal%>₫</div>
+                                            <div class="cart_total_price ml-auto"><%=subTotal%>₫</div>
                                         </li>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Giảm Giá</div>
-                                            <div class="cart_total_price ml-auto">$5.00₫</div>
+                                            <div class="cart_total_price ml-auto"><%=discount%>₫</div>
                                         </li>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Tổng Thanh Toán</div>
-                                            <div class="cart_total_price ml-auto"><%=grandTotal%>₫</div>
+                                            <div class="cart_total_price ml-auto"><%=total%>₫</div>
                                         </li>
                                     </ul>
-                                        <button type="button" class="cart_total_button" onclick="window.location.href = 'OrderURL?service=checkout'">Mua Hàng</button>
+                                    <button type="button" class="cart_total_button" onclick="window.location.href = 'OrderURL?service=checkout'">Mua Hàng</button>
                                 </div>
                             </div>
                         </div>
+                        <%}%>
                     </div>
                 </div>
                 <!-- Footer -->

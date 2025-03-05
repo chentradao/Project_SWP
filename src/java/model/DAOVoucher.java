@@ -69,4 +69,13 @@ public class DAOVoucher extends DBConnection {
         }
         return vector;
     }
+    public static void main(String[] args) {
+        DAOVoucher dao = new DAOVoucher();
+        Voucher voucher = dao.getVoucherByID(2);
+        if(voucher == null){
+            System.out.println("null");
+        }else{
+            System.out.println(voucher.getDiscount());
+        }
+    }
 }
