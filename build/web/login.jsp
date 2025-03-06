@@ -59,11 +59,11 @@
 
                     <div class="button-container">
                         <button type="submit">Đăng nhập</button>
-                        <!--<button class="google-login"><a href="https:/accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http:/localhost:9999/ProjectSWP/login&response_type=code&client_id=544358352643-kqs8iv9ej4s52ni1vg8qhmfg18mghfl2.apps.googleusercontent.com&approval_prompt=force">LOGIN with Google</a></button>-->
+                        <button class="google-login"><a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/ProjectSWP/login&response_type=code&client_id=544358352643-kqs8iv9ej4s52ni1vg8qhmfg18mghfl2.apps.googleusercontent.com&approval_prompt=force">Đăng nhập với Google</a></button>
                     </div>
 
                     <div class="text-center" style="margin-top: 15px;">
-                        Don't have an account? <a href="signup.jsp" class="link-to-help">Sign up</a>
+                        Chưa có tài khoản? <a href="signup.jsp" class="link-to-help">Đăng kí</a>
                     </div>
                 </form>
             </div>

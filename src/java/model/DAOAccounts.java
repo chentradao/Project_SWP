@@ -56,7 +56,6 @@ public class DAOAccounts extends DBConnection {
                             rs.getString("Phone"),
                             rs.getString("Email"),
                             rs.getString("Address"),
-                            rs.getString("City"),
                             rs.getString("Role"),
                             rs.getString("Image"),
                             rs.getString("GoogleID"),
@@ -85,14 +84,13 @@ public class DAOAccounts extends DBConnection {
                 String Phone = rs.getString("Phone");
                 String Email = rs.getString("Email");
                 String Address = rs.getString("Address");
-                String City = rs.getString("City");
                 String Role = rs.getString("Role");
                 String Image = rs.getString("Image");
                 String GoogleID = rs.getString("GoogleID");
                 Date CreateDate = rs.getDate("CreateDate");
                 int AccountStatus = rs.getInt("AccountStatus");
                 // Tạo đối tượng Accounts với dữ liệu đúng
-                Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender, Phone, Email, Address, City, Role, Image, GoogleID, CreateDate, AccountStatus);
+                Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender, Phone, Email, Address, Role, Image, GoogleID, CreateDate, AccountStatus);
                 vector.add(acc);
             }
         } catch (SQLException ex) {
@@ -116,7 +114,35 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
+                        rs.getString("Role"),
+                        rs.getString("Image"),
+                        rs.getString("GoogleID"),
+                        rs.getDate("CreateDate"),
+                        rs.getInt("AccountStatus"));
+                return acc;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error cannot get account");
+            return null;
+        }
+        return null;
+    }
+
+    public Accounts getAccountByAccountID(String AccountID) {
+        String sql = "Select * from Accounts where AccountID =?";
+        try {
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, AccountID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Accounts acc = new Accounts(rs.getInt("AccountID"),
+                        rs.getString("UserName"),
+                        rs.getString("Password"),
+                        rs.getString("FullName"),
+                        rs.getString("Gender"),
+                        rs.getString("Phone"),
+                        rs.getString("Email"),
+                        rs.getString("Address"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),
@@ -146,7 +172,6 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),
@@ -160,8 +185,7 @@ public class DAOAccounts extends DBConnection {
         }
         return null;
     }
-    
-    
+
     public Accounts getAccountByPhone(String Phone) {
         String sql = "Select * from Accounts where Phone =?";
         try {
@@ -177,7 +201,6 @@ public class DAOAccounts extends DBConnection {
                         rs.getString("Phone"),
                         rs.getString("Email"),
                         rs.getString("Address"),
-                        rs.getString("City"),
                         rs.getString("Role"),
                         rs.getString("Image"),
                         rs.getString("GoogleID"),
@@ -192,8 +215,34 @@ public class DAOAccounts extends DBConnection {
         return null;
     }
 
+    public void updateAccounts(String AccountID, String FullName, String Gender, String Phone, String Email, String Address, String Image) {
+        String sql = "UPDATE Accounts SET FullName = ?, Gender = ?, Phone = ?, Email = ?,Address = ?, Image = ? WHERE AccountID = ?";
+
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, FullName);
+            st.setString(2, Gender);
+            st.setString(3, Phone);
+            st.setString(4, Email);
+            st.setString(5, Address);
+            st.setString(6, Image);
+            st.setString(7, AccountID);
+
+            int rowsAffected = st.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected); // Thêm dòng này để kiểm tra
+            if (rowsAffected > 0) {
+                System.out.println("Cập nhật thông tin người dùng thành công.");
+            } else {
+                System.out.println("Không tìm thấy người dùng với ID đã cho.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         DAOAccounts acc = new DAOAccounts();
-        acc.createAccount("minhday", "30122004", "NguyenQuangMinh", "0987654333", "hihi1@gmail.com", "customer", 1);
+        //acc.createAccount("admin", "20042004", "Adminnnnn", "0999999999", "esteelauder046@gmail.com", "admin", 1);
+        //acc.updateAccounts("1", "Minh", "M", "0987567567", "minhnq@gmail.com", "HaDong", "HaNoi", "");
+        acc.createAccount("staff", "20042004", "Staff", "0999999998", "chiendmhe186520@fpt.edu.vn", "staff", 1);
     }
 }
