@@ -16,4 +16,8 @@ public class ProductService {
         int totalPages = (int) Math.ceil((double) total / pageSize);
         return new PaginatedResponse<>(products, page, pageSize, total, totalPages);
     }
+
+    public List<String> getAvailableSizes() {
+        return productRepository.findAvailableSizesByCategory();
+    }
 }

@@ -24,38 +24,41 @@ public class DAOProductDetail extends DBConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DAOProducts.class.getName());
 
-    public ProductDetail getProductDetailById(int productId) {
-        String sql = "select p.ProductID, p.ProductName, p.CategoryID, p.Quantity, p.SoldQuantity,\n"
-                + "p.Date, p.Description, p.ProductStatus, p.ProductImage, pd.ID, \n"
-                + "pd.Size, pd.Color, pd.Price,pd.Image\n"
-                + "from Products p join ProductDetail pd on p.ProductID = pd.ProductID";
-        try ( PreparedStatement st = conn.prepareStatement(sql)) {
-            st.setInt(1, productId);
-            try ( ResultSet rs = st.executeQuery()) {
-                if (rs.next()) {
-                    return new ProductDetail(
-                            rs.getInt("ProductID"),
-                            rs.getString("ProductName"),
-                            rs.getInt("CategoryID"),
-                            rs.getInt("Quantity"),
-                            rs.getInt("SoldQuantity"),
-                            rs.getDate("Date"),
-                            rs.getString("Description"),
-                            rs.getString("ProductStatus"),
-                            rs.getString("ProductImage"),
-                            rs.getInt("ID"),
-                            rs.getString("Size"),
-                            rs.getString("Color"),
-                            rs.getInt("Price"),
-                            rs.getString("Image")
-                    );
-                }
+public ProductDetail getProductDetailById(int productId) {
+    String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, pd.Quantity, pd.SoldQuantity, "
+            + "p.Date, p.Description, p.ProductStatus, "
+            + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image "
+            + "FROM Products p "
+            + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID "
+            + "WHERE p.ProductID = ?";
+    try (PreparedStatement st = conn.prepareStatement(sql)) {
+        st.setInt(1, productId);
+        try (ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+                return new ProductDetail(
+                        rs.getInt("ProductID"),
+                        rs.getString("ProductName"),
+                        rs.getInt("CategoryID"),
+                        rs.getInt("Quantity"),
+                        rs.getInt("SoldQuantity"),
+                        rs.getDate("Date"),
+                        rs.getString("Description"),
+                        rs.getString("ProductStatus"),
+                        rs.getString("Image"),
+                        rs.getInt("ID"),
+                        rs.getString("Size"),
+                        rs.getString("Color"),
+                        rs.getInt("Price"),
+                        rs.getString("Image")
+                );
             }
-        } catch (SQLException e) {
-            Logger.getLogger(DAOProducts.class.getName()).log(Level.SEVERE, "Error fetching product with ID: " + productId, e);
         }
-        return null;
+    } catch (SQLException e) {
+        Logger.getLogger(DAOProducts.class.getName())
+              .log(Level.SEVERE, "Error fetching product with ID: " + productId, e);
     }
+    return null;
+}
 
     public List<ProductDetail> getAllProducts(int limit) {
         List<ProductDetail> productList = new ArrayList<>();

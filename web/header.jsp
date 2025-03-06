@@ -23,12 +23,6 @@
             </ul>
         </nav>
         <div class="header_content ml-auto">
-            <div class="search header_search">
-                <form action="#">
-                    <input type="search" class="search_input" required="required">
-                    <button type="submit" id="search_button" class="search_button"><img src="images/magnifying-glass.svg" alt=""></button>
-                </form>
-            </div>
             <div class="shopping">
                 <!-- Cart -->
                 <a href="CartURL?service=showCart">
