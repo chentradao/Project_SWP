@@ -66,22 +66,22 @@
                                 </div>
                                 <!-- Price Filter -->
                                 <div class="sidebar_section">
-                                    <div class="sidebar_title">Giá¡</div>
+                                    <div class="sidebar_title">Giá</div>
                                     <div class="sidebar_section_content">
                                         <div class="filter_price">
-                                            <!-- Hai Ã´ nháº­p giÃ¡ trá» tá»i thiá»u vÃ  tá»i Äa -->
-                                            <input type="number" id="minPriceInput" placeholder="Giá Tối Thiểu">
-                                            <input type="number" id="maxPriceInput" placeholder="Giá Tối Đa">
+                                            <!-- Hai ô nhập giá trị tối thiểu và tối đa -->
+                                            <input type="number" id="minPriceInput" placeholder="Giá tối thiểu">
+                                            <input type="number" id="maxPriceInput" placeholder="Giá tối đa">
                                             <br/><br/>
                                             <div class="price-buttons">
-                                                <button id="applyPriceBtn">Áp Dụng Giá</button>
-                                                <button id="clearPriceBtn">Xóa Giá</button>
+                                                <button id="applyPriceBtn">Áp dụng giá</button>
+                                                <button id="clearPriceBtn">Xóa giá</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="current_page">Woman's Fashion</div>
+                            <div class="current_page">Estee Lauder</div>
                         </div>
                         <div class="col-12">
                             <div class="product_sorting clearfix">
@@ -89,29 +89,19 @@
                                     <div class="view_box box_view"><i class="fa fa-th-large" aria-hidden="true"></i></div>
                                     <div class="view_box detail_view"><i class="fa fa-bars" aria-hidden="true"></i></div>
                                 </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row products_container">
-                        <div class="col">
-                            <!-- Include the list of products -->
-                            <%@ include file="listProduct.jsp" %>
-                        </div>
-                    </div>
-                    <div class="sorting">
+                                <div class="sorting">
                         <ul class="item_sorting">
                             <li>
-                                            <span class="sorting_text">Sắp Xếp</span>
+                                            <span class="sorting_text">Sắp xếp </span>
                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
                                 <ul>
                                     <!-- Updated sorting options -->
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>Giá</span></li>
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>Size</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>giá(tăng dần)</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>kích cỡ(tăng dần)</span></li>
                                 </ul>
                             </li>
                             <li>
-                                            <span class="sorting_text">Hiển Thị</span>
+                                            <span class="sorting_text">Hiển thị</span>
                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
                                 <ul>
                                     <li class="num_sorting_btn"><span>3</span></li>
@@ -121,6 +111,16 @@
                             </li>
                         </ul>
                     </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row products_container">
+                        <div class="col">
+                            <!-- Include the list of products -->
+                            <%@ include file="listProduct.jsp" %>
+                        </div>
+                    </div>
+                    
                     <%
                         // Generate pagination links based on total pages
                         int totalPages = productResponse.getTotalPages();
@@ -350,13 +350,13 @@
 
             .price-buttons {
                 display: flex;
-                gap: 10px; /* Khoáº£ng cÃ¡ch giá»¯a cÃ¡c nÃºt */
+                gap: 10px; /* Khoảng cách giữa các nút */
                 flex-wrap: wrap;
             }
 
             .price-buttons button {
-                flex: 1; /* Chia Äá»u chiá»u rá»ng */
-                min-width: 120px; /* Äáº£m báº£o nÃºt khÃ´ng quÃ¡ bÃ© */
+                flex: 1; /* Chia đều chiều rộng */
+                min-width: 120px; /* Đảm bảo nút không quá bé */
                 padding: 10px;
                 font-size: 16px;
                 border: none;

@@ -19,7 +19,7 @@ import model.ProductRepository;
  *
  * @author Administrator
  */
-public class ProductListServlet extends HttpServlet {
+public class ProductListServlet_1 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

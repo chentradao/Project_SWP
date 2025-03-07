@@ -4,7 +4,7 @@
  */
 package controller;
 
-import entity.ProductResponse;
+import entity.ProductDetail;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,14 +12,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
-import model.ProductRepository;
+import model.DAOProductDetail;
 
 /**
  *
  * @author Administrator
  */
-public class ProductListServlet extends HttpServlet {
+public class ProductDetailListServlet_1 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +37,10 @@ public class ProductListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductListServlet</title>");
+            out.println("<title>Servlet ProductDetailListServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProductListServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductDetailListServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,41 +58,10 @@ public class ProductListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        ProductRepository productRepository = new ProductRepository();
-
-        // Extract filters from request
-        Map<String, String> filters = ProductRepository.extractFilters(request);
-
-        int page = 1; // Default page number
-        int pageSize = 10; // Default page size
-        String sortBy = "original-order"; // Default sort column
-        String sortOrder = "ASC"; // Default sort order
-
-        try {
-            if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            if (request.getParameter("pageSize") != null && !request.getParameter("pageSize").isEmpty()) {
-                pageSize = Integer.parseInt(request.getParameter("pageSize"));
-            }
-            if (request.getParameter("sortBy") != null && !request.getParameter("sortBy").isEmpty()) {
-                sortBy = request.getParameter("sortBy");
-            }
-            if (request.getParameter("sortOrder") != null && !request.getParameter("sortOrder").isEmpty()) {
-                sortOrder = request.getParameter("sortOrder");
-            }
-        } catch (NumberFormatException e) {
-            // Handle invalid number format gracefully
-            page = 1;
-            pageSize = 10;
-        }
-
-        // Get product list from repository
-        List<ProductResponse> productList = productRepository.findAllProducts(page, pageSize, filters, sortBy, sortOrder);
-        // Set attributes and forward to JSP
-        request.setAttribute("products", productList);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        DAOProductDetail dao = new DAOProductDetail();
+        List<ProductDetail> productList = dao.getAllProducts(6);
+        request.setAttribute("productdetail", productList);
+        request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }
 
     /**
@@ -107,7 +75,7 @@ public class ProductListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**

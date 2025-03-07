@@ -116,7 +116,10 @@
                     <img src="images/shopping-bag-white.svg" alt="">
                 </div>
             </a>
-            <div class="product_fav product_option">+</div>
+            
+            <!--<a href="addToWishlist?productId=<%=product.getId()%>">-->
+                <div class="product_fav product_option">+</div>
+            <!--</a>-->
         </div>
     </div>
     <% } %>
