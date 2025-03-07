@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <!-- Servlet Definitions -->
     <servlet>
         <servlet-name>AddToWishlistServlet</servlet-name>
         <servlet-class>controller.AddToWishlistServlet</servlet-class>
@@ -13,7 +17,7 @@
         <servlet-class>controller.GetWishlistByAccountIDServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ProductDetail</servlet-name>
+        <servlet-name>ProductDetailController</servlet-name>
         <servlet-class>controller.ProductDetailController</servlet-class>
     </servlet>
     <servlet>
@@ -28,6 +32,28 @@
         <servlet-name>VoucherServlet</servlet-name>
         <servlet-class>controller.VoucherServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageSliderController</servlet-name>
+        <servlet-class>controller.ManageSliderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserFeedbackController</servlet-name>
+        <servlet-class>controller.UserFeedbackController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FeedbackManagementController</servlet-name>
+        <servlet-class>controller.FeedbackManagementController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReplyFeedbackController</servlet-name>
+        <servlet-class>controller.ReplyFeedbackController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FeedbackDisplayController</servlet-name>
+        <servlet-class>controller.FeedbackDisplayController</servlet-class>
+    </servlet>
+
+    <!-- Servlet Mappings -->
     <servlet-mapping>
         <servlet-name>AddToWishlistServlet</servlet-name>
         <url-pattern>/addToWishlist</url-pattern>
@@ -49,11 +75,32 @@
         <url-pattern>/productdetailURL</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ProductDetail</servlet-name>
+        <servlet-name>ProductDetailController</servlet-name>
         <url-pattern>/ProductDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageSliderController</servlet-name>
+        <url-pattern>/slider</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserFeedbackController</servlet-name>
+        <url-pattern>/submitFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FeedbackManagementController</servlet-name>
+        <url-pattern>/feedbacks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReplyFeedbackController</servlet-name>
+        <url-pattern>/ReplyFeedbackController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FeedbackDisplayController</servlet-name>
+        <url-pattern>/FeedbackDisplayController</url-pattern>
+    </servlet-mapping>
+
 </web-app>

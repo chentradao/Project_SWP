@@ -44,52 +44,22 @@
                     <div class="owl-carousel owl-theme home_slider">
 
                         <!-- Home Slider Item -->
-                        <div class="owl-item">
-                            <a href="product.html">
-                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                                <div class="home_slider_content">
-                                    <div class="home_slider_content_inner">
-                                        <div class="home_slider_subtitle">Promo Prices</div>
-                                        <div class="home_slider_title">New Collection</div>
-                                    </div>	
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Home Slider Item -->
-                        <div class="owl-item">
-                            <a href="product.html">
-                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                                <div class="home_slider_content">
-                                    <div class="home_slider_content_inner">
-                                        <div class="home_slider_subtitle">Promo Prices</div>
-                                        <div class="home_slider_title">New Collection</div>
-                                    </div>	
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Home Slider Item -->
-                        <div class="owl-item">
-                            <a href="product.html">
-                                <div class="home_slider_background" style="background-image:url(images/home_slider_1.jpg)"></div>
-                                <div class="home_slider_content">
-                                    <div class="home_slider_content_inner">
-                                        <div class="home_slider_subtitle">Promo Prices</div>
-                                        <div class="home_slider_title">New Collection</div>
-                                    </div>	
-                                </div>
-                            </a>
-                        </div>
-
+                        <c:forEach var="s" items="${slider}">
+                            <div class="owl-item">
+                                <a href="product.html">
+                                    <div class="home_slider_background" style="background-image:url('<c:out value='img/${s.imageURL}' />')"></div>
+                                    <div class="home_slider_content">
+                                        <div class="home_slider_content_inner">
+                                            <div class="home_slider_title"><c:out value="${s.sliderTitle}"/></div>
+                                        </div>  
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
                     </div>
-
                     <!-- Home Slider Nav -->
-
                     <div class="home_slider_next d-flex flex-column align-items-center justify-content-center"><img src="images/arrow_r.png" alt=""></div>
-
                     <!-- Home Slider Dots -->
-
                     <div class="home_slider_dots_container">
                         <div class="container">
                             <div class="row">
@@ -99,6 +69,7 @@
                                             <li class="home_slider_custom_dot active">01.<div></div></li>
                                             <li class="home_slider_custom_dot">02.<div></div></li>
                                             <li class="home_slider_custom_dot">03.<div></div></li>
+                                            <li class="home_slider_custom_dot">04.<div></div></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -107,9 +78,7 @@
                     </div>
                 </div>
             </div>
-
             <!-- Promo -->
-
             <div class="promo">
                 <div class="container">
                     <div class="row">
@@ -135,7 +104,6 @@
                                 <div class="promo_link"><a href="#">Shop Now</a></div>
                             </div>
                         </div>
-
                         <!-- Promo Item -->
                         <div class="col-lg-4 promo_col">
                             <div class="promo_item">

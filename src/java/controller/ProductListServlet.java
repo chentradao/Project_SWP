@@ -4,7 +4,10 @@
  */
 package controller;
 
+import entity.Product;
+import entity.ProductDetail;
 import entity.ProductResponse;
+import entity.Slider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import model.DAOProducts;
+import model.DAOProductDetail;
+import model.DAOSlider;
 import model.ProductRepository;
 
 /**
@@ -56,7 +62,7 @@ public class ProductListServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+      @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -91,7 +97,9 @@ public class ProductListServlet extends HttpServlet {
 
         // Get product list from repository
         List<ProductResponse> productList = productRepository.findAllProducts(page, pageSize, filters, sortBy, sortOrder);
-        // Set attributes and forward to JSP
+        DAOSlider dAOSlider = new DAOSlider();
+        List<Slider> slider = dAOSlider.getAllSliders();
+        request.setAttribute("slider", slider);
         request.setAttribute("products", productList);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

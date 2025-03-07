@@ -26,7 +26,7 @@ public class OrderManagementServlet extends HttpServlet {
             String action = request.getParameter("action");
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             if ("confirm".equals(action)) {
-                dao.updateStatus(orderId, 1); // 1 = Đã hoàn thành
+                dao.updateStatus(orderId, 3); // 1 = Đang giao
             } else if ("cancel".equals(action)) {
                 dao.updateStatus(orderId, 4); // 4 = Đã hủy
             }

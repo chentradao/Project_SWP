@@ -348,9 +348,8 @@
                                     <div class="breadcrumbs">
                                         <ul>
                                             <li><a href="ProductListServlet">Home</a></li>
-                                            <li>${productDetail.productName}</li>
+                                            <li>Product detail</li>
                                         </ul>
-
                                     </div>
                                 </div>
                             </div>
@@ -367,9 +366,9 @@
                         <div class="col">
                             <div class="current_page">
                                 <ul>
-                                    <li><a href="ProductListSevlet">Home</a></li>
-                                    <li><a href="listProduct.jsp">Danh sách sản phẩm</a></li>
-                                    <li>${productDetail.productName}</li>
+                                    <li><a href="categories.html">Woman's Fashion</a></li>
+                                    <li><a href="categories.html">Swimsuits</a></li>
+                                    <li>2 Piece Swimsuits</li>
                                 </ul>
                             </div>
                         </div>
@@ -414,28 +413,6 @@
                                 <div class="product_details">
                                     <p><strong>Size:</strong> ${productDetail.size}</p>
                                     <p><strong>Color:</strong> ${productDetail.color}</p>
-                                </div>
-                                <!-- Product Quantity -->
-                                <div class="product_quantity_container">
-                                    <span>Quantity</span>
-                                    <div class="product_quantity clearfix">
-                                        <input id="quantity_input" type="text" pattern="[0-9]*" value="1">
-                                        <div class="quantity_buttons">
-                                            <div id="quantity_inc_button" class="quantity_inc quantity_control">
-                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
-                                            </div>
-                                            <div id="quantity_dec_button" class="quantity_dec quantity_control">
-                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Link to add the product to cart -->
-                                <div class="button cart_button">
-                                    <a href="CartURL?service=add2cart&id=${productDetail.productId}">add to cart</a>
-                                </div>
-                                <div class="button cart_button">
-                                    <a href="FeedbackDisplayController?productId=${productDetail.productId}">View Feedback</a>
                                 </div>
                             </div>
                         </div>
@@ -587,9 +564,9 @@
                                                             <div class="review_name">
                                                                 <a href="#">${feedback.accountName}</a>
                                                             </div>
-                                                            <div class="review_date">
-                                                                <fmt:formatDate value="${feedback.date}" pattern="dd/MM/yyyy" />
-                                                            </div>
+                                                                <div class="review_date">
+                                                                    <fmt:formatDate value="${feedback.date}" pattern="dd/MM/yyyy" />
+                                                                </div>
                                                             <div class="rating review_rating" data-rating="${feedback.rateStar}">
                                                                 <c:forEach var="i" begin="1" end="5">
                                                                     <c:choose>
@@ -618,8 +595,7 @@
                                                                                 <i class="bi bi-person-check-fill me-1"></i>Admin
                                                                             </div>
                                                                             <small class="text-muted">
-                                                                                <i class="bi bi-clock me-1"></i>
-                                                                                <fmt:formatDate value="${feedback.feedbackReply.replyDate}" pattern="dd/MM/yyyy" />
+                                                                                <i class="bi bi-clock me-1"></i>${feedback.feedbackReply.replyDate}
                                                                             </small>
                                                                         </div>
                                                                         <div class="reply-content p-3 bg-white rounded shadow-sm border-start border-3 border-brown">
@@ -629,8 +605,7 @@
                                                                 </c:if>
 
                                                                 <c:if test="${empty feedback.feedbackReply}">
-                                                                    <c:if test="${currentUser != null}">
-
+                                                                    <c:if test="${currentUser != null and (currentUser.role eq 'Admin' or currentUser.role eq 'Staff')}">
                                                                         <div class="reply-form mt-3 ms-md-4 ms-2">
                                                                             <form action="ReplyFeedbackController" method="post">
                                                                                 <input type="hidden" name="feedbackID" value="${feedback.feedbackID}">
@@ -669,7 +644,7 @@
                         </div>
                     </div>
 
-                    <c:if test="${currentUser != null}">
+                    <c:if test="${currentUser != null && currentUser.role == 'Customer'}">
 
                         <div class="feedback-form card p-4 mt-4 shadow">
                             <h3 class="mb-4 fw-bold text-brown">Để lại phản hồi của bạn</h3>
@@ -732,12 +707,12 @@
                             </form>
                         </div>
                     </c:if>
-
+                   
 
 
                 </div>		
             </div>
-
+            
             <!-- Footer -->
 
             <footer class="footer">
@@ -827,8 +802,6 @@
                                             reader.readAsDataURL(input.files[0]);
                                         }
                                     }
-
-
         </script>
     </body>
 </html>
