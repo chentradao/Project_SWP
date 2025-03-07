@@ -6,6 +6,7 @@ package model;
 
 import entity.Order;
 import entity.Cart;
+import entity.SalesData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -15,12 +16,171 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author nguye
  */
 public class DAOOrder extends DBConnection {
+    public Vector<Order> getOrderBy(String sql) {
+        Vector<Order> vector = new Vector<>();
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                int CustomerID = rs.getInt("CustomerID"),
+                        TotalCost = rs.getInt("TotalCost"),
+                        OrderStatus = rs.getInt("OrderStatus");
+                String CustomerName = rs.getString("CustomerName"),
+                        ShipAddress = rs.getString("ShipAddress"),
+                        ShipCity = rs.getString("ShipCity"),
+                        Phone = rs.getString("Phone");
+                Date OrderDate = rs.getDate("OrderDate"),
+                        ShippedDate = rs.getDate("ShippedDate");
+                Order order = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, OrderStatus, TotalCost, sql, Phone, ShipAddress, CustomerID, ShipCity, Phone, Phone, OrderStatus);
+                vector.add(order);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return vector;
+    }
+    public int getRevunue(String sql){
+        int revenue = 0;
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            if(rs.next()) {
+                revenue = rs.getInt("TotalSum");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return revenue;
+    }
+    public int getNumberOrder(String sql){
+        int OrderCount = 0;
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            if(rs.next()) {
+                OrderCount = rs.getInt("OrderCount");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return OrderCount;
+    }
+    public List<Map<String, Object>> getOrderDetails(String[] statusFilters, String startDate, String endDate) {
+    List<Map<String, Object>> list = new ArrayList<>();
+    Map<Integer, Double> orderTotalMap = new HashMap<>();
+
+    // Xây dựng SQL query với điều kiện lọc
+    StringBuilder sql = new StringBuilder(
+        "SELECT o.OrderID, p.ProductName, od.Quantity, od.UnitPrice, o.OrderStatus " +
+        "FROM OrderDetail od " +
+        "JOIN Orders o ON od.OrderID = o.OrderID " +
+        "JOIN Products p ON od.ProductID = p.ProductID " +
+        "WHERE o.OrderDate BETWEEN ? AND ?"
+    );
+
+    // Thêm điều kiện lọc theo trạng thái nếu có
+    if (statusFilters != null && statusFilters.length > 0) {
+        sql.append(" AND o.OrderStatus IN (");
+        sql.append(String.join(",", Collections.nCopies(statusFilters.length, "?")));
+        sql.append(")");
+    }
+
+    try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        // Đặt giá trị cho startDate và endDate
+        ps.setString(1, startDate);
+        ps.setString(2, endDate);
+
+        // Đặt giá trị cho OrderStatus nếu có
+        if (statusFilters != null) {
+            for (int i = 0; i < statusFilters.length; i++) {
+                ps.setInt(i + 3, Integer.parseInt(statusFilters[i]));  // Vị trí bắt đầu từ 3
+            }
+        }
+
+        // Chạy query
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int orderId = rs.getInt("OrderID");
+                double price = rs.getDouble("UnitPrice");
+                int quantity = rs.getInt("Quantity");
+
+                // Lưu thông tin đơn hàng vào danh sách
+                Map<String, Object> row = new HashMap<>();
+                row.put("OrderID", orderId);
+                row.put("ProductName", rs.getString("ProductName"));
+                row.put("Quantity", quantity);
+                row.put("Price", price);
+                row.put("OrderStatus", rs.getInt("OrderStatus"));
+
+                list.add(row);
+
+                // Tính tổng tiền cho từng OrderID
+                orderTotalMap.put(orderId, orderTotalMap.getOrDefault(orderId, 0.0) + (price * quantity));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Gán tổng tiền vào danh sách (tránh mất đơn hàng cuối cùng)
+    for (Map<String, Object> order : list) {
+        int orderId = (int) order.get("OrderID");
+        order.put("TotalAmount", orderTotalMap.get(orderId));
+    }
+
+    return list;
+}
+
+
+
+
+
+    public void updateStatus(int orderId, int status) throws SQLException {        
+        try  {
+            String sql = "UPDATE Orders SET OrderStatus = ? WHERE OrderID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, status);
+            pstmt.setInt(2, orderId);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<SalesData> getData(String startDate,String endDate){
+        List<SalesData> data = new ArrayList<>();
+        try {
+            String sql = "SELECT FORMAT(OrderDate, 'yyyy-MM-dd') AS YearMonth, TotalCost FROM Orders " +
+             "WHERE OrderDate BETWEEN ? AND ? ORDER BY OrderDate;";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,startDate );
+            pstmt.setString(2,endDate );            
+            ResultSet rs = pstmt.executeQuery();            
+            while (rs.next()) {
+                data.add(new SalesData(
+                    rs.getString("YearMonth"),
+                    rs.getInt("TotalCost")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
     public int insertOrder(Order o) {
     int n = 0;
     String sql = "INSERT INTO [dbo].[Orders] "

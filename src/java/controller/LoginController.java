@@ -52,9 +52,9 @@ public class LoginController extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("acc", acc);
                     if(acc.getRole().equals("admin")){
-                        response.sendRedirect("AdminManage");
+                        response.sendRedirect("admin");
                     }else if(acc.getRole().equals("staff")){
-                        response.sendRedirect("Manager");
+                        response.sendRedirect("manager");
                     }else
                     response.sendRedirect("ProductListServlet");
                 }
@@ -87,7 +87,7 @@ public class LoginController extends HttpServlet {
             HttpSession session = request.getSession();
             session.removeAttribute("acc");
             session.removeAttribute("mess"); // Xóa thông báo lỗi
-
+            
         }
         processRequest(request, response);
     }

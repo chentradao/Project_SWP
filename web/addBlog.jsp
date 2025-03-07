@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Wish shop project">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
@@ -53,7 +53,7 @@
             <div class="main-content">
                 <form action="Blog?service=add" method="post" enctype="multipart/form-data"> 
                     <input type="hidden" name="service" value="add">
-                    <h3 id="formTitle">Thêm Blog mới</h3>
+                    <h3 id="formTitle">Thêm bài viết mới</h3>
                     <input type="hidden" id="blogID" name="blogID">
 
                     <div class="form-group">
@@ -90,11 +90,6 @@
                     <div class="form-group">
                         <label>Tác giả:</label>
                         <input type="number" id="blogAuthor" name="blogAuthor" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Ảnh:</label>
-                        <input type="file" id="image" name="image" required>
                     </div>
 
                     <div class="form-group">
