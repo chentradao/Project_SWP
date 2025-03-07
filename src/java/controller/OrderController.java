@@ -225,7 +225,7 @@ public class OrderController extends HttpServlet {
                                     session.removeAttribute(key);
                                 }
                             }
-                            response.sendRedirect("index.jsp");
+                            response.sendRedirect("ProductListServlet");
                         }
                     }
                     if (PaymentMethod.equalsIgnoreCase("VNPAY")) {
