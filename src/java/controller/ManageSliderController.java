@@ -4,7 +4,7 @@
  */
 package controller;
 
-import Helper.UploadImage;
+import service.UploadImage;
 import entity.Slider;
 import java.io.IOException;
 import java.io.PrintWriter;

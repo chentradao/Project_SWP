@@ -447,296 +447,108 @@
                         </div>
                     </div>
 
-                    <!-- Review Statistics Section -->
-                    <div class="container">
-                        <div class="card shadow-sm p-4 mb-5">
-                            <h2 class="mb-4 fw-bold">Đánh giá tổng quan</h2>
-
-                            <!-- Star Distribution -->
-                            <div class="mb-4">
-                                <!-- 5 Stars -->
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <span class="text-warning"><i class="bi bi-star-fill"></i> 5 sao</span>
-                                    </div>
-                                    <div class="col-md-8 col-7">
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                 style="width: calc(${stats.fiveStar} / ${stats.totalReviews} * 100%);" 
-                                                 aria-valuenow="${stats.fiveStar}" aria-valuemin="0" aria-valuemax="${stats.totalReviews}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-2 text-end">
-                                        <small class="text-muted">${stats.fiveStar}</small>
-                                    </div>
-                                </div>
-
-                                <!-- 4 Stars -->
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <span class="text-warning"><i class="bi bi-star-fill"></i> 4 sao</span>
-                                    </div>
-                                    <div class="col-md-8 col-7">
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                 style="width: calc(${stats.fourStar} / ${stats.totalReviews} * 100%);" 
-                                                 aria-valuenow="${stats.fourStar}" aria-valuemin="0" aria-valuemax="${stats.totalReviews}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-2 text-end">
-                                        <small class="text-muted">${stats.fourStar}</small>
-                                    </div>
-                                </div>
-
-                                <!-- 3 Stars -->
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <span class="text-warning"><i class="bi bi-star-fill"></i> 3 sao</span>
-                                    </div>
-                                    <div class="col-md-8 col-7">
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar bg-warning" role="progressbar" 
-                                                 style="width: calc(${stats.threeStar} / ${stats.totalReviews} * 100%);" 
-                                                 aria-valuenow="${stats.threeStar}" aria-valuemin="0" aria-valuemax="${stats.totalReviews}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-2 text-end">
-                                        <small class="text-muted">${stats.threeStar}</small>
-                                    </div>
-                                </div>
-
-                                <!-- 2 Stars -->
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <span class="text-warning"><i class="bi bi-star-fill"></i> 2 sao</span>
-                                    </div>
-                                    <div class="col-md-8 col-7">
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar bg-warning" role="progressbar" 
-                                                 style="width: calc(${stats.twoStar} / ${stats.totalReviews} * 100%);" 
-                                                 aria-valuenow="${stats.twoStar}" aria-valuemin="0" aria-valuemax="${stats.totalReviews}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-2 text-end">
-                                        <small class="text-muted">${stats.twoStar}</small>
-                                    </div>
-                                </div>
-
-                                <!-- 1 Star -->
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <span class="text-warning"><i class="bi bi-star-fill"></i> 1 sao</span>
-                                    </div>
-                                    <div class="col-md-8 col-7">
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar bg-danger" role="progressbar" 
-                                                 style="width: calc(${stats.oneStar} / ${stats.totalReviews} * 100%);" 
-                                                 aria-valuenow="${stats.oneStar}" aria-valuemin="0" aria-valuemax="${stats.totalReviews}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-2 text-end">
-                                        <small class="text-muted">${stats.oneStar}</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Average Rating -->
-                            <div class="text-center p-3 bg-light rounded">
-                                <div class="mb-2">
-                                    <c:set var="fullStars" value="${Math.floor(stats.averageStars)}" />
-                                    <c:set var="hasHalfStar" value="${stats.averageStars % 1 >= 0.5}" />
-
-                                    <c:forEach begin="1" end="5" var="i">
-                                        <c:choose>
-                                            <c:when test="${i <= fullStars}">
-                                                <i class="bi bi-star-fill text-warning fs-4"></i>
-                                            </c:when>
-                                            <c:when test="${i == fullStars + 1 && hasHalfStar}">
-                                                <i class="bi bi-star-half text-warning fs-4"></i>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <i class="bi bi-star text-warning fs-4"></i>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </div>
-                                <h4 class="mb-0">${stats.averageStars} <span class="text-muted fs-6">trên 5</span></h4>
-                                <p class="text-muted mb-0">${stats.totalReviews} lượt đánh giá</p>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Reviews -->
 
-                    <div class="row">
-                        <div class="col">
-                            <div class="reviews">
-                                <div class="reviews_title">Phản hồi</div>
-                                <div class="reviews_container">
-                                    <ul>
-                                        <c:choose>
-                                            <c:when test="${not empty feedbacks}">
-                                                <c:forEach var="feedback" items="${feedbacks}">
-                                                    <!-- Review -->
-                                                    <li class="review clearfix">
-                                                        <div class="review_content">
-                                                            <div class="review_name">
-                                                                <a href="#">${feedback.accountName}</a>
-                                                            </div>
-                                                            <div class="review_date">
-                                                                <fmt:formatDate value="${feedback.date}" pattern="dd/MM/yyyy" />
-                                                            </div>
-                                                            <div class="rating review_rating" data-rating="${feedback.rateStar}">
-                                                                <c:forEach var="i" begin="1" end="5">
-                                                                    <c:choose>
-                                                                        <c:when test="${i <= feedback.rateStar}">
-                                                                            <i class="fa fa-star" style="color: gold;"></i>  
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <i class="fa fa-star-o"></i> 
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </c:forEach>
-                                                            </div>
-                                                            <div class="review_image1">
-                                                                <img src="img/${feedback.imageURL}" alt="">
-                                                            </div>
-                                                            <div class="review_text">
-                                                                <p>${feedback.feedback}</p>
-                                                            </div>
+			<div class="row">
+				<div class="col">
+					<div class="reviews">
+						<div class="reviews_title">reviews</div>
+						<div class="reviews_container">
+							<ul>
+								<!-- Review -->
+								<li class=" review clearfix">
+									<div class="review_image"><img src="images/review_1.jpg" alt=""></div>
+									<div class="review_content">
+										<div class="review_name"><a href="#">Maria Smith</a></div>
+										<div class="review_date">Nov 29, 2017</div>
+										<div class="rating rating_4 review_rating" data-rating="4">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="review_text">
+											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
+										</div>
+									</div>
+								</li>
+								<!-- Review -->
+								<li class=" review clearfix">
+									<div class="review_image"><img src="images/review_2.jpg" alt=""></div>
+									<div class="review_content">
+										<div class="review_name"><a href="#">Maria Smith</a></div>
+										<div class="review_date">Nov 29, 2017</div>
+										<div class="rating rating_4 review_rating" data-rating="4">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="review_text">
+											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
 
+			<!-- Leave a Review -->
 
-                                                            <div class="mt-3">
-                                                                <c:if test="${not empty feedback.feedbackReply}">
-                                                                    <div class="admin-reply mt-2 ms-md-4 ms-2">
-                                                                        <div class="d-flex align-items-center mb-2">
-                                                                            <div class="admin-badge bg-brown text-white px-2 py-1 rounded-pill me-2">
-                                                                                <i class="bi bi-person-check-fill me-1"></i>Admin
-                                                                            </div>
-                                                                            <small class="text-muted">
-                                                                                <i class="bi bi-clock me-1"></i>
-                                                                                <fmt:formatDate value="${feedback.feedbackReply.replyDate}" pattern="dd/MM/yyyy" />
-                                                                            </small>
-                                                                        </div>
-                                                                        <div class="reply-content p-3 bg-white rounded shadow-sm border-start border-3 border-brown">
-                                                                            <p class="mb-0">${feedback.feedbackReply.replyText}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </c:if>
+			<div class="row">
+				<div class="col">
+					<div class="review_form_container">
+						<div class="review_form_title">leave a review</div>
+						<div class="review_form_content">
+							<form action="#" id="review_form" class="review_form">
+								<div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
+									<input type="text" class="review_form_input" placeholder="Name" required="required">
+									<input type="email" class="review_form_input" placeholder="E-mail" required="required">
+									<input type="text" class="review_form_input" placeholder="Subject">
+								</div>
+								<textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
+								<button type="submit" class="review_form_button">leave a review</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
+	</div>
 
-                                                                <c:if test="${empty feedback.feedbackReply}">
-                                                                    <c:if test="${currentUser != null}">
+	<!-- Newsletter -->
 
-                                                                        <div class="reply-form mt-3 ms-md-4 ms-2">
-                                                                            <form action="ReplyFeedbackController" method="post">
-                                                                                <input type="hidden" name="feedbackID" value="${feedback.feedbackID}">
-                                                                                <input type="hidden" name="productId" value="${param.productId}">
-                                                                                <div class="input-group">
-                                                                                    <span class="input-group-text bg-brown text-white border-0">
-                                                                                        <i class="bi bi-reply-fill"></i>
-                                                                                    </span>
-                                                                                    <textarea name="replyText" class="form-control brown-focus" rows="2" 
-                                                                                              placeholder="Enter your reply" required></textarea>
-                                                                                    <button type="submit" class="btn btn-brown">
-                                                                                        <i class="bi bi-send-fill me-1"></i>Send
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="form-text text-muted small">
-                                                                                    <i class="bi bi-info-circle me-1"></i>Feedback will be displayed publicly below this review.
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </c:if>
-                                                                </c:if>
-                                                            </div>
+	<div class="newsletter">
+		<div class="newsletter_content">
+			<div class="newsletter_image" style="background-image:url(images/newsletter.jpg)"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="section_title_container text-center">
+							<div class="section_subtitle">only the best</div>
+							<div class="section_title">subscribe for a 20% discount</div>
+						</div>
+					</div>
+				</div>
+				<div class="row newsletter_container">
+					<div class="col-lg-10 offset-lg-1">
+						<div class="newsletter_form_container">
+							<form action="#">
+								<input type="email" class="newsletter_input" required="required" placeholder="E-mail here">
+								<button type="submit" class="newsletter_button">subscribe</button>
+							</form>
+						</div>
+						<div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-
-                                                        </div>
-                                                    </li>
-                                                </c:forEach>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li>No Feedback</li>
-                                                </c:otherwise>
-                                            </c:choose>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <c:if test="${currentUser != null}">
-
-                        <div class="feedback-form card p-4 mt-4 shadow">
-                            <h3 class="mb-4 fw-bold text-brown">Để lại phản hồi của bạn</h3>
-                            <form action="submitFeedback" method="post" enctype="multipart/form-data">
-                                <!-- Upload Image -->
-                                <div class="mb-3">
-                                    <label class="form-label fw-medium text-brown">Đăng ảnh</label>
-                                    <div class="input-group">
-                                        <label for="photo" class="btn btn-brown">
-                                            <i class="bi bi-upload me-2"></i> Chọn ảnh
-                                        </label>
-                                        <input type="file" id="photo" name="photo" required accept="image/*" 
-                                               class="d-none" onchange="previewImage(event)">
-                                    </div>
-                                    <div class="mt-3 text-center">
-                                        <img id="imagePreview" src="#" alt="Image Preview" class="img-thumbnail d-none" 
-                                             style="max-width: 200px; max-height: 200px;">
-                                    </div>
-                                </div>
-
-
-                                <input type="hidden" name="productId" value="${param.productId}">
-
-
-                                <!-- Star Rating -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-medium text-brown">Đánh giá:</label>
-                                    <div class="rating-stars d-flex flex-row-reverse justify-content-end">
-                                        <input type="radio" id="star5" name="rateStar" value="5" class="btn-check">
-                                        <label for="star5" class="star" data-value="5"><i class="bi bi-star-fill"></i></label>
-
-                                        <input type="radio" id="star4" name="rateStar" value="4" class="btn-check">
-                                        <label for="star4" class="star" data-value="4"><i class="bi bi-star-fill"></i></label>
-
-                                        <input type="radio" id="star3" name="rateStar" value="3" class="btn-check">
-                                        <label for="star3" class="star" data-value="3"><i class="bi bi-star-fill"></i></label>
-
-                                        <input type="radio" id="star2" name="rateStar" value="2" class="btn-check">
-                                        <label for="star2" class="star" data-value="2"><i class="bi bi-star-fill"></i></label>
-
-                                        <input type="radio" id="star1" name="rateStar" value="1" class="btn-check">
-                                        <label for="star1" class="star" data-value="1"><i class="bi bi-star-fill"></i></label>
-                                    </div>
-                                    <div class="text-muted small mt-1">
-                                        Đánh giá của bạn: <span id="selected-rating">0</span> sao
-                                    </div>
-                                </div>
-
-
-                                <!-- Feedback -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-medium text-brown">Bình luận:</label>
-                                    <textarea name="feedback" class="form-control brown-focus" rows="4" required></textarea>
-                                </div>
-
-                                <!-- Submit Button -->
-                                <button type="submit" class="btn btn-brown w-100 py-2 fw-medium">
-                                    <i class="bi bi-send-fill me-2"></i>Gửi phản hồi
-                                </button>
-                            </form>
-                        </div>
-                    </c:if>
-
-
-
-                </div>		
-            </div>
 
             <!-- Footer -->
 

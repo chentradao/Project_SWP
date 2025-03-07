@@ -304,7 +304,6 @@
                     const startDate = new Date(startDateInput.value);
                     const endDate = new Date(endDateInput.value);
                     const today = new Date();
-                    today.setHours(0, 0, 0, 0);
                     if (startDate > today) {
                         errorMessage.textContent = "Ngày bắt đầu không được trong tương lai.";
                         errorMessage.classList.remove("hidden");
@@ -316,7 +315,7 @@
                         return false;
                     }
                     if (startDateInput.value && endDateInput.value) {
-                        if (endDate <= startDate) {
+                        if (endDate < startDate) {
                             errorMessage.textContent = "Ngày kết thúc phải sau ngày bắt đầu.";
                             errorMessage.classList.remove("hidden");
                             return false;
@@ -355,8 +354,6 @@
                 // Chuyển hướng đến URL mới
                 window.location.href = url;
             });
-
-            );
         </script>
         <script src="js/checkout_custom.js"></script>
     </body>

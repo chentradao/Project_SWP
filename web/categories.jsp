@@ -66,16 +66,16 @@
                                 </div>
                                 <!-- Price Filter -->
                                 <div class="sidebar_section">
-                                    <div class="sidebar_title">Giá</div>
+                                    <div class="sidebar_title">Giá¡</div>
                                     <div class="sidebar_section_content">
                                         <div class="filter_price">
-                                            <!-- Hai ô nhập giá trị tối thiểu và tối đa -->
-                                            <input type="number" id="minPriceInput" placeholder="Giá tối thiểu">
-                                            <input type="number" id="maxPriceInput" placeholder="Giá tối đa">
+                                            <!-- Hai Ã´ nháº­p giÃ¡ trá» tá»i thiá»u vÃ  tá»i Äa -->
+                                            <input type="number" id="minPriceInput" placeholder="Giá Tối Thiểu">
+                                            <input type="number" id="maxPriceInput" placeholder="Giá Tối Đa">
                                             <br/><br/>
                                             <div class="price-buttons">
-                                                <button id="applyPriceBtn">Áp dụng giá</button>
-                                                <button id="clearPriceBtn">Xóa giá</button>
+                                                <button id="applyPriceBtn">Áp Dụng Giá</button>
+                                                <button id="clearPriceBtn">Xóa Giá</button>
                                             </div>
                                         </div>
                                     </div>
@@ -102,16 +102,16 @@
                     <div class="sorting">
                         <ul class="item_sorting">
                             <li>
-                                            <span class="sorting_text">Sắp xếp </span>
+                                            <span class="sorting_text">Sắp Xếp</span>
                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
                                 <ul>
                                     <!-- Updated sorting options -->
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>giá</span></li>
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>kích cỡ</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>Giá</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>Size</span></li>
                                 </ul>
                             </li>
                             <li>
-                                            <span class="sorting_text">Hiển thị</span>
+                                            <span class="sorting_text">Hiển Thị</span>
                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
                                 <ul>
                                     <li class="num_sorting_btn"><span>3</span></li>
@@ -350,13 +350,13 @@
 
             .price-buttons {
                 display: flex;
-                gap: 10px; /* Khoảng cách giữa các nút */
+                gap: 10px; /* Khoáº£ng cÃ¡ch giá»¯a cÃ¡c nÃºt */
                 flex-wrap: wrap;
             }
 
             .price-buttons button {
-                flex: 1; /* Chia đều chiều rộng */
-                min-width: 120px; /* Đảm bảo nút không quá bé */
+                flex: 1; /* Chia Äá»u chiá»u rá»ng */
+                min-width: 120px; /* Äáº£m báº£o nÃºt khÃ´ng quÃ¡ bÃ© */
                 padding: 10px;
                 font-size: 16px;
                 border: none;

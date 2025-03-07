@@ -4,7 +4,7 @@
  */
 package controller;
 
-import Helper.UploadImage;
+import service.UploadImage;
 import entity.Accounts;
 import entity.Feedback;
 import entity.Slider;
