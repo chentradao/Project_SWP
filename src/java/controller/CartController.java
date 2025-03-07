@@ -6,6 +6,7 @@
 package controller;
 
 import entity.Cart;
+import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import model.DAOCart;
 import jakarta.servlet.RequestDispatcher;
+import model.DAOVoucher;
 
 /**
  *
@@ -29,9 +31,13 @@ public class CartController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         DAOCart dao = new DAOCart();
+        DAOVoucher d = new DAOVoucher();
         HttpSession session = request.getSession(true);
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
+            if(service == null){
+                service.equals("showCart");
+            }
             if(service.equals("add2cart")){
                 int id = Integer.parseInt(request.getParameter("id"));
                 Cart newCart = dao.getCart(id);
@@ -56,6 +62,8 @@ public class CartController extends HttpServlet {
                         vector.add(cart);
                     }
                 }
+                request.setAttribute("error", session.getAttribute("error"));
+                request.setAttribute("voucher", session.getAttribute("voucher"));
                 request.setAttribute("vectorCart", vector);
                 request.getRequestDispatcher("/jsp/Cart.jsp").forward(request, response);
             }
@@ -85,6 +93,25 @@ public class CartController extends HttpServlet {
     }
     response.sendRedirect("CartURL?service=showCart");
 }
+            if(service.equals("addVoucher")){
+                    String VoucherID = request.getParameter("VoucherID");
+                    if(VoucherID == null){
+                    Voucher voucher = d.getVoucher(1);
+                    session.setAttribute("voucher", voucher);
+                    }else{
+                        int vid = Integer.parseInt(VoucherID);
+                        Voucher voucher = d.getVoucher(vid);
+                        if(voucher == null){
+                            String error = "Voucher không hợp lệ";
+                            session.setAttribute("error", error);
+                            session.removeAttribute("voucher");
+                        }else{
+                            session.setAttribute("voucher", voucher);
+                        }
+                    }
+                    request.getRequestDispatcher("CartURL?service=showCart").forward(request, response);
+                }
+            
             if(service.equals("updateCart")){
                 String submit = request.getParameter("submit");
                 if(submit != null){

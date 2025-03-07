@@ -11,7 +11,7 @@
 
 <header class="header">
     <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-        <div class="logo"><a href="index.jsp">Wish</a></div>
+        <div class="logo"><a href="${pageContext.request.contextPath}/ProductListServlet">Wish</a></div>
         <nav class="main_nav">
             <ul>
                 <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>

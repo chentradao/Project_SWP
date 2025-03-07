@@ -45,6 +45,22 @@ public class Voucher {
         return voucherID;
     }
 
+    public int getVoucherID() {
+        return voucherID;
+    }
+
+    public String getVoucherName() {
+        return voucherName;
+    }
+
+    public int getVoucherStatus() {
+        return voucherStatus;
+    }
+
+    public void setVoucherStatus(int voucherStatus) {
+        this.voucherStatus = voucherStatus;
+    }
+
     public void setVoucherID(int voucherID) {
         this.voucherID = voucherID;
     }
