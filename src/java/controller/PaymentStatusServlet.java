@@ -90,7 +90,7 @@ public class PaymentStatusServlet extends HttpServlet {
                 + "</head>"
                 + "<body style=\" padding: 30px;\">"
                 + "    <div>"
-                + "        <h2 style=\"font-size: 25px;\">Cảm ơn " + CustomerName + " đã đặt hàng tại <a href=\"http://localhost:8080/Cosmetic/index.jsp\">ESTÉE LAUDER</a></h2>"
+                + "        <h2 style=\"font-size: 25px;\">Cảm ơn " + CustomerName + " đã đặt hàng tại <a href=\"http://localhost:8080/Project_SWP/ProductListServlet\">ESTÉE LAUDER</a></h2>"
                 + "        <p>Đơn hàng của bạn đã được đặt thành công!</p>"
                 + "        <h1 style=\"margin-top: 50px; font-size: 28px\">Chi tiết đơn hàng của bạn</h1>"
                 + "        <table style=\"width:100%;border-spacing:inherit;border:1px solid #ddd\">"
@@ -126,7 +126,6 @@ public class PaymentStatusServlet extends HttpServlet {
             if (obj instanceof Cart) {
                 Cart cart = (Cart) obj;
                 vector.add(cart);
-                session.removeAttribute(key);
             }
         }
         int subtotal = 0;
@@ -139,6 +138,7 @@ public class PaymentStatusServlet extends HttpServlet {
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
+            session.removeAttribute("cart");
         }
         int discount =0;
         if(voucher != null){
@@ -171,7 +171,7 @@ public class PaymentStatusServlet extends HttpServlet {
         } catch (AddressException ex) {
             Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.getRequestDispatcher("ProductListServlet").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
