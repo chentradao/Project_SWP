@@ -45,7 +45,7 @@
                         <div class="col">
                             <div class="home_container">
                                 <div class="home_content">
-                                    <div class="home_title">Giỏ hàng</div>
+                                    <div class="home_title"> aGiỏ hàng</div>
                                     <div class="breadcrumbs">
                                         <ul>
                                             <li><a href="index.jsp">Home</a></li>
