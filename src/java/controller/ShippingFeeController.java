@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -73,12 +74,12 @@ public class ShippingFeeController extends HttpServlet {
         out.flush();
     }
 
-    public double getShippingFee(String city, String district, String ward, int weight, int value) {
+    public double getShippingFee(String city, String district, String ward, double weight, double value) {
         try {
             String API_URL = "https://services.giaohangtietkiem.vn/services/shipment/fee";
-            String TOKEN = "W8BGwj6ped2keP01GFm77liHsGSgPPASqVdLGV";
+            String TOKEN = "13C9GJOiLh8zRzSXSIKkmYfTNPSvhO3a8sowSla";
             String encodedPickCity = URLEncoder.encode("Hà Nội", "UTF-8");
-            String encodedPickDistrict = URLEncoder.encode("Hà Đông", "UTF-8");
+            String encodedPickDistrict = URLEncoder.encode("Thạch Thất", "UTF-8");
             
             // ma hoa tham so de tranh loi ki tu dac biet
             String encodedCity = URLEncoder.encode(city, "UTF-8");
@@ -111,6 +112,7 @@ public class ShippingFeeController extends HttpServlet {
                     response.append(inputLine);
                 }
                 in.close();
+
                 // chuyen doi phan hoi thanh json
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 if (jsonResponse.has("fee")) {
@@ -119,20 +121,20 @@ public class ShippingFeeController extends HttpServlet {
             } else {
                 System.out.println("Lỗi HTTP: " + responseCode);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | JSONException e) {
         }
         return -1;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-    }
-
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }
 

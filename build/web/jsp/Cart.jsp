@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector,entity.Cart,entity.Voucher" %>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.text.DecimalFormatSymbols"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,6 +27,9 @@
                     Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
                     Voucher voucher = (Voucher)request.getAttribute("voucher");
                     String error = (String)request.getAttribute("error");
+                    DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+                    symbols.setGroupingSeparator('.');
+                    DecimalFormat formatter = new DecimalFormat("#,###", symbols);
         %>
         <div class="super_container">
 
@@ -111,7 +116,7 @@
                                             <div class="cart_product_info ml-auto">
                                                 <div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
                                                     <!-- Product Price -->
-                                                    <div class="cart_product_price"><%=cart.getPrice()%>₫</div>
+                                                    <div class="cart_product_price"><%=formatter.format(cart.getPrice())%>₫</div>
                                                     <!-- Product Quantity -->
                                                     <div class="product_quantity_container">
                                                         <div class="product_quantity clearfix">
@@ -120,10 +125,10 @@
                                                         </div>
                                                     </div>
                                                     <!-- Products Total Price -->
-                                                    <div class="cart_product_total"><%=total%>₫</div>
+                                                    <div class="cart_product_total"><%=formatter.format(total)%>₫</div>
                                                     <!-- Product Cart Trash Button -->
                                                     <div class="cart_product_button">
-                                                        <button type="button" class="cart_product_remove" title="Xóa sản phẩm" onclick="window.location.href='CartURL?service=removeCart&id=<%=cart.getID()%>'"><img src="images/trash.png" alt=""></button>
+                                                        <button type="button" class="cart_product_remove" title="Xóa sản phẩm" onclick="window.location.href = 'CartURL?service=removeCart&id=<%=cart.getID()%>'"><img src="images/trash.png" alt=""></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -192,8 +197,8 @@
                                         <button type="submit" class="button_clear cart_button_2">Áp Dụng</button>
                                     </form>
                                     <%if(error != null){%>
-                                        <div class="error-message" style="color: red;"><%=error%></div>
-                                        <%session.removeAttribute("error");
+                                    <div class="error-message" style="color: red;"><%=error%></div>
+                                    <%session.removeAttribute("error");
                                             }%>
                                 </div>
                             </div>
@@ -211,15 +216,15 @@
                                     <ul>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Tổng Tiền Hàng</div>
-                                            <div class="cart_total_price ml-auto"><%=subTotal%>₫</div>
+                                            <div class="cart_total_price ml-auto"><%=formatter.format(subTotal)%>₫</div>
                                         </li>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Giảm Giá</div>
-                                            <div class="cart_total_price ml-auto"><%=discount%>₫</div>
+                                            <div class="cart_total_price ml-auto"><%=formatter.format(discount)%>₫</div>
                                         </li>
                                         <li class="d-flex flex-row align-items-center justify-content-start">
                                             <div class="cart_total_title">Tổng Thanh Toán</div>
-                                            <div class="cart_total_price ml-auto"><%=total%>₫</div>
+                                            <div class="cart_total_price ml-auto"><%=formatter.format(total)%>₫</div>
                                         </li>
                                     </ul>
                                     <button type="button" class="cart_total_button" onclick="window.location.href = 'OrderURL?service=checkout'">Mua Hàng</button>

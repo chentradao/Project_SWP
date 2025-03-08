@@ -80,6 +80,18 @@ public class DAOOrder extends DBConnection {
             Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public int getTotalOrders(String countQuery) {
+        int total = 0;
+        try {
+            ResultSet rs = getData(countQuery); // Giả sử getData trả về ResultSet từ SQL
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
     
     public int deleteOrder(int oid) {
         int n = 0;
