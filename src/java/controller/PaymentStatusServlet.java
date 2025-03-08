@@ -127,6 +127,7 @@ public class PaymentStatusServlet extends HttpServlet {
                 Cart cart = (Cart) obj;
                 vector.add(cart);
                 session.removeAttribute(key);
+                session.removeAttribute("cartQuantiry");
             }
         }
         int subtotal = 0;

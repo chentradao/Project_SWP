@@ -38,17 +38,20 @@ public class CartController extends HttpServlet {
             if(service == null){
                 service.equals("showCart");
             }
+            int cartQuantiry = session.getAttribute("cartQuantiry") != null ? (int) session.getAttribute("cartQuantiry"): 0;
             if(service.equals("add2cart")){
                 int id = Integer.parseInt(request.getParameter("id"));
                 Cart newCart = dao.getCart(id);
                 if(session.getAttribute(id + "")== null){
                     newCart.setQuantity(1);
                     session.setAttribute(id + "", newCart);
+                    cartQuantiry +=1 ;
                 }else{
                     Cart oldCart = (Cart) session.getAttribute(id + "");
                     oldCart.setQuantity(oldCart.getQuantity() + 1);
                     session.setAttribute(id + "", oldCart);
                 }
+                session.setAttribute("cartQuantiry", cartQuantiry);
                 response.sendRedirect(request.getHeader("Referer"));
             }
             if(service.equals("showCart")){
@@ -77,9 +80,11 @@ public class CartController extends HttpServlet {
                         Cart cart = (Cart)obj;
                         if(cart.getID() == id){
                         session.removeAttribute(key);
+                        cartQuantiry -=1 ;
                         }
                     }  
                 }
+                session.setAttribute("cartQuantiry", cartQuantiry);
                 response.sendRedirect("CartURL?service=showCart");
             }
             if(service.equals("clearCart")){
@@ -89,6 +94,7 @@ public class CartController extends HttpServlet {
         Object obj = session.getAttribute(key);
         if(obj instanceof Cart){
             session.removeAttribute(key);
+            session.removeAttribute("cartQuantiry");
         }
     }
     response.sendRedirect("CartURL?service=showCart");

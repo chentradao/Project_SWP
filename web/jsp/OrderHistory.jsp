@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart,entity.Voucher,entity.Order" %>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.text.DecimalFormatSymbols"%>
 
 <html>
     <head>
@@ -32,19 +34,25 @@
             String startDate = (String) request.getAttribute("startDate");
             String endDate = (String) request.getAttribute("endDate");
             String payment = (String) request.getAttribute("payment");
+            String sortColumn = (String) request.getAttribute("sortColumn");
             String sortOrder = (String) request.getAttribute("sortOrder");
             // Xác định service từ request để xây dựng baseUrl phù hợp
     String service = request.getParameter("service") != null ? request.getParameter("service") : "orderHistory";
     String baseUrl = "OrderURL?service=" + service;
     
+    // Add sorting parameters for both services
+    if (sortColumn != null && !sortColumn.isEmpty()) baseUrl += "&sortColumn=" + sortColumn;
+    if (sortOrder != null && !sortOrder.isEmpty()) baseUrl += "&sortOrder=" + sortOrder;
     // Chỉ thêm các tham số nếu service là orderFilter
     if ("orderFilter".equals(service)) {
         if (status != null ) baseUrl += "&status=" + status;
         if (startDate != null && !startDate.isEmpty()) baseUrl += "&start=" + startDate;
         if (endDate != null && !endDate.isEmpty()) baseUrl += "&end=" + endDate;
         if (payment != null ) baseUrl += "&payment=" + payment;
-        if (sortOrder != null && !sortOrder.isEmpty()) baseUrl += "&sortOrder=" + sortOrder;
     }
+    DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+    symbols.setGroupingSeparator('.');
+    DecimalFormat formatter = new DecimalFormat("#,###", symbols);
         %>
         <!-- Header -->
 
@@ -58,8 +66,8 @@
         <!-- Home -->
         <div class="container mx-auto px-4 py-8 flex items-start">
             <!-- Bộ lọc -->
-            <div class="w-1/4 bg-white rounded-xl shadow-md p-5 h-full mt-20">
-                <form action="OrderURL" id="filter" method="post">
+            <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
+                <form action="OrderURL" id="filter" method="get">
                     <input type="hidden" name="service" value="orderFilter" />
                     <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
 
@@ -100,7 +108,7 @@
                 </form>
             </div>
             <!-- Main Content -->
-            <div class="w-3/4">
+            <div class="w-4/5">
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                     <!-- Table Header -->
                     <div class="p-5 border-b border-gray-200"></div>
@@ -111,25 +119,78 @@
                             <thead class="border-b border-gray-300 bg-white">
                                 <tr>
                                     <th class="px-4 py-3 text-left">ID</th>
-                                    <th class="px-4 py-3 text-left">Ngày Đặt Hàng</th>
-                                    <th class="px-4 py-3 text-left">Tên Người Nhận</th>
-                                    <th class="px-4 py-3 text-left">Số Điện Thoại</th>
-                                    <th class="px-4 py-3 text-left" id="sortTotalCostHeader">
-                                        Đơn giá
-                                        <span id="sortIcon" class="ml-1">
-                                            <% 
-                                                if ("asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-arrow-up"></i>
-                                            <% } else if ("desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-arrow-down"></i>
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortOrderDateHeader">
+                                        Ngày Đặt Hàng
+                                        <span class="ml-1">
+                                            <% if ("orderDate".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("orderDate".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
                                             <% } else { %>
                                             <i class="fas fa-sort"></i>
                                             <% } %>
                                         </span>
                                     </th>
-                                    <th class="px-4 py-3 text-left">Phương Thức</th>
-                                    <th class="px-4 py-3 text-left">Trạng Thái</th>
-
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortCustomerNameHeader">
+                                        Người Nhận
+                                        <span class="ml-1">
+                                            <% if ("customerName".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("customerName".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
+                                            <% } else { %>
+                                            <i class="fas fa-sort"></i>
+                                            <% } %>
+                                        </span>
+                                    </th>
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortPhoneHeader">
+                                        Số Điện Thoại
+                                        <span class="ml-1">
+                                            <% if ("phone".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("phone".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
+                                            <% } else { %>
+                                            <i class="fas fa-sort"></i>
+                                            <% } %>
+                                        </span>
+                                    </th>
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortTotalCostHeader">
+                                        Đơn giá
+                                        <span class="ml-1">
+                                            <% if ("totalCost".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("totalCost".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
+                                            <% } else { %>
+                                            <i class="fas fa-sort"></i>
+                                            <% } %>
+                                        </span>
+                                    </th>
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortPaymentMethodHeader">
+                                        Phương Thức
+                                        <span class="ml-1">
+                                            <% if ("paymentMethod".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("paymentMethod".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
+                                            <% } else { %>
+                                            <i class="fas fa-sort"></i>
+                                            <% } %>
+                                        </span>
+                                    </th>
+                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortOrderStatusHeader">
+                                        Trạng Thái
+                                        <span class="ml-1">
+                                            <% if ("orderStatus".equals(sortColumn) && "asc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-up"></i>
+                                            <% } else if ("orderStatus".equals(sortColumn) && "desc".equals(sortOrder)) { %>
+                                            <i class="fas fa-sort-down"></i>
+                                            <% } else { %>
+                                            <i class="fas fa-sort"></i>
+                                            <% } %>
+                                        </span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -141,7 +202,7 @@
                                     <td class="px-4 py-3 font-medium text-gray-800"><%=order.getOrderDate()%></td>
                                     <td class="px-4 py-3 font-medium text-gray-800"><%=order.getCustomerName()%></td>
                                     <td class="px-4 py-3"><%=order.getPhone()%></td>
-                                    <td class="px-4 py-3 text-gray-800"><%=order.getTotalCost()%>₫</td>
+                                    <td class="px-4 py-3 text-gray-800"><%=formatter.format(order.getTotalCost())%>₫</td>
                                     <td class="px-4 py-3 text-gray-800"><%=order.getPaymentMethod()%></td>
                                     <% if(order.getOrderStatus()==1){%>
                                     <td class="px-4 py-3 text-gray-800">Đang Chờ</td>
@@ -152,15 +213,15 @@
                                     <%}else if(order.getOrderStatus()==0){%>
                                     <td class="px-4 py-3 text-red-800">Đã Hủy</td>
                                     <%}%>
-                                    <td class="px-4 py-3">
+                                    <td class="px-4 py-3 w-[60px]">
                                         <div class="flex justify-center space-x-2">
                                             <a href="slider?action=edit&id=${slider.sliderID}" 
-                                               class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-full p-2 transition duration-300"
+                                               class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-full p-1 transition duration-300"
                                                title="Cập nhật đơn hàng">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button"
-                                                    class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full p-2 transition duration-300"
+                                                    class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full p-1 transition duration-300"
                                                     data-orderid="<%=order.getOrderID()%>"
                                                     data-status="<%=order.getOrderStatus()%>"
                                                     onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)"
@@ -207,7 +268,7 @@
                             </div>
                             <h3 class="text-lg font-medium text-gray-700 mb-2">Không có đơn hàng nào được tìm thấy</h3>
                             <p class="text-gray-500 max-w-md">Bạn chưa mua bất kỳ đơn hàng nào. Hãy đặt đơn đầu tiên ngay hôm nay để nhận ưu đãi đặc biệt!</p>
-                            <a href="index.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                            <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
                                 <i class="fas fa-plus mr-1"></i> Mua đơn hàng đầu tiên của bạn
                             </a>
                         </div>
@@ -336,25 +397,32 @@
                         event.preventDefault();
                     }
                 });
-            });
-            // Xử lý sắp xếp Đơn giá
-            sortTotalCostHeader.addEventListener("click", function () {
-                const currentSortOrder = "<%= sortOrder != null ? sortOrder : "" %>";
-                let newSortOrder = "";
-                // Chuyển đổi trạng thái sắp xếp
-                if (currentSortOrder === "asc") {
-                    newSortOrder = "desc";
-                } else {
-                    newSortOrder = "asc";
+                // Hàm xử lý sắp xếp chung
+                function handleSort(column) {
+                    const currentSortColumn = "<%= sortColumn != null ? sortColumn : "" %>";
+                    const currentSortOrder = "<%= sortOrder != null ? sortOrder : "" %>";
+                    let newSortOrder = "";
+
+                    if (currentSortColumn === column) {
+                        newSortOrder = currentSortOrder === "asc" ? "desc" : "asc";
+                    } else {
+                        newSortOrder = "asc";
+                    }
+
+                    const urlObj = new URL(window.location.href);
+                    urlObj.searchParams.set("sortColumn", column);
+                    urlObj.searchParams.set("sortOrder", newSortOrder);
+                    window.location.href = urlObj.toString();
                 }
 
-                // Lấy URL cơ bản và thêm tham số sortOrder
-                let url = "<%= baseUrl %>";
-                url += "&sortOrder=" + newSortOrder;
-                // Chuyển hướng đến URL mới
-                window.location.href = url;
+                // Gắn sự kiện click cho từng header
+                document.getElementById("sortOrderDateHeader").addEventListener("click", () => handleSort("orderDate"));
+                document.getElementById("sortCustomerNameHeader").addEventListener("click", () => handleSort("customerName"));
+                document.getElementById("sortPhoneHeader").addEventListener("click", () => handleSort("phone"));
+                document.getElementById("sortTotalCostHeader").addEventListener("click", () => handleSort("totalCost"));
+                document.getElementById("sortPaymentMethodHeader").addEventListener("click", () => handleSort("paymentMethod"));
+                document.getElementById("sortOrderStatusHeader").addEventListener("click", () => handleSort("orderStatus"));
             });
         </script>
-        <script src="js/checkout_custom.js"></script>
     </body>
 </html>

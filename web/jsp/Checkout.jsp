@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart,entity.Voucher" %>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.text.DecimalFormatSymbols"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,11 +25,17 @@
             for(Cart cart : vector){
                 subtotal += (cart.getPrice() * cart.getQuantity());
             }
+            if(subtotal == 0){
+                response.sendRedirect("CartURL?service=showCart");
+            }
             int discount = 0;
             if(voucher != null){
                 discount = (voucher.getDiscount() * subtotal)/100;
             }
             int total = subtotal - discount;
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setGroupingSeparator('.');
+            DecimalFormat formatter = new DecimalFormat("#,###", symbols);
         %>
         <div class="super_container">
             <%@ include file="/header.jsp" %>
@@ -118,12 +126,12 @@
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Tổng Tiền Hàng</div>
-                                                <div class="cart_total_price ml-auto"><%=subtotal%>₫</div>
+                                                <div class="cart_total_price ml-auto"><%=formatter.format(subtotal)%>₫</div>
                                                 <input type="hidden" name="total" id="total" value="<%=total%>">
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Giảm Giá</div>
-                                                <div class="cart_total_price ml-auto"><%=discount%>₫</div>
+                                                <div class="cart_total_price ml-auto"><%=formatter.format(discount)%>₫</div>
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Phí Ship</div>
@@ -132,7 +140,7 @@
                                             </li>
                                             <li class="d-flex flex-row align-items-start justify-content-start total_row">
                                                 <div class="cart_total_title">Tổng Thanh Toán</div>
-                                                <div class="cart_total_price ml-auto" id="totalPrice"><%=total%>₫</div>
+                                                <div class="cart_total_price ml-auto" id="totalPrice"><%=formatter.format(total)%>₫</div>
                                                 <input type="hidden" id="totalPrice1" name="totalPrice1" value="<%=total%>">
                                             </li>
                                         </ul>
@@ -167,6 +175,7 @@
         <script src="plugins/easing/easing.js"></script>
         <script src="plugins/parallax-js-master/parallax.min.js"></script>
         <script src="js/checkout_custom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
         <script src="js/checkout_provinces.js"></script>
 
@@ -204,7 +213,6 @@
                                 document.getElementById("shippingFee1").value = shippingFee;
                                 document.getElementById("totalPrice").innerText = totalPrice + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;
-                                console.log("total", totalPrice);
                             },
                             error: function() {
                                 document.getElementById("shippingFee").innerText = "Không thể tính phí";
@@ -288,5 +296,17 @@
                 return true;
             }
         </script>
+        <script>
+        //js format gia tien
+        document.addEventListener("DOMContentLoaded", function () {
+            let priceElements = document.querySelectorAll(".productPrice");
+            priceElements.forEach(function (element) {
+                let price = parseFloat(element.textContent);
+                if (!isNaN(price)) {
+                    element.textContent = price.toLocaleString("vi-VN") + "₫";
+                }
+            });
+        });
+    </script>
     </body>
 </html>

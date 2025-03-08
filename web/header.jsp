@@ -36,7 +36,7 @@
                         <img src="images/shopping-bag.svg" alt="">
                         <div class="cart_num_container">
                             <div class="cart_num_inner">
-                                <div class="cart_num">0</div>
+                                <div class="cart_num">${sessionScope.cartQuantiry!= null ? sessionScope.cartQuantiry : 0}</div>
                             </div>
                         </div>
                     </div>

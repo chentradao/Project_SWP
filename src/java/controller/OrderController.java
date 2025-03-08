@@ -65,13 +65,13 @@ public class OrderController extends HttpServlet {
 
             if (service.equals("orderHistory")) {
                 if (acc != null) {
+                    String sortColumn = request.getParameter("sortColumn");
+                    String sortOrder = request.getParameter("sortOrder");
                     int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 5; // Số bản ghi mỗi trang (có thể thay đổi)
-
+                    int pageSize = 7; // Số bản ghi mỗi trang (có thể thay đổi)
                     // Tổng số bản ghi
                     int totalRecords = dao.getTotalOrders("SELECT COUNT(*) FROM Orders WHERE CustomerID = " + acc.getAccountID());
                     int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-
                     // Đảm bảo page hợp lệ
                     if (page < 1) {
                         page = 1;
@@ -79,18 +79,44 @@ public class OrderController extends HttpServlet {
                     if (page > totalPages) {
                         page = totalPages;
                     }
-
                     // Tính vị trí bắt đầu
                     int start = (page - 1) * pageSize;
 
+                    String orderByClause = " ORDER BY OrderDate DESC"; // Mặc định
+        if (sortColumn != null && sortOrder != null) {
+            String direction = sortOrder.equals("asc") ? "ASC" : "DESC";
+            switch (sortColumn) {
+                case "orderDate":
+                    orderByClause = " ORDER BY OrderDate " + direction;
+                    break;
+                case "customerName":
+                    orderByClause = " ORDER BY CustomerName " + direction;
+                    break;
+                case "phone":
+                    orderByClause = " ORDER BY Phone " + direction;
+                    break;
+                case "totalCost":
+                    orderByClause = " ORDER BY TotalCost " + direction;
+                    break;
+                case "paymentMethod":
+                    orderByClause = " ORDER BY PaymentMethod " + direction;
+                    break;
+                case "orderStatus":
+                    orderByClause = " ORDER BY OrderStatus " + direction;
+                    break;
+            }
+        }
+
                     // Lấy dữ liệu theo trang
                     Vector<Order> vector = dao.getOrders("SELECT * FROM Orders WHERE CustomerID = " + acc.getAccountID()
-                            + " ORDER BY OrderDate DESC OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY");
+                            + orderByClause + " OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY");
 
                     // Truyền dữ liệu cho JSP
                     request.setAttribute("vector", vector);
                     request.setAttribute("currentPage", page);
                     request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("sortColumn", sortColumn);
+                    request.setAttribute("sortOrder", sortOrder);
                     request.setAttribute("service", "orderHistory");
                     request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
                 } else {
@@ -106,16 +132,19 @@ public class OrderController extends HttpServlet {
                     String startDate = request.getParameter("start");
                     String endDate = request.getParameter("end");
                     String payment = request.getParameter("payment");
+                    String sortColumn = request.getParameter("sortColumn");
                     String sortOrder = request.getParameter("sortOrder");
+
                     if (endDate == null || endDate.trim().isEmpty()) {
                         endDate = LocalDate.now().toString();
                     }
                     if (startDate == null) {
                         startDate = "2000-01-01";
                     }
+
                     // Tham số phân trang
                     int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 5; // Số bản ghi mỗi trang
+                    int pageSize = 5;
 
                     // Tổng số bản ghi với bộ lọc
                     String countQuery = "SELECT COUNT(*) FROM Orders WHERE OrderStatus LIKE '%" + status + "%' "
@@ -132,14 +161,32 @@ public class OrderController extends HttpServlet {
                         page = totalPages;
                     }
 
-                    // Tính vị trí bắt đầu
                     int start = (page - 1) * pageSize;
 
+                    // Xử lý sắp xếp
                     String orderByClause = " ORDER BY OrderDate DESC"; // Mặc định
-                    if ("asc".equals(sortOrder)) {
-                        orderByClause = " ORDER BY TotalCost ASC";
-                    } else if ("desc".equals(sortOrder)) {
-                        orderByClause = " ORDER BY TotalCost DESC";
+                    if (sortColumn != null && sortOrder != null) {
+                        String direction = sortOrder.equals("asc") ? "ASC" : "DESC";
+                        switch (sortColumn) {
+                            case "orderDate":
+                                orderByClause = " ORDER BY OrderDate " + direction;
+                                break;
+                            case "customerName":
+                                orderByClause = " ORDER BY CustomerName " + direction;
+                                break;
+                            case "phone":
+                                orderByClause = " ORDER BY Phone " + direction;
+                                break;
+                            case "totalCost":
+                                orderByClause = " ORDER BY TotalCost " + direction;
+                                break;
+                            case "paymentMethod":
+                                orderByClause = " ORDER BY PaymentMethod " + direction;
+                                break;
+                            case "orderStatus":
+                                orderByClause = " ORDER BY OrderStatus " + direction;
+                                break;
+                        }
                     }
 
                     // Truy vấn dữ liệu theo trang
@@ -159,6 +206,7 @@ public class OrderController extends HttpServlet {
                     request.setAttribute("startDate", startDate);
                     request.setAttribute("endDate", endDate);
                     request.setAttribute("payment", payment);
+                    request.setAttribute("sortColumn", sortColumn);
                     request.setAttribute("sortOrder", sortOrder);
                     request.setAttribute("service", "orderFilter");
                     request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
@@ -225,7 +273,7 @@ public class OrderController extends HttpServlet {
                                     session.removeAttribute(key);
                                 }
                             }
-                            response.sendRedirect("ProductListServlet");
+                            response.sendRedirect("index.jsp");
                         }
                     }
                     if (PaymentMethod.equalsIgnoreCase("VNPAY")) {
