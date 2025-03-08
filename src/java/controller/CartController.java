@@ -32,11 +32,33 @@ public class CartController extends HttpServlet {
         HttpSession session = request.getSession(true);
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
+            String quality = request.getParameter("qty");
+            int qty = -1;
+            if(quality == null || quality.equals("")){
+                qty = 1;
+            }
+            try {
+                qty = Integer.parseInt(quality);
+            } catch (Exception e) {
+            }
             if(service.equals("add2cart")){
                 int id = Integer.parseInt(request.getParameter("id"));
                 Cart newCart = dao.getCart(id);
                 if(session.getAttribute(id + "")== null){
-                    newCart.setQuantity(1);
+                    newCart.setQuantity(qty);
+                    session.setAttribute(id + "", newCart);
+                }else{
+                    Cart oldCart = (Cart) session.getAttribute(id + "");
+                    oldCart.setQuantity(oldCart.getQuantity() + 1);
+                    session.setAttribute(id + "", oldCart);
+                }
+                response.sendRedirect(request.getHeader("Referer"));
+            }
+            if(service.equals("add3cart")){
+                int id = Integer.parseInt(request.getParameter("id"));
+                Cart newCart = dao.getCart(id);
+                if(session.getAttribute(id + "")== null){
+                    newCart.setQuantity(qty);
                     session.setAttribute(id + "", newCart);
                 }else{
                     Cart oldCart = (Cart) session.getAttribute(id + "");

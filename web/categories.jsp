@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="current_page">Woman's Fashion</div>
+                            <div class="current_page">Estee Lauder</div>
                         </div>
                         <div class="col-12">
                             <div class="product_sorting clearfix">
@@ -89,25 +89,15 @@
                                     <div class="view_box box_view"><i class="fa fa-th-large" aria-hidden="true"></i></div>
                                     <div class="view_box detail_view"><i class="fa fa-bars" aria-hidden="true"></i></div>
                                 </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row products_container">
-                        <div class="col">
-                            <!-- Include the list of products -->
-                            <%@ include file="listProduct.jsp" %>
-                        </div>
-                    </div>
-                    <div class="sorting">
+                                <div class="sorting">
                         <ul class="item_sorting">
                             <li>
                                             <span class="sorting_text">Sắp xếp </span>
                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
                                 <ul>
                                     <!-- Updated sorting options -->
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>giá</span></li>
-                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>kích cỡ</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Price"}'><span>giá(tăng dần)</span></li>
+                                    <li class="product_sorting_btn" data-isotope-option='{"sortBy": "Size"}'><span>kích cỡ(tăng dần)</span></li>
                                 </ul>
                             </li>
                             <li>
@@ -121,6 +111,16 @@
                             </li>
                         </ul>
                     </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row products_container">
+                        <div class="col">
+                            <!-- Include the list of products -->
+                            <%@ include file="listProduct.jsp" %>
+                        </div>
+                    </div>
+                    
                     <%
                         // Generate pagination links based on total pages
                         int totalPages = productResponse.getTotalPages();

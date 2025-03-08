@@ -34,31 +34,20 @@
                 color: red;
                 font-weight: bold;
             }
+            .button-container{
+                margin-top: 40px;
+            }
         </style>
     </head>
     <body>
         <div class="super_container">
-            <header class="header">
-                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
-                    <nav class="main_nav">
-                        <ul>
-                            <li><a href="index.jsp">Quản lý đơn hàng</a></li>
-                            <li><a href="index.jsp">Quản lý kho hàng</a></li>
-                            <li><a href="index.jsp">Quản lý nhân viên</a></li>
-                            <li><a href="VoucherController">Quản lý Voucher</a></li>
-                        </ul>
-                    </nav>
-                    <!-- User dropdown -->
-                </div>
-            </header>
 
             <div class="main-content">
                 <h1>Danh sách Voucher</h1>
 
                 <div class="button-container mb-3">
-                    <a href="VoucherController?action=create" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Thêm Voucher
+                    <a href="VoucherController?action=create"  class="btn btn-primary">
+                        <i class="fa fa-plus" ></i> Thêm Voucher
                     </a>
                 </div>
 
@@ -86,7 +75,7 @@
                                 <td>
                                     <%= voucher.getStartDate() != null ? 
         new SimpleDateFormat("dd/MM/yyyy").format(voucher.getStartDate()) : "N/A" %>
-                                </td>
+        </td>
                                 <td>
                                     <%= voucher.getEndDate() != null ? 
         new SimpleDateFormat("dd/MM/yyyy").format(voucher.getEndDate()) : "N/A" %>

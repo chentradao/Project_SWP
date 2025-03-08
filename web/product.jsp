@@ -123,7 +123,7 @@
                                 </div>
                                 <!-- Link to add the product to cart -->
                                 <div class="button cart_button">
-                                    <a href="CartURL?service=add2cart&id=${productDetail.productId}">add to cart</a>
+                                    <a id="buttonAddtoCart" href="CartURL?service=add2cart&id=${productDetail.productId}">add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -264,6 +264,43 @@
                 </div>
             </footer>
         </div>
+        <script>
+
+           document.addEventListener("DOMContentLoaded", function () {
+    const quantityInput = document.getElementById("quantity_input");
+    const addToCartButton = document.getElementById("buttonAddtoCart");
+
+    if (quantityInput && addToCartButton) {
+        function updateHref() {
+            let currentHref = addToCartButton.getAttribute("href") || "#";
+            let qty = parseInt(quantityInput.value) || 1; // M?c ??nh là 1 n?u không có giá tr? nh?p
+
+            // Chuy?n ??i URL ?? d? dàng thao tác tham s?
+            let url = new URL(currentHref, window.location.origin);
+
+            // ??m b?o ???ng d?n có ch?a /Project_SWP/
+            if (!url.pathname.includes("/Project_SWP/")) {
+                url.pathname = "/Project_SWP" + url.pathname;
+            }
+
+            // C?p nh?t giá tr? qty
+            url.searchParams.set("qty", qty);
+
+            addToCartButton.setAttribute("href", url.toString());
+        }
+
+        quantityInput.addEventListener("input", updateHref);
+        addToCartButton.addEventListener("click", function () {
+            updateHref(); // ??m b?o href ???c c?p nh?t ngay tr??c khi click
+        });
+    }
+});
+
+
+
+
+        </script>
+
 
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
