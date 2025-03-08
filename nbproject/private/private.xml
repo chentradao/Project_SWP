@@ -3,13 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/H:/kì%205/Project_SWP/web/listProduct.jsp</file>
-            <file>file:/H:/kì%205/Project_SWP/web/jsp/OrderHistory.jsp</file>
-            <file>file:/H:/kì%205/Project_SWP/src/java/controller/LoginController.java</file>
-            <file>file:/H:/kì%205/Project_SWP/src/java/controller/CartController.java</file>
-            <file>file:/H:/kì%205/Project_SWP/web/jsp/Cart.jsp</file>
-            <file>file:/H:/kì%205/Project_SWP/web/header.jsp</file>
-            <file>file:/H:/kì%205/Project_SWP/web/categories.jsp</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/src/java/controller/ProductListServlet.java</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/web/product.jsp</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/web/displayFeedback.jsp</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/web/listFeedback.jsp</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/web/categories.jsp</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/src/java/controller/AddToWishlistServlet.java</file>
+            <file>file:/C:/Users/dangp/OneDrive/Desktop/SWP_PRJ_Thao/Project_SWP/src/java/controller/CartController.java</file>
         </group>
     </open-files>
 </project-private>

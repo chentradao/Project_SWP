@@ -35,6 +35,15 @@ public class CartController extends HttpServlet {
         HttpSession session = request.getSession(true);
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
+             String quality = request.getParameter("qty");
+            int qty = -1;
+            if(quality == null || quality.equals("")){
+                qty = 1;
+            }
+            try {
+                qty = Integer.parseInt(quality);
+            } catch (Exception e) {
+            }
             if(service == null){
                 service.equals("showCart");
             }
@@ -43,7 +52,7 @@ public class CartController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
                 Cart newCart = dao.getCart(id);
                 if(session.getAttribute(id + "")== null){
-                    newCart.setQuantity(1);
+                    newCart.setQuantity(qty);
                     session.setAttribute(id + "", newCart);
                     cartQuantiry +=1 ;
                 }else{

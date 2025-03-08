@@ -14,7 +14,7 @@
         <div class="logo"><a href="${pageContext.request.contextPath}/ProductListServlet">Estée Lauder</a></div>
         <nav class="main_nav">
             <ul>
-                <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/ProductListServlet">Trang chủ</a></li>
                     <% for (Category category : categories) { %>
                 <li><a href="categories.jsp?category=<%= category.getCategoryId() %>">
                         <%= category.getCategoryName() %>
@@ -36,7 +36,7 @@
                         <img src="images/shopping-bag.svg" alt="">
                         <div class="cart_num_container">
                             <div class="cart_num_inner">
-                                <div class="cart_num">${sessionScope.cartQuantiry!= null ? sessionScope.cartQuantiry : 0}</div>
+                                <div class="cart_num">0</div>
                             </div>
                         </div>
                     </div>
@@ -90,3 +90,6 @@
         </div>
     </div>
 </header>
+
+
+
