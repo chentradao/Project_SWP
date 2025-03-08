@@ -78,7 +78,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Đơn hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quảng cáo</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Khách hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="Blog?service=listAllBlogs">Bài đăng</a></li>
                 </ul>
             </nav>

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Product</title>
+        <title>Feedback detail</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Wish shop project">
@@ -344,11 +344,13 @@
                         <div class="col">
                             <div class="home_container">
                                 <div class="home_content">
-                                    <div class="home_title">Product detail</div>
+                                    <div class="home_title">Đánh giá sản phẩm</div>
                                     <div class="breadcrumbs">
                                         <ul>
-                                            <li><a href="ProductListServlet">Home</a></li>
-                                            <li>Product detail</li>
+                                            <li><a href="ProductListServlet">Trang chủ</a></li>
+                                            <li><a href="categories.jsp">Danh sách sản phẩm</a></li>
+                                            <li><a href="javascript:history.back()">Sản phẩm chi tiết</a></li>
+                                            <li>Xem phản hồi</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -366,9 +368,9 @@
                         <div class="col">
                             <div class="current_page">
                                 <ul>
-                                    <li><a href="categories.html">Woman's Fashion</a></li>
-                                    <li><a href="categories.html">Swimsuits</a></li>
-                                    <li>2 Piece Swimsuits</li>
+                                    <li><a href="categories.jsp">Danh sách sản phẩm</a></li>
+                                    <li><a href="javascript:history.back()">${productDetail.productName}</a></li>
+                                    <li>Xem phản hồi</li>
                                 </ul>
                             </div>
                         </div>
@@ -414,15 +416,17 @@
                                     <p><strong>Size:</strong> ${productDetail.size}</p>
                                     <p><strong>Color:</strong> ${productDetail.color}</p>
                                 </div>
+
+                                <div class="button cart_button">
+                                    <a href="javascript:history.back()">Quay lại</a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col">
 
-                        </div>
-                    </div>
+
+
 
                     <!-- Review Statistics Section -->
                     <div class="container">
@@ -564,9 +568,9 @@
                                                             <div class="review_name">
                                                                 <a href="#">${feedback.accountName}</a>
                                                             </div>
-                                                                <div class="review_date">
-                                                                    <fmt:formatDate value="${feedback.date}" pattern="dd/MM/yyyy" />
-                                                                </div>
+                                                            <div class="review_date">
+                                                                <fmt:formatDate value="${feedback.date}" pattern="dd/MM/yyyy" />
+                                                            </div>
                                                             <div class="rating review_rating" data-rating="${feedback.rateStar}">
                                                                 <c:forEach var="i" begin="1" end="5">
                                                                     <c:choose>
@@ -707,12 +711,12 @@
                             </form>
                         </div>
                     </c:if>
-                   
+
 
 
                 </div>		
             </div>
-            
+
             <!-- Footer -->
 
             <footer class="footer">
