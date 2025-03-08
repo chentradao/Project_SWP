@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/Project_SWP"/>
+<Context path="/Project_SWP">
+    <Environment name="email" override="false" type="java.lang.String" value="esteelauder046@gmail.com"/>
+  <Environment name="password" override="false" type="java.lang.String" value="fyir zigs sgvz gcvo"/>
+</Context>
 

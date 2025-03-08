@@ -11,6 +11,17 @@
 
         <!-- STYLE CSS -->
         <link rel="stylesheet" href="css/style.css">
+        
+        <style>
+            ::placeholder {
+                font-size: 12px;
+                color: #a0a0a0;
+            }
+
+            #Email::placeholder {
+                font-size: 15px;
+            }
+        </style>
     </head>
 
     <body>
@@ -70,7 +81,7 @@
                             <label for="Email">Email:</label>
                             <div class="form-holder">
                                 <i class="zmdi zmdi-email"></i>
-                                <input type="email" class="form-control" id="Email" name="Email" value="${Email}" required>
+                                <input type="email" class="form-control" id="Email" name="Email" value="${Email}" placeholder="emailcuaban@email.com"  required>
                                 <p class="text-danger">${messEmail}</p>
                             </div>
                         </div>
@@ -89,6 +100,7 @@
                 </form>
             </div>
         </div>
+              
 
     </body>
 </html>

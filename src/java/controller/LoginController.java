@@ -49,14 +49,14 @@ public class LoginController extends HttpServlet {
                     request.setAttribute("mess", "Wrong username or password");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 } else {
-                    HttpSession session = request.getSession();
+                    HttpSession session = request.getSession(true);
                     session.setAttribute("acc", acc);
                     if(acc.getRole().equals("admin")){
-                        response.sendRedirect("AdminManage");
+                        response.sendRedirect("admin");
                     }else if(acc.getRole().equals("staff")){
-                        response.sendRedirect("Manager");
+                        response.sendRedirect("manager");
                     }else
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect("ProductListServlet");
                 }
             } else {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -87,9 +87,8 @@ public class LoginController extends HttpServlet {
             HttpSession session = request.getSession();
             session.removeAttribute("acc");
             session.removeAttribute("mess"); // Xóa thông báo lỗi
-
+            response.sendRedirect("ProductListServlet");
         }
-        processRequest(request, response);
     }
 
     /**

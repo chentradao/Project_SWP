@@ -388,7 +388,7 @@ section
 .search
 {
 	display: inline-block;
-	width: 400px;
+	width: 280px;
 	-webkit-transform: translateY(2px);
 	-moz-transform: translateY(2px);
 	-ms-transform: translateY(2px);
@@ -1495,4 +1495,85 @@ section
 	font-family: 'Lucida', serif;
 	font-size: 12px;
 	color: #232323;
+}
+
+
+.order_button:hover
+{
+	background: #937c6f;
+	color: #FFFFFF;
+	border: solid 1px #937c6f;
+}
+
+.order_button
+{
+	height: 47px;
+	border: solid 1px #b5b5b5;
+	outline: none;
+	background: #FFFFFF;
+	padding-left: 34px;
+	padding-right: 34px;
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	font-size: 12px;
+	color: #232323;
+	cursor: pointer;
+	-webkit-transition: all 200ms ease;
+	-moz-transition: all 200ms ease;
+	-ms-transition: all 200ms ease;
+	-o-transition: all 200ms ease;
+	transition: all 200ms ease;
+}
+
+.popup_content h3.text-red-600 { /* Tăng cỡ chữ cho h3 màu đỏ */
+    font-size: 24px; /* Hoặc giá trị bạn muốn */
+}
+
+.popup_clear{
+    width: 100%; 
+    height: 100%; 
+    position: fixed; 
+    top: 0; 
+    display: none; 
+    justify-content: left; 
+    padding-left: 5%;
+    align-items: center; 
+    text-align: center; 
+    z-index: 100;
+}
+.popup_content{ 
+height: 180px; 
+width: 500px; 
+background:#fff; 
+padding: 20px; 
+border-radius: 5px; 
+border: 1px;
+box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+position: relative; 
+}
+
+.popup_error_content h3.text-red-600 { /* Tăng cỡ chữ cho h3 màu đỏ */
+    font-size: 24px; /* Hoặc giá trị bạn muốn */
+}
+.popup_error{
+    width: 100%; 
+    height: 100%; 
+    position: fixed; 
+    top: 0; 
+    display: none; 
+    justify-content: left; 
+    padding-left: 5%;
+    align-items: center; 
+    text-align: center; 
+    z-index: 100;
+}
+.popup_error_content{ 
+height: 180px; 
+width: 500px; 
+background:#fff; 
+padding: 20px; 
+border-radius: 5px; 
+border: 1px;
+box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+position: relative; 
 }

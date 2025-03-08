@@ -229,7 +229,6 @@
                 <!-- Mô tả -->
                 <div class="blog-description">
                     <p><%=blog.getBlogDescription()%></p>
-                    <img src="<%=blog.getImage()%>" alt="Main content" class="main-image">
                 </div>
 
                 <div class="action-buttons">
