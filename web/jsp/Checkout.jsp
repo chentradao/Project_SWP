@@ -42,18 +42,18 @@
             <%@ include file="/menu.jsp" %>
 
             <div class="home">
-                <div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/categories.jpg" data-speed="0.8"></div>
+                <div class="home_background parallax-window" data-parallax="scroll" data-image-src="P_images/Checkout.jpg" data-speed="0.8"></div>
                 <div class="container">
                     <div class="row">
                         <div class="col">
                             <div class="home_container">
                                 <div class="home_content">
-                                    <div class="home_title">Checkout</div>
+                                    <div class="home_title">Thanh Toán</div>
                                     <div class="breadcrumbs">
                                         <ul>
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="index.html">Shopping Cart</a></li>
-                                            <li>Shopping Cart</li>
+                                            <li><a href="ProductListServlet">Trang Chủ</a></li>
+                                            <li><a href="CartURL?service=showCart">Giỏ Hàng</a></li>
+                                            <li>Giỏ Hàng</li>
                                         </ul>
                                     </div>
                                 </div>

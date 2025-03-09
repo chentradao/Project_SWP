@@ -25,7 +25,7 @@
     </head>
 
     <body>
-        <div class="wrapper" style="background-image: url('images/anh1.jpg');">
+        <div class="wrapper" style="background-image: url('P_images/login.jpg');">
             <div class="inner">
                 <form action="signup" method="POST">
                     <h3>Đăng kí</h3>
