@@ -73,7 +73,7 @@
                     <div class="newsletter_form_container">
                         <form action="CartURL" method="post" id="VoucherForm">
                             <input type="hidden" name="service" value="voucherEmail">
-                            <input type="email" id="V_email" name="V_email" class="newsletter_input" placeholder="E-mail here">
+                            <input type="email" id="V_email" name="V_email" class="newsletter_input" placeholder="emailcuaban@email.com">
                             <button type="submit" class="newsletter_button">Đăng kí</button>
                             <div id="Message" style="color: red;">
                                 <% 
@@ -90,7 +90,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
+                    <div class="newsletter_text">Ngoài ra bạn có thể đăng kí tài khoản để nhận được hỗ trợ tốt nhất</div>
                 </div>
             </div>
         </div>

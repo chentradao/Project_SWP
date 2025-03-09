@@ -424,5 +424,11 @@
                 document.getElementById("sortOrderStatusHeader").addEventListener("click", () => handleSort("orderStatus"));
             });
         </script>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="styles/bootstrap4/popper.js"></script>
+        <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
     </body>
 </html>

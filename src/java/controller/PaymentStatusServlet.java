@@ -126,6 +126,7 @@ public class PaymentStatusServlet extends HttpServlet {
             if (obj instanceof Cart) {
                 Cart cart = (Cart) obj;
                 vector.add(cart);
+                session.removeAttribute(key);
             }
         }
         int subtotal = 0;
@@ -138,7 +139,6 @@ public class PaymentStatusServlet extends HttpServlet {
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
-            session.removeAttribute("cart");
         }
         int discount =0;
         if(voucher != null){
