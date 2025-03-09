@@ -44,7 +44,6 @@ public class ShippingFeeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
         int total = Integer.parseInt(request.getParameter("total"));
         String city = request.getParameter("city");
         String district = request.getParameter("district");

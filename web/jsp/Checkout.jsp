@@ -208,10 +208,10 @@
                             data: { city: city, district: district, ward: ward, total: total },
                             success: function(response) {
                                 let shippingFee = response.shippingFee || 0;
-                                document.getElementById("shippingFee").innerText = shippingFee + "₫";
+                                document.getElementById("shippingFee").innerText = shippingFee.toLocaleString("vi-VN") + "₫";
                                 let totalPrice = parseInt(total) + shippingFee;
                                 document.getElementById("shippingFee1").value = shippingFee;
-                                document.getElementById("totalPrice").innerText = totalPrice + "₫";
+                                document.getElementById("totalPrice").innerText = totalPrice.toLocaleString("vi-VN") + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;
                             },
                             error: function() {

@@ -87,7 +87,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Doanh thu</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quảng cáo</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Tài khoản</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="feedbacks">Tài khoản</a></li>
                 </ul>
             </nav>
             <div class="nav-item dropdown">

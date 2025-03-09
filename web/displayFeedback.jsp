@@ -338,7 +338,7 @@
             <!-- Home -->
 
             <div class="home">
-                <div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/product.jpg" data-speed="0.8"></div>
+                <div class="home_background parallax-window" data-parallax="scroll" data-image-src="P_images/categories.jpg" data-speed="0.8"></div>
                 <div class="container">
                     <div class="row">
                         <div class="col">
@@ -347,7 +347,7 @@
                                     <div class="home_title">Đánh giá sản phẩm</div>
                                     <div class="breadcrumbs">
                                         <ul>
-                                            <li><a href="ProductListServlet">Trang chủ</a></li>
+                                            <li><a href="ProductListServlet">Home</a></li>
                                             <li><a href="categories.jsp">Danh sách sản phẩm</a></li>
                                             <li><a href="javascript:history.back()">Sản phẩm chi tiết</a></li>
                                             <li>Xem phản hồi</li>
@@ -405,7 +405,7 @@
                                 <!-- In Stock -->
                                 <div class="in_stock_container">
                                     <div class="in_stock in_stock_true"></div>
-                                    <span>in stock</span>
+                                    <span>còn hàng</span>
                                 </div>
                                 <!-- Dynamic product description -->
                                 <div class="product_text">
@@ -413,8 +413,8 @@
                                 </div>
                                 <!-- Display product details such as size and color -->
                                 <div class="product_details">
-                                    <p><strong>Size:</strong> ${productDetail.size}</p>
-                                    <p><strong>Color:</strong> ${productDetail.color}</p>
+                                    <p><strong>Kích cỡ:</strong> ${productDetail.size}</p>
+                                    <p><strong>Màu:</strong> ${productDetail.color}</p>
                                 </div>
 
                                 <div class="button cart_button">
@@ -726,7 +726,7 @@
                             <div class="footer_logo"><a href="ProductListServlet">Estée Lauder</a></div>
                             <nav class="footer_nav">
                                 <ul>
-                                    <li><a href="ProductListServlet">Home</a></li>
+                                    <li><a href="ProductListServlet">Trang chủ</a></li>
                                     <li><a href="categories.html">Chăm sóc da</a></li>
                                     <li><a href="categories.html">Trang điểm</a></li>
                                     <li><a href="categories.html">Nước hoa</a></li>
