@@ -64,7 +64,7 @@
                 <div class="col">
                     <div class="section_title_container text-center">
                         <div class="section_subtitle">only the best</div>
-                        <div class="section_title">Đăng Kí để Nhận Voucher Giảm 20%</div>
+                        <div class="section_title">Đăng Kí để Nhận Voucher Giảm 5%</div>
                     </div>
                 </div>
             </div>

@@ -179,7 +179,7 @@ public class CartController extends HttpServlet {
 
                 // Nếu validate thành công, gửi email
                 try {
-                    sendVoucherEmail(email, 2, 20);
+                    sendVoucherEmail(email, 4, 5);
                     session.setAttribute("success", "Voucher đã được gửi đến email của bạn!");
                 } catch (Exception e) {
                     session.setAttribute("V_error", "Có lỗi khi gửi email. Vui lòng thử lại.");
