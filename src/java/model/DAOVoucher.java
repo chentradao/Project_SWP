@@ -8,9 +8,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DAOVoucher extends DBConnection {
-    public Voucher getVoucher(int id) {
+
+    public Voucher getVoucherByID(int id) {
         Voucher voucher = null;
         String sql = "SELECT * FROM Voucher WHERE VoucherID = " + id;
+        try {
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            if (rs.next()) {
+                voucher = new Voucher(
+                        rs.getInt("VoucherID"),
+                        rs.getString("VoucherName"),
+                        rs.getInt("Discount"),
+                        rs.getInt("Quantity"),
+                        rs.getDate("StartDate"),
+                        rs.getDate("EndDate"),
+                        rs.getString("Description"),
+                        rs.getInt("VoucherStatus")
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return voucher;
+    }
+
+    public Voucher getVoucherByName(String name) {
+        Voucher voucher = null;
+        String sql = "SELECT * FROM Voucher WHERE VoucherName = '" + name +"'";
         try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
             if (rs.next()) {

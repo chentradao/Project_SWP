@@ -70,7 +70,7 @@
                     <div class="container">
                         <div class="row">
                             <!-- Billing Details -->
-                            <div class="col-lg-6">
+                            <div class="col-lg-7">
                                 <div class="billing">
                                     <div class="checkout_title">Chi Tiết Thanh Toán</div>
                                     <div class="checkout_form_container">
@@ -78,10 +78,10 @@
                                         <% if(acc != null) { %>
                                         <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" name="CustomerName" value="<%=acc.getUserName()%>">
                                         <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email" value="<%=acc.getEmail()%>">
-                                        <select name="city" id="city" class="country_select checkout_input">
+                                        <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
+                                            <select name="city" id="city" class="country_select checkout_input">
                                             <option value="">Tỉnh / Thành phố</option>
                                         </select>
-                                        <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="district" id="district" class="country_select checkout_input">
                                                 <option value="">Quận / Huyện</option>
                                             </select>
@@ -95,10 +95,10 @@
                                         <% } else { %>
                                         <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" name="CustomerName">
                                         <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email">
-                                        <select name="city" id="city" class="country_select checkout_input">
+                                        <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
+                                            <select name="city" id="city" class="country_select checkout_input">
                                             <option value="">Tỉnh / Thành phố</option>
                                         </select>
-                                        <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="district" id="district" class="country_select checkout_input">
                                                 <option value="">Quận / Huyện</option>
                                             </select>
@@ -115,7 +115,7 @@
                             </div>
 
                             <!-- Cart Details -->
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="cart_details">
                                     <div class="checkout_title">Tổng Thanh Toán</div>
                                     <div class="cart_total">

@@ -49,7 +49,7 @@ public class CartController extends HttpServlet {
             } catch (Exception e) {
             }
             if (service == null) {
-                service.equals("showCart");
+                service = "showCart";
             }
             int cartQuantiry = session.getAttribute("cartQuantiry") != null ? (int) session.getAttribute("cartQuantiry") : 0;
             if (service.equals("add2cart")) {
@@ -115,11 +115,11 @@ public class CartController extends HttpServlet {
             if (service.equals("addVoucher")) {
                 String VoucherID = request.getParameter("VoucherID");
                 if (VoucherID == null) {
-                    Voucher voucher = d.getVoucher(1);
+                    Voucher voucher = d.getVoucherByID(1);
                     session.setAttribute("voucher", voucher);
                 } else {
                     int vid = Integer.parseInt(VoucherID);
-                    Voucher voucher = d.getVoucher(vid);
+                    Voucher voucher = d.getVoucherByID(vid);
                     if (voucher == null) {
                         String error = "Voucher không hợp lệ";
                         session.setAttribute("error", error);

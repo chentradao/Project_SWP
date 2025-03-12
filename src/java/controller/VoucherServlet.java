@@ -36,7 +36,7 @@ public class VoucherServlet extends HttpServlet {
                 break;
             case "edit":
                 int id = Integer.parseInt(request.getParameter("id"));
-                Voucher voucher = daoVoucher.getVoucher(id);
+                Voucher voucher = daoVoucher.getVoucherByID(id);
                 request.setAttribute("voucher", voucher);
                 request.getRequestDispatcher("voucher-form.jsp").forward(request, response);
                 break;
