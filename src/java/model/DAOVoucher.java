@@ -14,38 +14,60 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 
-
 /**
  *
  * @author nguye
  */
 public class DAOVoucher extends DBConnection {
-    public Voucher getVoucherByID(int voucherID) {
-    Voucher voucher = null;
-    String sql = "SELECT * FROM Voucher WHERE VoucherID = ?";
-    
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, voucherID);
-        ResultSet rs = ps.executeQuery();
-        
-        if (rs.next()) { // Chỉ lấy một dòng dữ liệu
-            voucher = new Voucher(
-                rs.getInt("VoucherID"),
-                rs.getString("VoucherName"),
-                rs.getInt("Discount"),
-                rs.getInt("Quantity"),
-                rs.getDate("StartDate"),
-                rs.getDate("EndDate"),
-                rs.getString("Description"),
-                rs.getInt("VoucherStatus")
-            );
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return voucher;
-}
 
+    public Voucher getVoucherByID(int voucherID) {
+        Voucher voucher = null;
+        String sql = "SELECT * FROM Voucher WHERE VoucherID = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, voucherID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) { // Chỉ lấy một dòng dữ liệu
+                voucher = new Voucher(
+                        rs.getInt("VoucherID"),
+                        rs.getString("VoucherName"),
+                        rs.getInt("Discount"),
+                        rs.getInt("Quantity"),
+                        rs.getDate("StartDate"),
+                        rs.getDate("EndDate"),
+                        rs.getString("Description"),
+                        rs.getInt("VoucherStatus")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return voucher;
+    }
+
+    public Voucher getVoucherByName(String name) {
+        Voucher voucher = null;
+        String sql = "SELECT * FROM Voucher WHERE VoucherName = '" + name + "'";
+        try {
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            if (rs.next()) {
+                voucher = new Voucher(
+                        rs.getInt("VoucherID"),
+                        rs.getString("VoucherName"),
+                        rs.getInt("Discount"),
+                        rs.getInt("Quantity"),
+                        rs.getDate("StartDate"),
+                        rs.getDate("EndDate"),
+                        rs.getString("Description"),
+                        rs.getInt("VoucherStatus")
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return voucher;
+    }
 
     public Vector<Voucher> getVouchers(String sql) {
         Vector<Voucher> vector = new Vector<>();
@@ -61,7 +83,7 @@ public class DAOVoucher extends DBConnection {
                 Date EndDate = rs.getDate("EndDate");
                 String Description = rs.getString("Description");
                 int VoucherStatus = rs.getInt("VoucherStatus");
-                Voucher v = new  Voucher(VoucherID, VoucherName, Discount, Quantity, StartDate, EndDate, Description, VoucherStatus);
+                Voucher v = new Voucher(VoucherID, VoucherName, Discount, Quantity, StartDate, EndDate, Description, VoucherStatus);
                 vector.add(v);
             }
         } catch (SQLException ex) {
@@ -69,12 +91,13 @@ public class DAOVoucher extends DBConnection {
         }
         return vector;
     }
+
     public static void main(String[] args) {
         DAOVoucher dao = new DAOVoucher();
         Voucher voucher = dao.getVoucherByID(2);
-        if(voucher == null){
+        if (voucher == null) {
             System.out.println("null");
-        }else{
+        } else {
             System.out.println(voucher.getDiscount());
         }
     }

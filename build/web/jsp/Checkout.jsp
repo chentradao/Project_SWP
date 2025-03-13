@@ -25,6 +25,9 @@
             for(Cart cart : vector){
                 subtotal += (cart.getPrice() * cart.getQuantity());
             }
+            if(subtotal == 0){
+                response.sendRedirect("CartURL?service=showCart");
+            }
             int discount = 0;
             if(voucher != null){
                 discount = (voucher.getDiscount() * subtotal)/100;
@@ -204,11 +207,12 @@
                             type: "GET",
                             data: { city: city, district: district, ward: ward, total: total },
                             success: function(response) {
-                                let shippingFee = response.shippingFee;
-                                document.getElementById("shippingFee").innerText = shippingFee + "₫";
+                                console.log("response",response);
+                                let shippingFee = response.shippingFee || 0;
+                                document.getElementById("shippingFee").innerText = shippingFee.toLocaleString("vi-VN") + "₫";
                                 let totalPrice = parseInt(total) + shippingFee;
                                 document.getElementById("shippingFee1").value = shippingFee;
-                                document.getElementById("totalPrice").innerText = totalPrice + "₫";
+                                document.getElementById("totalPrice").innerText = totalPrice.toLocaleString("vi-VN") + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;
                             },
                             error: function() {

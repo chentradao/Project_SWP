@@ -68,7 +68,7 @@ public class OrderController extends HttpServlet {
                     String sortColumn = request.getParameter("sortColumn");
                     String sortOrder = request.getParameter("sortOrder");
                     int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 7; // Số bản ghi mỗi trang (có thể thay đổi)
+                    int pageSize = 10; // Số bản ghi mỗi trang (có thể thay đổi)
                     // Tổng số bản ghi
                     int totalRecords = dao.getTotalOrders("SELECT COUNT(*) FROM Orders WHERE CustomerID = " + acc.getAccountID());
                     int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
@@ -144,7 +144,7 @@ public class OrderController extends HttpServlet {
 
                     // Tham số phân trang
                     int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 5;
+                    int pageSize = 10;
 
                     // Tổng số bản ghi với bộ lọc
                     String countQuery = "SELECT COUNT(*) FROM Orders WHERE OrderStatus LIKE '%" + status + "%' "
@@ -271,6 +271,7 @@ public class OrderController extends HttpServlet {
                                     Cart cart = (Cart) obj;
                                     dao.addToOrder(cart);
                                     session.removeAttribute(key);
+                                    session.removeAttribute("cartQuantiry");
                                 }
                             }
                             response.sendRedirect("index.jsp");

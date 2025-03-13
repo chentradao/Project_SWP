@@ -165,12 +165,13 @@ public class PaymentStatusServlet extends HttpServlet {
                 + "</body>"
                 + "</html>";
         session.removeAttribute("voucher");
+        session.removeAttribute("cartQuantiry");
         try {
             EmailHandler.sendEmail(Email, subject, content);
         } catch (AddressException ex) {
             Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getRequestDispatcher("ProductListServlet").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

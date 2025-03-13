@@ -45,7 +45,6 @@ public class ShippingFeeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
         int total = Integer.parseInt(request.getParameter("total"));
         String city = request.getParameter("city");
         String district = request.getParameter("district");
@@ -77,9 +76,9 @@ public class ShippingFeeController extends HttpServlet {
     public double getShippingFee(String city, String district, String ward, double weight, double value) {
         try {
             String API_URL = "https://services.giaohangtietkiem.vn/services/shipment/fee";
-            String TOKEN = "13C9GJOiLh8zRzSXSIKkmYfTNPSvhO3a8sowSla";
+            String TOKEN = "16LVGcpuRjfbd5VB2Gcc3AeqDZYNLUBb7sNRLvx";
             String encodedPickCity = URLEncoder.encode("Hà Nội", "UTF-8");
-            String encodedPickDistrict = URLEncoder.encode("Thạch Thất", "UTF-8");
+            String encodedPickDistrict = URLEncoder.encode("Hà Đông", "UTF-8");
             
             // ma hoa tham so de tranh loi ki tu dac biet
             String encodedCity = URLEncoder.encode(city, "UTF-8");
@@ -103,6 +102,7 @@ public class ShippingFeeController extends HttpServlet {
 
             // kiem tra phan hoi tu server
             int responseCode = conn.getResponseCode();
+            System.out.println("Lỗi HTTP: " + responseCode);
             if (responseCode == 200) { // Nếu thành công
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String inputLine;
@@ -112,9 +112,10 @@ public class ShippingFeeController extends HttpServlet {
                     response.append(inputLine);
                 }
                 in.close();
-
+                System.out.print(response);
                 // chuyen doi phan hoi thanh json
                 JSONObject jsonResponse = new JSONObject(response.toString());
+                System.out.println(jsonResponse.getJSONObject("fee").getDouble("fee"));
                 if (jsonResponse.has("fee")) {
                     return jsonResponse.getJSONObject("fee").getDouble("fee");
                 }
@@ -137,4 +138,3 @@ public class ShippingFeeController extends HttpServlet {
     }// </editor-fold>
 
 }
-
