@@ -78,6 +78,8 @@ public class CartController extends HttpServlet {
                         vector.add(cart);
                     }
                 }
+                Vector<Voucher> voucherlist = d.getVouchers("Select * From Voucher Where VoucherStatus =1");
+                request.setAttribute("voucherlist", voucherlist);
                 request.setAttribute("error", session.getAttribute("error"));
                 request.setAttribute("voucher", session.getAttribute("voucher"));
                 request.setAttribute("vectorCart", vector);
@@ -114,13 +116,11 @@ public class CartController extends HttpServlet {
             }
             if (service.equals("addVoucher")) {
                 String VoucherID = request.getParameter("VoucherID");
-                if (VoucherID == null) {
-                    Voucher voucher = d.getVoucherByID(1);
-                    session.setAttribute("voucher", voucher);
+                if (VoucherID == null || VoucherID.isEmpty()) {
+                    session.setAttribute("error", "Vui lòng nhập voucher");
                 } else {
-                    int vid = Integer.parseInt(VoucherID);
-                    Voucher voucher = d.getVoucherByID(vid);
-                    if (voucher == null) {
+                    Voucher voucher = d.getVoucherByName(VoucherID);
+                    if (voucher == null || voucher.getVoucherStatus() == 0) {
                         String error = "Voucher không hợp lệ";
                         session.setAttribute("error", error);
                         session.removeAttribute("voucher");

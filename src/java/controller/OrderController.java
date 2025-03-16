@@ -90,13 +90,14 @@ public class OrderController extends HttpServlet {
                     String ward = request.getParameter("ward");
                     String address = request.getParameter("address");
                     String ShipAddress = address + ", " + ward + ", " + district + ", " + city;
+                    int Discount = Integer.parseInt(request.getParameter("discount"));
                     String CancelNotification = null;
                     String Note = request.getParameter("Note");
                     int OrderStatus = 1;
 
                     String PaymentMethod = request.getParameter("payment");
                     if (PaymentMethod.equalsIgnoreCase("cod")) {
-                        Order o = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, CancelNotification, Note, PaymentMethod, OrderStatus);
+                        Order o = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus);
                         int n = dao.insertOrder(o);
                         int newVQuantity = voucher.getQuantity() - 1;
                         voucher.setQuantity(newVQuantity);
@@ -104,7 +105,7 @@ public class OrderController extends HttpServlet {
                             voucher.setStatus(0);
                         }
                         d.updateVoucherByHank(voucher);
-                        sendOrderConfirmationEmail(session, CustomerName, ShipAddress, Phone, Email, ShippingFee, TotalCost, Note);
+                        sendOrderConfirmationEmail(session, CustomerName, ShipAddress, Discount, Phone, Email, ShippingFee, TotalCost, Note);
                         if (n > 0) {
                             // Insert các mục giỏ hàng vào OrderDetails
                             Enumeration<String> enu = session.getAttributeNames();
@@ -138,6 +139,7 @@ public class OrderController extends HttpServlet {
                         session.setAttribute("Email", Email);
                         session.setAttribute("Phone", Phone);
                         session.setAttribute("ShipAddress", ShipAddress);
+                        session.setAttribute("Discount", Discount);
                         session.setAttribute("Note", Note);
                         response.sendRedirect("paymentvnpay");
                     }
@@ -149,7 +151,7 @@ public class OrderController extends HttpServlet {
 
     }
 
-    private void sendOrderConfirmationEmail(HttpSession session, String name, String address, String phone, String email, int shipping, int total, String note) {
+    private void sendOrderConfirmationEmail(HttpSession session, String name, String address, int discount, String phone, String email, int shipping, int total, String note) {
         NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN")); // Sử dụng getNumberInstance thay vì getCurrencyInstance
         formatter.setGroupingUsed(true); // Bật tính năng nhóm số
         Voucher voucher = (Voucher) session.getAttribute("voucher");
@@ -214,10 +216,6 @@ public class OrderController extends HttpServlet {
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
-        }
-        int discount = 0;
-        if (voucher != null) {
-            discount = (voucher.getDiscount() * subtotal) / 100;
         }
         content += "<tr>"
                 + "<tr>"

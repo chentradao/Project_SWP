@@ -53,6 +53,7 @@ public class PaymentStatusServlet extends HttpServlet {
         String Phone = (String) session.getAttribute("Phone");
         String ShipAddress = (String) session.getAttribute("ShipAddress");
         Voucher voucher = (Voucher) session.getAttribute("voucher");
+        int Discount = (int) session.getAttribute("Discount");
         int VoucherID = 1;
         if (voucher != null) {
             VoucherID = voucher.getVoucherID();
@@ -70,7 +71,7 @@ public class PaymentStatusServlet extends HttpServlet {
         }
         d.updateVoucherByHank(voucher);
         DAOOrder dao = new DAOOrder();
-        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, null, Note, "VNPay", 1);
+        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, "VNPay", "VNPay", VoucherID);
         int n = dao.insertOrder(o);
         if (n > 0) {
             // Insert các mục giỏ hàng vào OrderDetails
@@ -158,14 +159,11 @@ public class PaymentStatusServlet extends HttpServlet {
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
         }
-        int discount = 0;
-        if (voucher != null) {
-            discount = (voucher.getDiscount() * subtotal) / 100;
-        }
+        
         content += "<tr>"
                 + "<tr>"
                 + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Giảm giá  </td>"
-                + "    <td class=\"price\">" + formatter.format(discount) + " VNĐ</td>"
+                + "    <td class=\"price\">" + formatter.format(Discount) + " VNĐ</td>"
                 + "</tr>"
                 + "<tr>"
                 + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Phí vận chuyển </td>"
@@ -183,6 +181,7 @@ public class PaymentStatusServlet extends HttpServlet {
                 + "</body>"
                 + "</html>";
         session.removeAttribute("voucher");
+        session.removeAttribute("Discount");
         session.removeAttribute("cartQuantiry");
         try {
             EmailHandler.sendEmail(Email, subject, content);

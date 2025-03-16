@@ -4,6 +4,7 @@ import entity.Voucher;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,6 +133,30 @@ public class DAOVoucher extends DBConnection {
             Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    public Vector<Voucher> getVouchers(String sql) {
+        Vector<Voucher> vector = new Vector<>();
+        try {
+            Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                int VoucherID = rs.getInt("VoucherID");
+                String VoucherName = rs.getString("VoucherName");
+                int Discount = rs.getInt("Discount");
+                int MaxDiscount = rs.getInt("MaxDiscount");
+                int Quantity = rs.getInt("Quantity");
+                java.util.Date StartDate = rs.getDate("StartDate");
+                java.util.Date EndDate = rs.getDate("EndDate");
+                String Description = rs.getString("Description");
+                int VoucherStatus = rs.getInt("VoucherStatus");
+                Voucher v = new Voucher(VoucherID, VoucherName, Discount, MaxDiscount,Quantity, StartDate, EndDate, Description, VoucherStatus);
+                vector.add(v);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector;
     }
 
     public List<Voucher> listVouchers() {

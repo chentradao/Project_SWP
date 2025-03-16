@@ -22,13 +22,13 @@ public class Order {
     private String Email;
     private String Phone;
     private String ShipAddress;
-    private int VoucherID;
+    private int Discount;
     private String CancelNotification;
     private String Note;
     private String PaymentMethod;
     private int OrderStatus;
 
-    public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+    public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
         this.OrderDate = OrderDate;
@@ -38,14 +38,15 @@ public class Order {
         this.Email = Email;
         this.Phone = Phone;
         this.ShipAddress = ShipAddress;
-        this.VoucherID = VoucherID;
+        this.Discount = Discount;
         this.CancelNotification = CancelNotification;
         this.Note = Note;
         this.PaymentMethod = PaymentMethod;
         this.OrderStatus = OrderStatus;
     }
 
-    public Order(Integer OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int VoucherID, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+
+    public Order(Integer OrderID, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
         this.OrderID = OrderID;
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
@@ -56,7 +57,7 @@ public class Order {
         this.Email = Email;
         this.Phone = Phone;
         this.ShipAddress = ShipAddress;
-        this.VoucherID = VoucherID;
+        this.Discount = Discount;
         this.CancelNotification = CancelNotification;
         this.Note = Note;
         this.PaymentMethod = PaymentMethod;
@@ -161,12 +162,12 @@ public class Order {
         this.ShippingFee = ShippingFee;
     }
 
-    public int getVoucherID() {
-        return VoucherID;
+    public int getDiscount() {
+        return Discount;
     }
 
-    public void setVoucherID(int VoucherID) {
-        this.VoucherID = VoucherID;
+    public void setDiscount(int Discount) {
+        this.Discount = Discount;
     }
 
     public String getCancelNotification() {
@@ -184,18 +185,5 @@ public class Order {
     public void setNote(String Note) {
         this.Note = Note;
     }
-
-    @Override
-    public String toString() {
-        return "Order{" + "OrderID=" + OrderID + ", CustomerID=" + CustomerID + ", CustomerName=" + CustomerName + ", OrderDate=" + OrderDate + ", ShippedDate=" + ShippedDate + ", ShippingFee=" + ShippingFee + ", TotalCost=" + TotalCost + ", Email=" + Email + ", Phone=" + Phone + ", ShipAddress=" + ShipAddress + ", VoucherID=" + VoucherID + ", CancelNotification=" + CancelNotification + ", Note=" + Note + ", PaymentMethod=" + PaymentMethod + ", OrderStatus=" + OrderStatus + '}';
-    }
-    
-
-    
-
-    
-
-    
-    
-    
+      
 }

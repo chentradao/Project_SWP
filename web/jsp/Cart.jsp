@@ -25,6 +25,7 @@
     <body>
         <%
                     Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
+                    Vector<Voucher> voucherlist=(Vector<Voucher>)request.getAttribute("voucherlist");
                     Voucher voucher = (Voucher)request.getAttribute("voucher");
                     String error = (String)request.getAttribute("error");
                     DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -193,8 +194,15 @@
                                     <div class="cart_title">Mã Giảm Giá</div>
                                     <form action="CartURL" class="cart_coupon_form d-flex flex-row align-items-start justify-content-start" id="cart_coupon_form" method="post">
                                         <input type="hidden" name="service" value="addVoucher">
-                                        <input type="number" name="VoucherID" class="cart_coupon_input" placeholder="Mã Giảm Giá" required="required">
+                                        <input type="text" name="VoucherID" class="cart_coupon_input" placeholder="Mã Giảm Giá"  id="voucherInput">
                                         <button type="submit" class="button_clear cart_button_2">Áp Dụng</button>
+
+                                        <!-- Danh sách đề xuất voucher -->
+                                        <div id="voucherSuggestions" class="voucher-suggestions" style="display: none;">
+                                            <%for(Voucher voucherin4 : voucherlist){%>
+                                            <label><input type="radio" name="voucherOption" value="<%=voucherin4.getVoucherName()%>"> <%=voucherin4.getVoucherName()%> - Giảm <%=voucherin4.getDiscount()%>%</label><br>
+                                                <%}%>
+                                        </div>
                                     </form>
                                     <%if(error != null){%>
                                     <div class="error-message" style="color: red;"><%=error%></div>
@@ -205,7 +213,16 @@
                             <%
                                 int discount = 0;
                                 if(voucher != null){
-                                        discount = (voucher.getDiscount() * subTotal)/100;
+                                       int rawDiscount = (voucher.getDiscount() * subTotal)/100;
+                                       if(voucher.getMaxDiscount() > 0){
+                                       if(rawDiscount <= voucher.getMaxDiscount()){
+                                       discount = rawDiscount;
+                                }else{
+                                        discount = voucher.getMaxDiscount();
+                                    }
+                                }else{
+                                discount = rawDiscount;
+                                }
                                 }
                                 int total = subTotal - discount;
                             %>
@@ -238,7 +255,44 @@
 
                 <%@ include file="/Footer.jsp" %>
         </div>
+        <script>
+            function removeDiacritics(str) {
+                return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+            }
 
+            document.getElementById("voucherInput").addEventListener("input", function (event) {
+                let inputValue = this.value;
+                inputValue = removeDiacritics(inputValue); // Chuyển chữ có dấu thành không dấu
+                inputValue = inputValue.replace(/[^a-zA-Z0-9]/g, ''); // Loại bỏ ký tự đặc biệt và dấu cách
+                this.value = inputValue.toUpperCase(); // Chuyển thành chữ in hoa
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const voucherInput = document.getElementById("voucherInput");
+                const voucherSuggestions = document.getElementById("voucherSuggestions");
+                const radioButtons = voucherSuggestions.querySelectorAll('input[type="radio"]');
+
+                // Hiển thị danh sách khi nhấp vào ô input
+                voucherInput.addEventListener("focus", function () {
+                    voucherSuggestions.style.display = "block";
+                });
+
+                // Điền giá trị voucher vào input khi chọn radio button
+                radioButtons.forEach(radio => {
+                    radio.addEventListener("change", function () {
+                        voucherInput.value = this.value;
+                        voucherSuggestions.style.display = "none"; // Ẩn danh sách sau khi chọn
+                    });
+                });
+
+                // Ẩn danh sách khi nhấp ra ngoài
+                document.addEventListener("click", function (e) {
+                    if (!voucherInput.contains(e.target) && !voucherSuggestions.contains(e.target)) {
+                        voucherSuggestions.style.display = "none";
+                    }
+                });
+            });
+        </script>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>

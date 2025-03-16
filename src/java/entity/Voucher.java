@@ -32,12 +32,12 @@ public class Voucher {
     public Voucher() {
     }
 
-    public Voucher(int voucherID, String voucherName, int discount, int quantity, int maxDiscount, Date startDate, Date endDate, String description, int voucherStatus) {
+    public Voucher(int voucherID, String voucherName, int discount, int maxDiscount, int quantity, Date startDate, Date endDate, String description, int voucherStatus) {
         this.voucherID = voucherID;
         this.voucherName = voucherName;
         this.discount = discount;
-        this.quantity = quantity;
         this.maxDiscount = maxDiscount;
+        this.quantity = quantity;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
