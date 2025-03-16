@@ -105,6 +105,7 @@ public class DAOProductDetail extends DBConnection {
             pre.setObject(9, pro.getPrice());
             pre.setObject(10, pro.getImage());
             pre.setObject(11, pro.getProductStatus());
+            pre.setObject(12, pro.getID());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DAOProductDetail.class.getName()).log(Level.SEVERE, null, ex);
@@ -174,6 +175,11 @@ public class DAOProductDetail extends DBConnection {
         }
 
         return productDetail; // Trả về đối tượng ProductDetail (hoặc null nếu không tìm thấy)
+    }
+    public static void main(String[] args) {
+        DAOProductDetail dao = new DAOProductDetail();
+        ProductDetail pro =dao.getProDetailbyID(10);
+        System.out.println(pro);
     }
 
 }

@@ -45,9 +45,6 @@ public class Voucher {
     }
 
 
-    public int getId() {
-        return voucherID;
-    }
 
     public int getVoucherID() {
         return voucherID;

@@ -83,14 +83,6 @@ public class PaymentStatusServlet extends HttpServlet {
                 if (obj instanceof Cart) {
                     Cart cart = (Cart) obj;
                     dao.addToOrder(cart);
-                    ProductDetail pro = da.getProDetailbyID(cart.getID());
-                    int updateQuantity = pro.getQuantity() - cart.getQuantity();
-                    pro.setQuantity(updateQuantity);
-                    pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
-                    if (updateQuantity <= 0) {
-                        pro.setProductStatus(0);
-                    }
-                    da.updateProductDetail(pro);
                 }
             }
         }
@@ -158,8 +150,16 @@ public class PaymentStatusServlet extends HttpServlet {
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
+            ProductDetail pro = da.getProDetailbyID(cart.getID());
+            int updateQuantity = pro.getQuantity() - cart.getQuantity();
+            pro.setQuantity(updateQuantity);
+            pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
+            if (updateQuantity <= 0) {
+                pro.setProductStatus(0);
+            }
+            da.updateProductDetail(pro);
         }
-        
+
         content += "<tr>"
                 + "<tr>"
                 + "    <td colspan=\"4\" style=\"padding:4px;text-align:right\"> Giảm giá  </td>"

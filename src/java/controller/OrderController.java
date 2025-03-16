@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.AccountVoucher;
 import entity.Accounts;
 import entity.Cart;
 import entity.Order;
@@ -29,6 +30,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
+import model.DAOAccountVoucher;
 import model.DAOOrder;
 import model.DAOProductDetail;
 import model.DAOVoucher;
@@ -50,6 +52,7 @@ public class OrderController extends HttpServlet {
         DAOOrder dao = new DAOOrder();
         DAOProductDetail da = new DAOProductDetail();
         DAOVoucher d = new DAOVoucher();
+        DAOAccountVoucher av = new DAOAccountVoucher();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
             if (service.equals("checkout")) {
@@ -105,6 +108,10 @@ public class OrderController extends HttpServlet {
                             voucher.setStatus(0);
                         }
                         d.updateVoucherByHank(voucher);
+                        if(VoucherID > 1 || acc != null){
+                            AccountVoucher accv = new AccountVoucher(VoucherID, acc.getAccountID());
+                            av.insertAccountVoucher(accv);
+                        }
                         sendOrderConfirmationEmail(session, CustomerName, ShipAddress, Discount, Phone, Email, ShippingFee, TotalCost, Note);
                         if (n > 0) {
                             // Insert các mục giỏ hàng vào OrderDetails
@@ -116,14 +123,6 @@ public class OrderController extends HttpServlet {
                                 if (obj instanceof Cart) {
                                     Cart cart = (Cart) obj;
                                     dao.addToOrder(cart);
-                                    ProductDetail pro = da.getProDetailbyID(cart.getID());
-                                    int updateQuantity = pro.getQuantity() - cart.getQuantity();
-                                    pro.setQuantity(updateQuantity);
-                                    pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
-                                    if (updateQuantity <= 0) {
-                                        pro.setProductStatus(0);
-                                    }
-                                    da.updateProductDetail(pro);
                                     session.removeAttribute(key);
                                     session.removeAttribute("cartQuantiry");
                                 }
@@ -153,6 +152,7 @@ public class OrderController extends HttpServlet {
 
     private void sendOrderConfirmationEmail(HttpSession session, String name, String address, int discount, String phone, String email, int shipping, int total, String note) {
         NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN")); // Sử dụng getNumberInstance thay vì getCurrencyInstance
+        DAOProductDetail da = new DAOProductDetail();
         formatter.setGroupingUsed(true); // Bật tính năng nhóm số
         Voucher voucher = (Voucher) session.getAttribute("voucher");
         String subject = "ESTÉE LAUDER - Xác nhận đơn hàng!";
@@ -216,6 +216,14 @@ public class OrderController extends HttpServlet {
                     + "    <td class=\"price\" style=\"padding:4px;align-content: center;justify-content: center\">" + formatter.format(cart.getPrice() * cart.getQuantity()) + " VNĐ</td>"
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
+            ProductDetail pro = da.getProDetailbyID(cart.getID());
+                                    int updateQuantity = pro.getQuantity() - cart.getQuantity();
+                                    pro.setQuantity(updateQuantity);
+                                    pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
+                                    if (updateQuantity <= 0) {
+                                        pro.setProductStatus(0);
+                                    }
+                                    da.updateProductDetail(pro);
         }
         content += "<tr>"
                 + "<tr>"

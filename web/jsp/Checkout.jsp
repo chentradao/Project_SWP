@@ -30,7 +30,16 @@
             }
             int discount = 0;
             if(voucher != null){
-                discount = (voucher.getDiscount() * subtotal)/100;
+               int rawDiscount = (voucher.getDiscount() * subtotal)/100;
+                  if(voucher.getMaxDiscount() > 0){
+                   if(rawDiscount <= voucher.getMaxDiscount()){
+              discount = rawDiscount;
+              }else{
+                       discount = voucher.getMaxDiscount();
+                 }
+            }else{
+              discount = rawDiscount;
+                }
             }
             int total = subtotal - discount;
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -76,7 +85,7 @@
                                     <div class="checkout_form_container">
                                         <div id="errorMessage" style="color: red;"></div>
                                         <% if(acc != null) { %>
-                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên*" name="CustomerName" value="<%=acc.getUserName()%>">
+                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên*" name="CustomerName" value="<%=acc.getFullName()%>">
                                         <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email*" value="<%=acc.getEmail()%>">
                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="city" id="city" class="country_select checkout_input">
@@ -132,6 +141,7 @@
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Giảm Giá</div>
                                                 <div class="cart_total_price ml-auto"><%=formatter.format(discount)%>₫</div>
+                                                <input type="hidden" id="discount" name="discount" value="<%=discount%>">
                                             </li>
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Phí Ship</div>

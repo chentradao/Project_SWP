@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.Accounts;
 import entity.Cart;
 import entity.Voucher;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import jakarta.servlet.RequestDispatcher;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
+import model.DAOAccountVoucher;
 import model.DAOVoucher;
 import model.EmailHandler;
 
@@ -36,7 +38,9 @@ public class CartController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DAOCart dao = new DAOCart();
         DAOVoucher d = new DAOVoucher();
+        DAOAccountVoucher av = new DAOAccountVoucher();
         HttpSession session = request.getSession(true);
+        Accounts acc = (Accounts) session.getAttribute("acc");
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
             String quality = request.getParameter("qty");
@@ -125,7 +129,11 @@ public class CartController extends HttpServlet {
                         session.setAttribute("error", error);
                         session.removeAttribute("voucher");
                     } else {
+                        if(av.hasUsedVoucher(voucher.getVoucherID(), acc.getAccountID())){
+                            session.setAttribute("error", "Voucher này đã được sử dụng trước đây");
+                        }else{
                         session.setAttribute("voucher", voucher);
+                        }
                     }
                 }
                 request.getRequestDispatcher("CartURL?service=showCart").forward(request, response);

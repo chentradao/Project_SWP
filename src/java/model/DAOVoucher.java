@@ -70,7 +70,7 @@ public class DAOVoucher extends DBConnection {
             ps.setDate(6, new java.sql.Date(voucher.getEndDate().getTime()));
             ps.setString(7, voucher.getDescription());
             ps.setInt(8, voucher.getStatus());
-            ps.setInt(9, voucher.getId());
+            ps.setInt(9, voucher.getVoucherID());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -84,7 +84,9 @@ public class DAOVoucher extends DBConnection {
 
     public int updateVoucherByHank(Voucher voucher) {
         int n = 0;
-        String sql = "UPDATE Voucher SET VoucherName=?, Discount=?, Quantity=?, StartDate=?, EndDate=?, Description=?, VoucherStatus=? WHERE VoucherID=?";
+        String sql = "UPDATE Voucher SET "
+                + "VoucherName=?, Discount=?, MaxDiscount=?, Quantity=?, StartDate=?, "
+                + "EndDate=?, Description=?, VoucherStatus=? WHERE VoucherID=?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, voucher.getName());
@@ -95,7 +97,7 @@ public class DAOVoucher extends DBConnection {
             ps.setObject(6, voucher.getEndDate());
             ps.setString(7, voucher.getDescription());
             ps.setInt(8, voucher.getStatus());
-            ps.setInt(9, voucher.getId());
+            ps.setInt(9, voucher.getVoucherID());
             n= ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,7 +117,7 @@ public class DAOVoucher extends DBConnection {
             ps.setDate(6, new java.sql.Date(voucher.getEndDate().getTime()));
             ps.setString(7, voucher.getDescription());
             ps.setInt(8, voucher.getStatus());
-            ps.setInt(9, voucher.getId());
+            ps.setInt(9, voucher.getVoucherID());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
