@@ -19,16 +19,18 @@ public class ProductDetail {
     private int soldQuantity;
     private Date date;
     private String description;
-    private String productStatus;
-    private String productImage;
+    private int productStatus;
     private int ID;
+    private String IdentityCode;
     private String size;
     private String Color;
+    private Date DateCreate;
+    private int ImportPrice;
     private int Price;
     private String image;
     private Product product;
 
-    public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, String productStatus, String productImage, int ID, String Size, String Color, int Price, String Image) {
+    public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, int productStatus, int ID, String size, String Color, int Price, String image) {
         this.productId = productId;
         this.productName = productName;
         this.categoryId = categoryId;
@@ -37,17 +39,25 @@ public class ProductDetail {
         this.date = date;
         this.description = description;
         this.productStatus = productStatus;
-        this.productImage = productImage;
         this.ID = ID;
-        this.size = Size;
+        this.size = size;
         this.Color = Color;
         this.Price = Price;
-        this.image = Image;
+        this.image = image;
     }
 
-    public ProductDetail(int id, Product product, String size, String color, int price, String image) {
-        this.productId = id;
-        this.product = product;
+    public ProductDetail(int ID,Product Product, String size, String color, int price, String image) {
+        this.ID = ID;
+        this.product = Product;
+        this.size = size;
+        this.Color = color;
+        this.Price = price;
+        this.image = image;
+    }
+    
+    public ProductDetail(int ID,int ProductId, String size, String color, int price, String image) {
+        this.ID = ID;
+        this.productId = ProductId;
         this.size = size;
         this.Color = color;
         this.Price = price;
@@ -58,13 +68,43 @@ public class ProductDetail {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public ProductDetail(int id, int productId, String size, String color, int price, String image) {
+    public ProductDetail(int id, int productId,String IdentityCode ,String size, String color, int Quantity, int SoldQuantity, Date DateCreate, int ImportPrice,int price, String image, int ProductStatus) {
         this.ID = id;
         this.productId = productId;
+        this.IdentityCode = IdentityCode;
         this.size = size;
         this.Color = color;
+        this.quantity = Quantity;
+        this.soldQuantity = SoldQuantity;
+        this.DateCreate = DateCreate;
+        this.ImportPrice = ImportPrice;
         this.Price = price;
         this.image = image;
+        this.productStatus = ProductStatus;
+    }
+
+    public Date getDateCreate() {
+        return DateCreate;
+    }
+
+    public void setDateCreate(Date DateCreate) {
+        this.DateCreate = DateCreate;
+    }
+
+    public int getImportPrice() {
+        return ImportPrice;
+    }
+
+    public void setImportPrice(int ImportPrice) {
+        this.ImportPrice = ImportPrice;
+    }
+
+    public String getIdentityCode() {
+        return IdentityCode;
+    }
+
+    public void setIdentityCode(String IdentityCode) {
+        this.IdentityCode = IdentityCode;
     }
 
     public int getproductId() {
@@ -123,20 +163,12 @@ public class ProductDetail {
         this.description = description;
     }
 
-    public String getProductStatus() {
+    public int getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(String productStatus) {
+    public void setProductStatus(int productStatus) {
         this.productStatus = productStatus;
-    }
-
-    public String getProductImage() {
-        return productImage;
-    }
-
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
     }
 
     public int getID() {
@@ -191,9 +223,5 @@ public class ProductDetail {
         return productId;
     }
 
-    @Override
-    public String toString() {
-        return "ProductDetail{" + "productId=" + productId + ", productName=" + productName + ", categoryId=" + categoryId + ", quantity=" + quantity + ", soldQuantity=" + soldQuantity + ", date=" + date + ", description=" + description + ", productStatus=" + productStatus + ", productImage=" + productImage + ", ID=" + ID + ", Size=" + size + ", Color=" + Color + ", Price=" + Price + ", Image=" + image + '}';
-    }
-
+   
 }

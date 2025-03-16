@@ -19,6 +19,7 @@ public class DAOVoucher extends DBConnection {
                         rs.getInt("VoucherID"),
                         rs.getString("VoucherName"),
                         rs.getInt("Discount"),
+                        rs.getInt("MaxDiscount"),
                         rs.getInt("Quantity"),
                         rs.getDate("StartDate"),
                         rs.getDate("EndDate"),
@@ -42,6 +43,7 @@ public class DAOVoucher extends DBConnection {
                         rs.getInt("VoucherID"),
                         rs.getString("VoucherName"),
                         rs.getInt("Discount"),
+                        rs.getInt("MaxDiscount"),
                         rs.getInt("Quantity"),
                         rs.getDate("StartDate"),
                         rs.getDate("EndDate"),
@@ -61,11 +63,13 @@ public class DAOVoucher extends DBConnection {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, voucher.getName());
             ps.setInt(2, voucher.getDiscount());
-            ps.setInt(3, voucher.getQuantity());
-            ps.setDate(4, new java.sql.Date(voucher.getStartDate().getTime()));
-            ps.setDate(5, new java.sql.Date(voucher.getEndDate().getTime()));
-            ps.setString(6, voucher.getDescription());
-            ps.setInt(7, voucher.getStatus());
+            ps.setInt(3, voucher.getMaxDiscount());
+            ps.setInt(4, voucher.getQuantity());
+            ps.setDate(5, new java.sql.Date(voucher.getStartDate().getTime()));
+            ps.setDate(6, new java.sql.Date(voucher.getEndDate().getTime()));
+            ps.setString(7, voucher.getDescription());
+            ps.setInt(8, voucher.getStatus());
+            ps.setInt(9, voucher.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -77,18 +81,40 @@ public class DAOVoucher extends DBConnection {
         return -1;
     }
 
+    public int updateVoucherByHank(Voucher voucher) {
+        int n = 0;
+        String sql = "UPDATE Voucher SET VoucherName=?, Discount=?, Quantity=?, StartDate=?, EndDate=?, Description=?, VoucherStatus=? WHERE VoucherID=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, voucher.getName());
+            ps.setInt(2, voucher.getDiscount());
+            ps.setInt(3, voucher.getMaxDiscount());
+            ps.setInt(4, voucher.getQuantity());
+            ps.setObject(5, voucher.getStartDate());
+            ps.setObject(6, voucher.getEndDate());
+            ps.setString(7, voucher.getDescription());
+            ps.setInt(8, voucher.getStatus());
+            ps.setInt(9, voucher.getId());
+            n= ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+    
     public boolean updateVoucher(Voucher voucher) {
         String sql = "UPDATE Voucher SET VoucherName=?, Discount=?, Quantity=?, StartDate=?, EndDate=?, Description=?, VoucherStatus=? WHERE VoucherID=?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, voucher.getName());
             ps.setInt(2, voucher.getDiscount());
-            ps.setInt(3, voucher.getQuantity());
-            ps.setDate(4, new java.sql.Date(voucher.getStartDate().getTime()));
-            ps.setDate(5, new java.sql.Date(voucher.getEndDate().getTime()));
-            ps.setString(6, voucher.getDescription());
-            ps.setInt(7, voucher.getStatus());
-            ps.setInt(8, voucher.getId());
+            ps.setInt(3, voucher.getMaxDiscount());
+            ps.setInt(4, voucher.getQuantity());
+            ps.setDate(5, new java.sql.Date(voucher.getStartDate().getTime()));
+            ps.setDate(6, new java.sql.Date(voucher.getEndDate().getTime()));
+            ps.setString(7, voucher.getDescription());
+            ps.setInt(8, voucher.getStatus());
+            ps.setInt(9, voucher.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,6 +144,7 @@ public class DAOVoucher extends DBConnection {
                         rs.getInt("VoucherID"),
                         rs.getString("VoucherName"),
                         rs.getInt("Discount"),
+                        rs.getInt("MaxDiscount"),
                         rs.getInt("Quantity"),
                         rs.getDate("StartDate"),
                         rs.getDate("EndDate"),

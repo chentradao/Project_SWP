@@ -57,6 +57,7 @@ public class VoucherServlet extends HttpServlet {
         String id = request.getParameter("id");
         String name = request.getParameter("name");
         int discount = Integer.parseInt(request.getParameter("discount"));
+        int maxDiscount = Integer.parseInt(request.getParameter("maxDiscount"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String description = request.getParameter("description");
         int status = Integer.parseInt(request.getParameter("status"));
@@ -69,7 +70,7 @@ public class VoucherServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        Voucher voucher = new Voucher(id == null ? 0 : Integer.parseInt(id), name, discount, quantity, startDate, endDate, description, status);
+        Voucher voucher = new Voucher(id == null ? 0 : Integer.parseInt(id), name, discount, quantity, maxDiscount, startDate, endDate, description, status);
 
         if (id == null || id.isEmpty()) {
             daoVoucher.createVoucher(voucher);

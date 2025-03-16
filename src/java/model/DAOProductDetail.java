@@ -24,53 +24,105 @@ public class DAOProductDetail extends DBConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DAOProducts.class.getName());
 
-public ProductDetail getProductDetailById(int productId) {
-    String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, pd.Quantity, pd.SoldQuantity, "
-            + "p.Date, p.Description, p.ProductStatus, "
-            + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image "
-            + "FROM Products p "
-            + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID "
-            + "WHERE p.ProductID = ?";
-    try (PreparedStatement st = conn.prepareStatement(sql)) {
-        st.setInt(1, productId);
-        try (ResultSet rs = st.executeQuery()) {
-            if (rs.next()) {
-                return new ProductDetail(
-                        rs.getInt("ProductID"),
-                        rs.getString("ProductName"),
-                        rs.getInt("CategoryID"),
-                        rs.getInt("Quantity"),
-                        rs.getInt("SoldQuantity"),
-                        rs.getDate("Date"),
-                        rs.getString("Description"),
-                        rs.getString("ProductStatus"),
-                        rs.getString("Image"),
-                        rs.getInt("ID"),
-                        rs.getString("Size"),
-                        rs.getString("Color"),
-                        rs.getInt("Price"),
-                        rs.getString("Image")
-                );
+    public ProductDetail getProductDetailById(int productId) {
+        String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, pd.Quantity, pd.SoldQuantity, "
+                + "p.Date, p.Description, p.ProductStatus, "
+                + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image "
+                + "FROM Products p "
+                + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID "
+                + "WHERE p.ProductID = ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, productId);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return new ProductDetail(
+                            rs.getInt("ProductID"),
+                            rs.getString("ProductName"),
+                            rs.getInt("CategoryID"),
+                            rs.getInt("Quantity"),
+                            rs.getInt("SoldQuantity"),
+                            rs.getDate("Date"),
+                            rs.getString("Description"),
+                            rs.getInt("ProductStatus"),
+                            rs.getInt("ID"),
+                            rs.getString("Size"),
+                            rs.getString("Color"),
+                            rs.getInt("Price"),
+                            rs.getString("Image")
+                    );
+                }
             }
+        } catch (SQLException e) {
+            Logger.getLogger(DAOProducts.class.getName())
+                    .log(Level.SEVERE, "Error fetching product with ID: " + productId, e);
         }
-    } catch (SQLException e) {
-        Logger.getLogger(DAOProducts.class.getName())
-              .log(Level.SEVERE, "Error fetching product with ID: " + productId, e);
+        return null;
     }
-    return null;
-}
+    
+    public ProductDetail getProDetailbyID(int ID){
+        ProductDetail pro = null;
+        String sql = "Select * from ProductDetail Where ID=" +ID;
+        try {
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            if(rs.next()){
+                pro = new ProductDetail(
+                        rs.getInt("ID"), 
+                        rs.getInt("ProductID"),
+                        rs.getString("IdentityCode"),
+                        rs.getString("Size"), 
+                        rs.getString("Color"), 
+                        rs.getInt("Quantity"),
+                        rs.getInt("SoldQuantity"), 
+                        rs.getDate("DateCreate"),
+                        rs.getInt("ImportPrice"), 
+                        rs.getInt("Price"),
+                        rs.getString("Image"), 
+                        rs.getInt("ProductStatus"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOProductDetail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pro;
+    }
+
+    public int updateProductDetail(ProductDetail pro) {
+        int n = 0;
+        String sql = "UPDATE [dbo].[ProductDetail]\n"
+                + "   SET [ProductID] = ?,[IdentityCode] = ?,[Size] = ?,[Color] = ?\n"
+                + "      ,[Quantity] = ?,[SoldQuantity] = ?,[DateCreate] = ?\n"
+                + "      ,[ImportPrice] = ?,[Price] = ?,[Image] = ?,[ProductStatus] = ?\n"
+                + " WHERE [ID] = ?";
+        try {
+            PreparedStatement pre = conn.prepareStatement(sql);
+            pre.setObject(1, pro.getProductId());
+            pre.setObject(2, pro.getIdentityCode());
+            pre.setObject(3, pro.getSize());
+            pre.setObject(4, pro.getColor());
+            pre.setObject(5, pro.getQuantity());
+            pre.setObject(6, pro.getSoldQuantity());
+            pre.setObject(7, pro.getDateCreate());
+            pre.setObject(8, pro.getImportPrice());
+            pre.setObject(9, pro.getPrice());
+            pre.setObject(10, pro.getImage());
+            pre.setObject(11, pro.getProductStatus());
+            n = pre.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOProductDetail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
 
     public List<ProductDetail> getAllProducts(int limit) {
         List<ProductDetail> productList = new ArrayList<>();
         String sql = "select p.ProductID, p.ProductName, p.CategoryID, p.Quantity, p.SoldQuantity,\n"
-                + "p.Date, p.Description, p.ProductStatus, p.ProductImage, pd.ID, \n"
+                + "p.Date, p.Description, p.ProductStatus, pd.ID, \n"
                 + "pd.Size, pd.Color, pd.Price,pd.Image\n"
                 + "from Products p join ProductDetail pd on p.ProductID = pd.ProductID";
 
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, limit);  // Set the limit parameter
 
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     int productId = rs.getInt("ProductID");
                     String productName = rs.getString("ProductName");
@@ -79,8 +131,7 @@ public ProductDetail getProductDetailById(int productId) {
                     int soldQuantity = rs.getInt("SoldQuantity");
                     java.sql.Date date = rs.getDate("Date");
                     String description = rs.getString("Description");
-                    String productStatus = rs.getString("ProductStatus");
-                    String productImage = rs.getString("ProductImage");
+                    int productStatus = rs.getInt("ProductStatus");
                     int ID = rs.getInt("ID");
                     String Size = rs.getString("Size");
                     String Color = rs.getString("Color");
@@ -88,7 +139,7 @@ public ProductDetail getProductDetailById(int productId) {
                     String Image = rs.getString("Image");
                     ProductDetail pd = new ProductDetail(productId, productName, categoryId,
                             quantity, soldQuantity, date, description,
-                            productStatus, productImage, ID, Size, Color, Price, Image);
+                            productStatus, ID, Size, Color, Price, Image);
                     productList.add(pd);
                 }
             }
@@ -103,10 +154,10 @@ public ProductDetail getProductDetailById(int productId) {
 
         ProductDetail productDetail = null; // Khởi tạo biến ở đầu phương thức
 
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productId);
 
-            try ( ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) { // Chỉ lấy một bản ghi
                     int id = rs.getInt("ID");
                     String size = rs.getString("Size");

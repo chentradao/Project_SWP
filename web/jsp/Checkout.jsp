@@ -76,12 +76,12 @@
                                     <div class="checkout_form_container">
                                         <div id="errorMessage" style="color: red;"></div>
                                         <% if(acc != null) { %>
-                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" name="CustomerName" value="<%=acc.getUserName()%>">
-                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email" value="<%=acc.getEmail()%>">
+                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên*" name="CustomerName" value="<%=acc.getUserName()%>">
+                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email*" value="<%=acc.getEmail()%>">
                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="city" id="city" class="country_select checkout_input">
-                                            <option value="">Tỉnh / Thành phố</option>
-                                        </select>
+                                                <option value="">Tỉnh / Thành phố</option>
+                                            </select>
                                             <select name="district" id="district" class="country_select checkout_input">
                                                 <option value="">Quận / Huyện</option>
                                             </select>
@@ -89,16 +89,16 @@
                                                 <option value="">Phường / Xã</option>
                                             </select>
                                         </div>
-                                        <input type="text" class="checkout_input" id="address" placeholder="Địa Chỉ" name="address">
-                                        <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại" name="Phone" value="<%=acc.getPhone()%>">
+                                        <input type="text" class="checkout_input" id="address" placeholder="Địa Chỉ Giao Hàng*" name="address">
+                                        <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại*" name="Phone" value="<%=acc.getPhone()%>">
                                         <textarea name="checkout_comment" id="note" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
                                         <% } else { %>
-                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên" name="CustomerName">
-                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email">
+                                        <input type="text" class="checkout_input" id="name" placeholder="Họ Tên*" name="CustomerName">
+                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com*" name="Email">
                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="city" id="city" class="country_select checkout_input">
-                                            <option value="">Tỉnh / Thành phố</option>
-                                        </select>
+                                                <option value="">Tỉnh / Thành phố</option>
+                                            </select>
                                             <select name="district" id="district" class="country_select checkout_input">
                                                 <option value="">Quận / Huyện</option>
                                             </select>
@@ -106,8 +106,8 @@
                                                 <option value="">Phường / Xã</option>
                                             </select>
                                         </div>
-                                        <input type="text" class="checkout_input" id="address" placeholder="Địa Chỉ" name="address">
-                                        <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại" name="Phone">
+                                        <input type="text" class="checkout_input" id="address" placeholder="Địa Chỉ Giao Hàng*" name="address">
+                                        <input type="text" class="checkout_input" id="phone" placeholder="Số Điện Thoại*" name="Phone">
                                         <textarea name="checkout_comment" id="note" class="checkout_comment" placeholder="Lưu ý về đơn hàng"></textarea>
                                         <% } %>
                                     </div>
@@ -136,12 +136,12 @@
                                             <li class="d-flex flex-row align-items-center justify-content-start">
                                                 <div class="cart_total_title">Phí Ship</div>
                                                 <div class="cart_total_price ml-auto" id="shippingFee">0₫</div>
-                                                <input type="hidden" id="shippingFee1" name="shippingFee1" value="0">
+                                                <input type="hidden" id="shippingFee1" name="shippingFee1" value="">
                                             </li>
                                             <li class="d-flex flex-row align-items-start justify-content-start total_row">
                                                 <div class="cart_total_title">Tổng Thanh Toán</div>
                                                 <div class="cart_total_price ml-auto" id="totalPrice"><%=formatter.format(total)%>₫</div>
-                                                <input type="hidden" id="totalPrice1" name="totalPrice1" value="<%=total%>">
+                                                <input type="hidden" id="totalPrice1" name="totalPrice1" value="">
                                             </li>
                                         </ul>
                                     </div>
@@ -180,8 +180,8 @@
         <script src="js/checkout_provinces.js"></script>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("checkoutForm").addEventListener("submit", function (event) {
                     console.log("Submit event triggered");
                     if (!validateForm()) {
                         console.log("Validation failed, preventing submit");
@@ -205,8 +205,8 @@
                         $.ajax({
                             url: "ShippingURL",
                             type: "GET",
-                            data: { city: city, district: district, ward: ward, total: total },
-                            success: function(response) {
+                            data: {city: city, district: district, ward: ward, total: total},
+                            success: function (response) {
                                 let shippingFee = response.shippingFee || 0;
                                 document.getElementById("shippingFee").innerText = shippingFee.toLocaleString("vi-VN") + "₫";
                                 let totalPrice = parseInt(total) + shippingFee;
@@ -214,7 +214,7 @@
                                 document.getElementById("totalPrice").innerText = totalPrice.toLocaleString("vi-VN") + "₫";
                                 document.getElementById("totalPrice1").value = totalPrice;
                             },
-                            error: function() {
+                            error: function () {
                                 document.getElementById("shippingFee").innerText = "Không thể tính phí";
                             }
                         });
@@ -297,16 +297,16 @@
             }
         </script>
         <script>
-        //js format gia tien
-        document.addEventListener("DOMContentLoaded", function () {
-            let priceElements = document.querySelectorAll(".productPrice");
-            priceElements.forEach(function (element) {
-                let price = parseFloat(element.textContent);
-                if (!isNaN(price)) {
-                    element.textContent = price.toLocaleString("vi-VN") + "₫";
-                }
+            //js format gia tien
+            document.addEventListener("DOMContentLoaded", function () {
+                let priceElements = document.querySelectorAll(".productPrice");
+                priceElements.forEach(function (element) {
+                    let price = parseFloat(element.textContent);
+                    if (!isNaN(price)) {
+                        element.textContent = price.toLocaleString("vi-VN") + "₫";
+                    }
+                });
             });
-        });
-    </script>
+        </script>
     </body>
 </html>

@@ -18,6 +18,8 @@ public class Voucher {
     private int discount;
 
     private int quantity;
+    
+    private int maxDiscount;
 
     private Date startDate;
 
@@ -30,16 +32,18 @@ public class Voucher {
     public Voucher() {
     }
 
-    public Voucher(int voucherID, String voucherName, int discount, int quantity, Date startDate, Date endDate, String description, int voucherStatus) {
+    public Voucher(int voucherID, String voucherName, int discount, int quantity, int maxDiscount, Date startDate, Date endDate, String description, int voucherStatus) {
         this.voucherID = voucherID;
         this.voucherName = voucherName;
         this.discount = discount;
         this.quantity = quantity;
+        this.maxDiscount = maxDiscount;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
         this.voucherStatus = voucherStatus;
     }
+
 
     public int getId() {
         return voucherID;
@@ -79,6 +83,14 @@ public class Voucher {
 
     public void setDiscount(int discount) {
         this.discount = discount;
+    }
+
+    public int getMaxDiscount() {
+        return maxDiscount;
+    }
+
+    public void setMaxDiscount(int maxDiscount) {
+        this.maxDiscount = maxDiscount;
     }
 
     public int getQuantity() {

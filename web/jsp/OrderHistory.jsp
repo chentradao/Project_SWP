@@ -38,7 +38,7 @@
             String sortOrder = (String) request.getAttribute("sortOrder");
             // Xác định service từ request để xây dựng baseUrl phù hợp
     String service = request.getParameter("service") != null ? request.getParameter("service") : "orderHistory";
-    String baseUrl = "OrderURL?service=" + service;
+    String baseUrl = "OrderHistoryURL?service=" + service;
     
     // Add sorting parameters for both services
     if (sortColumn != null && !sortColumn.isEmpty()) baseUrl += "&sortColumn=" + sortColumn;
@@ -67,7 +67,7 @@
         <div class="container mx-auto px-4 py-8 flex items-start">
             <!-- Bộ lọc -->
             <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
-                <form action="OrderURL" id="filter" method="get">
+                <form action="OrderHistoryURL" id="filter" method="get">
                     <input type="hidden" name="service" value="orderFilter" />
                     <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
 
@@ -237,7 +237,7 @@
                     </div>
                     <!--Popup hủy đơn-->
                     <div class="popup_clear" style="display: none;">
-                        <form action="OrderURL" method="post">
+                        <form action="OrderHistoryURL" method="post">
                             <input type="hidden" name="service" value="deleteOrder" />
                             <div class="popup_content">
                                 <h3 class="text-red-600">Bạn muốn hủy đơn hàng?</h3>

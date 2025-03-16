@@ -22,12 +22,15 @@ import javax.mail.internet.AddressException;
 import entity.Accounts;
 import entity.Cart;
 import entity.Order;
+import entity.ProductDetail;
 import entity.Voucher;
 import model.EmailHandler;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 import model.DAOOrder;
+import model.DAOProductDetail;
+import model.DAOVoucher;
 
 /**
  *
@@ -38,7 +41,8 @@ public class PaymentStatusServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        DAOProductDetail da = new DAOProductDetail();
+        DAOVoucher d = new DAOVoucher();
         HttpSession session = request.getSession(true);
 
         String CustomerName = (String) session.getAttribute("CustomerName");
@@ -59,6 +63,12 @@ public class PaymentStatusServlet extends HttpServlet {
         if (acc != null) {
             CustomerID = acc.getAccountID();
         }
+        int newVQuantity = voucher.getQuantity() - 1;
+        voucher.setQuantity(newVQuantity);
+        if (newVQuantity <= 0) {
+            voucher.setStatus(0);
+        }
+        d.updateVoucherByHank(voucher);
         DAOOrder dao = new DAOOrder();
         Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, null, Note, "VNPay", 1);
         int n = dao.insertOrder(o);
@@ -72,6 +82,14 @@ public class PaymentStatusServlet extends HttpServlet {
                 if (obj instanceof Cart) {
                     Cart cart = (Cart) obj;
                     dao.addToOrder(cart);
+                    ProductDetail pro = da.getProDetailbyID(cart.getID());
+                    int updateQuantity = pro.getQuantity() - cart.getQuantity();
+                    pro.setQuantity(updateQuantity);
+                    pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
+                    if (updateQuantity <= 0) {
+                        pro.setProductStatus(0);
+                    }
+                    da.updateProductDetail(pro);
                 }
             }
         }
@@ -140,8 +158,8 @@ public class PaymentStatusServlet extends HttpServlet {
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
         }
-        int discount =0;
-        if(voucher != null){
+        int discount = 0;
+        if (voucher != null) {
             discount = (voucher.getDiscount() * subtotal) / 100;
         }
         content += "<tr>"
