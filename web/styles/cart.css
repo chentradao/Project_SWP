@@ -849,7 +849,7 @@ section
 .product_quantity input
 {
     display: block;
-    width: 30px;
+    width: 100px;
     height: 41px;
     border: none;
     outline: none;
