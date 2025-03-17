@@ -82,8 +82,15 @@ public class CartController extends HttpServlet {
                         vector.add(cart);
                     }
                 }
-                Vector<Voucher> voucherlist = d.getVouchers("Select * From Voucher Where VoucherStatus =1");
-                request.setAttribute("voucherlist", voucherlist);
+                if (acc != null) {
+                    String sql = "SELECT V.*\n"
+                            + "FROM Voucher V\n"
+                            + "LEFT JOIN AccountVoucher AV ON V.VoucherID = AV.VoucherID AND AV.AccountID = \n"+acc.getAccountID()
+                            + "WHERE AV.VoucherID IS NULL AND V.VoucherStatus = 1;";
+                    Vector<Voucher> voucherlist = d.getVouchers(sql);
+                    request.setAttribute("voucherlist", voucherlist);
+                }
+                request.setAttribute("acc", acc);
                 request.setAttribute("error", session.getAttribute("error"));
                 request.setAttribute("voucher", session.getAttribute("voucher"));
                 request.setAttribute("vectorCart", vector);
@@ -120,19 +127,23 @@ public class CartController extends HttpServlet {
             }
             if (service.equals("addVoucher")) {
                 String VoucherID = request.getParameter("VoucherID");
-                if (VoucherID == null || VoucherID.isEmpty()) {
-                    session.setAttribute("error", "Vui lòng nhập voucher");
+                if (acc == null) {
+                    session.setAttribute("error", "Vui lòng đăng nhập để sử dụng voucher");
                 } else {
-                    Voucher voucher = d.getVoucherByName(VoucherID);
-                    if (voucher == null || voucher.getVoucherStatus() == 0) {
-                        String error = "Voucher không hợp lệ";
-                        session.setAttribute("error", error);
-                        session.removeAttribute("voucher");
+                    if (VoucherID == null || VoucherID.isEmpty()) {
+                        session.setAttribute("error", "Vui lòng nhập voucher");
                     } else {
-                        if(av.hasUsedVoucher(voucher.getVoucherID(), acc.getAccountID())){
-                            session.setAttribute("error", "Voucher này đã được sử dụng trước đây");
-                        }else{
-                        session.setAttribute("voucher", voucher);
+                        Voucher voucher = d.getVoucherByName(VoucherID);
+                        if (voucher == null || voucher.getVoucherStatus() == 0) {
+                            String error = "Voucher không hợp lệ";
+                            session.setAttribute("error", error);
+                            session.removeAttribute("voucher");
+                        } else {
+                            if (av.hasUsedVoucher(voucher.getVoucherID(), acc.getAccountID())) {
+                                session.setAttribute("error", "Voucher này đã được sử dụng trước đây");
+                            } else {
+                                session.setAttribute("voucher", voucher);
+                            }
                         }
                     }
                 }

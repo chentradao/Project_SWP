@@ -5,9 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.Vector,entity.Cart,entity.Voucher" %>
+<%@page import="java.util.Vector,entity.Cart,entity.Voucher,entity.Accounts" %>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.text.DecimalFormatSymbols"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,6 +28,7 @@
                     Vector<Cart> vector=(Vector<Cart>)request.getAttribute("vectorCart");
                     Vector<Voucher> voucherlist=(Vector<Voucher>)request.getAttribute("voucherlist");
                     Voucher voucher = (Voucher)request.getAttribute("voucher");
+                    Accounts acc = (Accounts)request.getAttribute("acc");
                     String error = (String)request.getAttribute("error");
                     DecimalFormatSymbols symbols = new DecimalFormatSymbols();
                     symbols.setGroupingSeparator('.');
@@ -194,15 +196,16 @@
                                     <div class="cart_title">Mã Giảm Giá</div>
                                     <form action="CartURL" class="cart_coupon_form d-flex flex-row align-items-start justify-content-start" id="cart_coupon_form" method="post">
                                         <input type="hidden" name="service" value="addVoucher">
-                                        <input type="text" name="VoucherID" class="cart_coupon_input" placeholder="Mã Giảm Giá"  id="voucherInput">
+                                        <input type="text" name="VoucherID" class="cart_coupon_input" placeholder="Mã Giảm Giá" value="${sessionScope.voucher.getVoucherName()}"  id="voucherInput">
                                         <button type="submit" class="button_clear cart_button_2">Áp Dụng</button>
-
+                                        <%if(acc != null){%>
                                         <!-- Danh sách đề xuất voucher -->
                                         <div id="voucherSuggestions" class="voucher-suggestions" style="display: none;">
                                             <%for(Voucher voucherin4 : voucherlist){%>
-                                            <label><input type="radio" name="voucherOption" value="<%=voucherin4.getVoucherName()%>"> <%=voucherin4.getVoucherName()%> - Giảm <%=voucherin4.getDiscount()%>%</label><br>
+                                            <label><input type="radio" name="voucherOption" value="<%=voucherin4.getVoucherName()%>"> <%=voucherin4.getVoucherName()%> - Giảm <%=voucherin4.getDiscount()%>% -Giảm Tối Đa <%=formatter.format(voucherin4.getMaxDiscount())%>₫</label><br>
                                                 <%}%>
                                         </div>
+                                        <%}%>
                                     </form>
                                     <%if(error != null){%>
                                     <div class="error-message" style="color: red;"><%=error%></div>
