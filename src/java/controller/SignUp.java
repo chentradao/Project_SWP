@@ -12,7 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.internet.AddressException;
 import model.DAOAccounts;
+import model.EmailHandler;
 
 /**
  *
@@ -96,6 +102,7 @@ public class SignUp extends HttpServlet {
             } else {
                 // Tạo tài khoản mới
                 new DAOAccounts().createAccount(UserName, Password, FullName, Phone, Email, "Customer", 1);
+                sendVoucherEmail(Email, "WELCOME02", 20, 200000);
                 response.sendRedirect("login.jsp");
             }
 
@@ -140,5 +147,39 @@ public class SignUp extends HttpServlet {
 
     private boolean checkUserName(String UserName) {
         return UserName.length() >= 5;
+    }
+    private void sendVoucherEmail(String email, String voucherCode, int discount, int maxDiscount) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+        formatter.setGroupingUsed(true); 
+        String subject = "ESTÉE LAUDER - Mã Voucher Giảm Giá Dành Cho Bạn!";
+        String content = "<!DOCTYPE html>"
+                + "<html>"
+                + "<head>"
+                + "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
+                + "    <title>Mã Voucher Giảm Giá</title>"
+                + "    <style>"
+                + "        .container { margin: 50px 200px; background-color: #F3F3F3; padding: 25px; text-align: center; }"
+                + "        .voucher-code { font-size: 24px; font-weight: bold; color: #ce0707; margin-top: 20px; }"
+                + "        .discount { font-size: 20px; margin-top: 10px; color: #333; }"
+                + "    </style>"
+                + "</head>"
+                + "<body style=\" padding: 30px;\">"
+                + "    <div class=\"container\">"
+                + "        <p>Cảm ơn bạn đã mua sắm tại <a href=\"http://localhost:8080/Project_SWP/ProductListServlet\">ESTÉE LAUDER</a>!</p>"
+                + "        <p>Chúng tôi gửi tặng bạn một mã giảm giá đặc biệt.</p>"
+                + "        <div class=\"voucher-code\">" + voucherCode + "</div>"
+                + "        <div class=\"discount\">Giảm ngay " + discount + "% trên tổng giá trị đơn hàng</div>"
+                + "        <p>Giảm tối đa "+formatter.format(maxDiscount)+"</p>"
+                + "        <p>Hãy sử dụng mã này trong lần mua sắm tiếp theo để nhận ưu đãi!</p>"
+                + "        <p>Trân trọng,</p>"
+                + "        <h2>ESTÉE LAUDER</h2>"
+                + "    </div>"
+                + "</body>"
+                + "</html>";
+        try {
+            EmailHandler.sendEmail(email, subject, content);
+        } catch (AddressException ex) {
+            Logger.getLogger(OrderController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

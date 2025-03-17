@@ -60,11 +60,12 @@
                 </div>
 
             </div>
+            <%if(acc == null){%>
             <div class="row newsletter_row">
                 <div class="col">
                     <div class="section_title_container text-center">
-                        <div class="section_subtitle">only the best</div>
-                        <div class="section_title">Đăng Kí để Nhận Voucher Giảm 5%</div>
+                        <div class="section_subtitle">Đăng Kí Tài Khoản</div>
+                        <div class="section_title">Nhận Ngay Voucher Giảm 20%</div>
                     </div>
                 </div>
             </div>
@@ -72,27 +73,32 @@
                 <div class="col-lg-10 offset-lg-1">
                     <div class="newsletter_form_container">
                         <form action="CartURL" method="post" id="VoucherForm">
-                            <input type="hidden" name="service" value="voucherEmail">
-                            <input type="email" id="V_email" name="V_email" class="newsletter_input" placeholder="emailcuaban@email.com">
-                            <button type="submit" class="newsletter_button">Đăng kí</button>
-                            <div id="Message" style="color: red;">
-                                <% 
-                                    String V_error = (String) session.getAttribute("V_error");
-                                    String success = (String) session.getAttribute("success");
-                                    if (V_error != null) {
-                                        out.print(V_error);
-                                        session.removeAttribute("V_error"); // Xóa sau khi hiển thị
-                                    } else if (success != null) {
-                                        out.print("<span style='color: green;'>" + success + "</span>");
-                                        session.removeAttribute("success"); // Xóa sau khi hiển thị
-                                    }
-                                %>
-                            </div>
+                            <!--                            <input type="hidden" name="service" value="voucherEmail">-->
+                            <!--                            <input type="email" id="V_email" name="V_email" class="newsletter_input" placeholder="emailcuaban@email.com">-->
+                            <button type="Button" onclick="window.location.href = 'signup.jsp'" class="newsletter_button">Đăng kí</button>
                         </form>
                     </div>
                     <div class="newsletter_text">Ngoài ra bạn có thể đăng kí tài khoản để nhận được hỗ trợ tốt nhất</div>
                 </div>
             </div>
+            <%} else{%>
+            <div class="row newsletter_row">
+                <div class="col">
+                    <div class="section_title_container text-center">
+                        <div class="section_subtitle">Chào Mừng Trở Lại, <%= acc.getFullName() %>!</div>
+                        <div class="section_title">Khám Phá Sản Phẩm Mới Nhất</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row newsletter_container">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="newsletter_form_container text-center">
+                        <button type="button" onclick="window.location.href = 'categories.jsp?'" class="newsletter_button">Khám Phá Ngay</button>
+                        <p class="newsletter_text">Hãy xem ngay những sản phẩm hot nhất hiện nay!</p>
+                    </div>
+                </div>
+            </div>
+            <%}%>
         </div>
     </div>
 </div>

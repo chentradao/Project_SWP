@@ -22,6 +22,43 @@
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <style>
+           .newsletter_button {
+    display: block; /* Đảm bảo button chiếm toàn bộ chiều ngang của container cha nếu cần */
+    margin: 0 auto; /* Căn giữa theo chiều ngang */
+    width: 142px; /* Giữ nguyên chiều rộng */
+    height: 46px;
+    background: #937c6f;
+    color: #FFFFFF;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+.newsletter_button:hover {
+    background: #e0e3e4;
+    color: #232323;
+}
+
+/* Đảm bảo container cha hỗ trợ căn giữa */
+.newsletter_form_container {
+    text-align: center; /* Căn giữa các phần tử con */
+}
+
+/* Nếu cần căn giữa trong trường hợp button nằm trong section_subtitle */
+.section_subtitle .newsletter_button {
+    display: inline-block; /* Đảm bảo button không chiếm toàn bộ dòng */
+    margin: 0 auto; /* Căn giữa */
+}
+        </style>
     </head>
     <body>
         <%
