@@ -22,6 +22,7 @@
         <ul class="menu_mm">
             <li class="menu_mm"><a href="#">home</a></li>
             <li class="menu_mm"><a href="OrderURL?service=orderHistory">Đơn Mua</a></li>
+            <li class="menu_mm"><a href="OrderHistoryURL?service=orderHistory">My Order</a></li>
             <% for (Category category : categories) { %>
                         <li><a href="categories.html?category=<%= category.getCategoryId() %>">
                             <%= category.getCategoryName() %>

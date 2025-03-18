@@ -82,9 +82,11 @@ public class CartController extends HttpServlet {
                         Cart cart = (Cart) obj;
                         if (cart.getID() == id) {
                             session.removeAttribute(key);
+                            cartQuantiry -=1 ;
                         }
                     }
                 }
+                session.setAttribute("cartQuantiry", cartQuantiry);
                 response.sendRedirect("CartURL?service=showCart");
             }
             if (service.equals("clearCart")) {
@@ -96,6 +98,7 @@ public class CartController extends HttpServlet {
                         session.removeAttribute(key);
                     }
                 }
+                session.removeAttribute("cartQuantiry");
                 response.sendRedirect("CartURL?service=showCart");
             }
             if (service.equals("addVoucher")) {

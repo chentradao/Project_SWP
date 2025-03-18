@@ -25,7 +25,7 @@ public class DAOOrder extends DBConnection {
     int n = 0;
     String sql = "INSERT INTO [dbo].[Orders] "
             + "([CustomerID], [CustomerName], [OrderDate], [ShippedDate], [ShippingFee], "
-            + "[TotalCost], [Email], [Phone], [ShipAddress], [VoucherID], "
+            + "[TotalCost], [Email], [Phone], [ShipAddress], [Discount], "
             + "[CancelNotification], [Note], [PaymentMethod], [OrderStatus]) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -56,7 +56,7 @@ public class DAOOrder extends DBConnection {
         ps.setString(7, o.getEmail());
         ps.setString(8, o.getPhone());
         ps.setString(9, o.getShipAddress());
-        ps.setInt(10, o.getVoucherID());
+        ps.setInt(10, o.getDiscount());
         ps.setString(11, o.getCancelNotification());
         ps.setString(12, o.getNote());
         ps.setString(13, o.getPaymentMethod());
@@ -117,7 +117,7 @@ public class DAOOrder extends DBConnection {
         String sql = "UPDATE [dbo].[Orders]\n"
                 + "   SET [CustomerID] = ?,[CustomerName] = ?,[OrderDate] = ?\n"
                 + "      ,[ShippedDate] = ?,[ShippingFee] = ?,[TotalCost] = ?,[Email] = ?,[Phone] = ?\n"
-                + "      ,[ShipAddress] = ?,[VoucherID] = ?,[CancelNotification] = ?,[Note] = ?,[PaymentMethod] = ?,[OrderStatus] = ?\n"
+                + "      ,[ShipAddress] = ?,[Discount] = ?,[CancelNotification] = ?,[Note] = ?,[PaymentMethod] = ?,[OrderStatus] = ?\n"
                 + " WHERE [OrderID] = ?";
         try {
             PreparedStatement pre = conn.prepareStatement(sql);
@@ -130,7 +130,7 @@ public class DAOOrder extends DBConnection {
             pre.setObject(7, o.getEmail());
             pre.setObject(8, o.getPhone());
             pre.setObject(9, o.getShipAddress());
-            pre.setObject(10, o.getVoucherID());
+            pre.setObject(10, o.getDiscount());
             pre.setObject(11, o.getCancelNotification());
             pre.setObject(12, o.getNote());
             pre.setObject(13, o.getPaymentMethod());
@@ -159,12 +159,12 @@ public class DAOOrder extends DBConnection {
                 String Email = rs.getString("Email");
                 String Phone = rs.getString("Phone");
                 String ShipAddress = rs.getString("ShipAddress");
-                int VoucherID = rs.getInt("VoucherID");
+                int Discount = rs.getInt("Discount");
                 String CancelNotification = rs.getString("CancelNotification");
                 String Note = rs.getString("Note");
                 String PaymentMethod = rs.getString("PaymentMethod");
                 int OrderStatus = rs.getInt("OrderStatus");
-                Order or = new Order(OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, VoucherID, CancelNotification, Note, PaymentMethod, OrderStatus);
+                Order or = new Order(OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus);
                 vector.add(or);
             }
         } catch (SQLException ex) {
