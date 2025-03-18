@@ -13,15 +13,22 @@ public class OrderDetail {
     private int ProductID;
     private int Quantity;
     private int UnitPrice;
-    private int Voucher;
+    private String ProductName;
+    private String Size;
+    private String Color; 
+    private String Image;
 
-    public OrderDetail(int OrderID, int ProductID, int Quantity, int UnitPrice, int Voucher) {
+    public OrderDetail(int OrderID, int ProductID, int Quantity, int UnitPrice, String ProductName, String Size, String Color, String Image) {
         this.OrderID = OrderID;
         this.ProductID = ProductID;
         this.Quantity = Quantity;
         this.UnitPrice = UnitPrice;
-        this.Voucher = Voucher;
+        this.ProductName = ProductName;
+        this.Size = Size;
+        this.Color = Color;
+        this.Image = Image;
     }
+    
 
     public int getOrderID() {
         return OrderID;
@@ -55,18 +62,36 @@ public class OrderDetail {
         this.UnitPrice = UnitPrice;
     }
 
-    public int getVoucher() {
-        return Voucher;
+    public String getProductName() {
+        return ProductName;
     }
 
-    public void setVoucher(int Voucher) {
-        this.Voucher = Voucher;
+    public void setProductName(String ProductName) {
+        this.ProductName = ProductName;
     }
 
-    @Override
-    public String toString() {
-        return "OrderDetail{" + "OrderID=" + OrderID + ", ProductID=" + ProductID + ", Quantity=" + Quantity + ", UnitPrice=" + UnitPrice + ", Voucher=" + Voucher + '}';
+    public String getSize() {
+        return Size;
     }
-    
-    
+
+    public void setSize(String Size) {
+        this.Size = Size;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String Color) {
+        this.Color = Color;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String Image) {
+        this.Image = Image;
+    }
+
 }

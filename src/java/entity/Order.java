@@ -5,6 +5,7 @@
 package entity;
 
 import java.util.Date;
+import java.util.Vector;
 
 
 /**
@@ -27,6 +28,7 @@ public class Order {
     private String Note;
     private String PaymentMethod;
     private int OrderStatus;
+    private Vector<OrderDetail> orderDetail;
 
     public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
         this.CustomerID = CustomerID;
@@ -62,6 +64,14 @@ public class Order {
         this.Note = Note;
         this.PaymentMethod = PaymentMethod;
         this.OrderStatus = OrderStatus;
+    }
+
+    public Vector<OrderDetail> getOrderDetail() {
+        return orderDetail;
+    }
+
+    public void setOrderDetail(Vector<OrderDetail> orderDetail) {
+        this.orderDetail = orderDetail;
     }
 
     public String getPaymentMethod() {

@@ -6,6 +6,7 @@ package controller;
 
 import entity.Accounts;
 import entity.Order;
+import entity.OrderDetail;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Vector;
 import model.DAOOrder;
+import model.DAOOrderDetail;
 
 /**
  *
@@ -31,6 +33,7 @@ public class OrderHistoryController extends HttpServlet {
         HttpSession session = request.getSession(true);
         Accounts acc = (Accounts) session.getAttribute("acc");
         DAOOrder dao = new DAOOrder();
+        DAOOrderDetail da = new DAOOrderDetail();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
 
@@ -48,156 +51,52 @@ public class OrderHistoryController extends HttpServlet {
             }
 
             if (service.equals("orderHistory")) {
-                if (acc != null) {
-                    String sortColumn = request.getParameter("sortColumn");
-                    String sortOrder = request.getParameter("sortOrder");
-                    int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 10; // Số bản ghi mỗi trang (có thể thay đổi)
-                    // Tổng số bản ghi
-                    int totalRecords = dao.getTotalOrders("SELECT COUNT(*) FROM Orders WHERE CustomerID = " + acc.getAccountID());
-                    int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-                    // Đảm bảo page hợp lệ
-                    if (page < 1) {
-                        page = 1;
-                    }
-                    if (page > totalPages) {
-                        page = totalPages;
-                    }
-                    // Tính vị trí bắt đầu
-                    int start = (page - 1) * pageSize;
-
-                    String orderByClause = " ORDER BY OrderDate DESC"; // Mặc định
-                    if (sortColumn != null && sortOrder != null) {
-                        String direction = sortOrder.equals("asc") ? "ASC" : "DESC";
-                        switch (sortColumn) {
-                            case "orderDate":
-                                orderByClause = " ORDER BY OrderDate " + direction;
-                                break;
-                            case "customerName":
-                                orderByClause = " ORDER BY CustomerName " + direction;
-                                break;
-                            case "phone":
-                                orderByClause = " ORDER BY Phone " + direction;
-                                break;
-                            case "totalCost":
-                                orderByClause = " ORDER BY TotalCost " + direction;
-                                break;
-                            case "paymentMethod":
-                                orderByClause = " ORDER BY PaymentMethod " + direction;
-                                break;
-                            case "orderStatus":
-                                orderByClause = " ORDER BY OrderStatus " + direction;
-                                break;
-                        }
-                    }
-
-                    // Lấy dữ liệu theo trang
-                    Vector<Order> vector = dao.getOrders("SELECT * FROM Orders WHERE CustomerID = " + acc.getAccountID()
-                            + orderByClause + " OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY");
-
-                    // Truyền dữ liệu cho JSP
-                    request.setAttribute("vector", vector);
-                    request.setAttribute("currentPage", page);
-                    request.setAttribute("totalPages", totalPages);
-                    request.setAttribute("sortColumn", sortColumn);
-                    request.setAttribute("sortOrder", sortOrder);
-                    request.setAttribute("service", "orderHistory");
-                    request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
-                } else {
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
-            }
-
-            if (service.equals("orderFilter")) {
                 if (acc == null) {
-                    response.sendRedirect("OrderURL?service=orderHistory");
-                } else {
-                    String status = request.getParameter("status");
-                    String startDate = request.getParameter("start");
-                    String endDate = request.getParameter("end");
-                    String payment = request.getParameter("payment");
-                    String sortColumn = request.getParameter("sortColumn");
-                    String sortOrder = request.getParameter("sortOrder");
-
-                    if (endDate == null || endDate.trim().isEmpty()) {
-                        endDate = LocalDate.now().toString();
-                    }
-                    if (startDate == null) {
-                        startDate = "2000-01-01";
-                    }
-
-                    // Tham số phân trang
-                    int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                    int pageSize = 10;
-
-                    // Tổng số bản ghi với bộ lọc
-                    String countQuery = "SELECT COUNT(*) FROM Orders WHERE OrderStatus LIKE '%" + status + "%' "
-                            + "AND OrderDate BETWEEN '" + startDate + "' AND '" + endDate + "' "
-                            + "AND PaymentMethod LIKE '%" + payment + "%' AND CustomerID = " + acc.getAccountID();
-                    int totalRecords = dao.getTotalOrders(countQuery);
-                    int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-
-                    // Đảm bảo page hợp lệ
-                    if (page < 1) {
-                        page = 1;
-                    }
-                    if (page > totalPages) {
-                        page = totalPages;
-                    }
-
-                    int start = (page - 1) * pageSize;
-
-                    // Xử lý sắp xếp
-                    String orderByClause = " ORDER BY OrderDate DESC"; // Mặc định
-                    if (sortColumn != null && sortOrder != null) {
-                        String direction = sortOrder.equals("asc") ? "ASC" : "DESC";
-                        switch (sortColumn) {
-                            case "orderDate":
-                                orderByClause = " ORDER BY OrderDate " + direction;
-                                break;
-                            case "customerName":
-                                orderByClause = " ORDER BY CustomerName " + direction;
-                                break;
-                            case "phone":
-                                orderByClause = " ORDER BY Phone " + direction;
-                                break;
-                            case "totalCost":
-                                orderByClause = " ORDER BY TotalCost " + direction;
-                                break;
-                            case "paymentMethod":
-                                orderByClause = " ORDER BY PaymentMethod " + direction;
-                                break;
-                            case "orderStatus":
-                                orderByClause = " ORDER BY OrderStatus " + direction;
-                                break;
-                        }
-                    }
-
-                    // Truy vấn dữ liệu theo trang
-                    String sql = "SELECT * FROM Orders "
-                            + "WHERE OrderStatus LIKE '%" + status + "%' "
-                            + "AND OrderDate BETWEEN '" + startDate + "' AND '" + endDate + "' "
-                            + "AND PaymentMethod LIKE '%" + payment + "%' "
-                            + "AND CustomerID = " + acc.getAccountID() + orderByClause
-                            + " OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
-                    Vector<Order> vector = dao.getOrders(sql);
-
-                    // Truyền dữ liệu cho JSP
-                    request.setAttribute("vector", vector);
-                    request.setAttribute("currentPage", page);
-                    request.setAttribute("totalPages", totalPages);
-                    request.setAttribute("status", status);
-                    request.setAttribute("startDate", startDate);
-                    request.setAttribute("endDate", endDate);
-                    request.setAttribute("payment", payment);
-                    request.setAttribute("sortColumn", sortColumn);
-                    request.setAttribute("sortOrder", sortOrder);
-                    request.setAttribute("service", "orderFilter");
-                    request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    return;
                 }
+
+                String status = request.getParameter("status");
+                int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+                int pageSize = 4;
+
+                // Tổng số bản ghi
+                String countQuery = "SELECT COUNT(*) FROM Orders WHERE CustomerID = " + acc.getAccountID();
+                if (status != null && !status.isEmpty()) {
+                    countQuery += " AND OrderStatus = " + status;
+                }
+                int totalRecords = dao.getTotalOrders(countQuery);
+                int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+                if (page < 1) {
+                    page = 1;
+                }
+                if (page > totalPages) {
+                    page = totalPages;
+                }
+                int start = (page - 1) * pageSize;
+
+                // Truy vấn dữ liệu (sắp xếp mặc định theo OrderDate DESC)
+                String sql = "SELECT * FROM Orders WHERE CustomerID = " + acc.getAccountID();
+                if (status != null && !status.isEmpty()) {
+                    sql += " AND OrderStatus = " + status;
+                }
+                sql += " ORDER BY OrderID DESC OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
+                Vector<Order> vector = dao.getOrders(sql);
+                for(Order order : vector){
+                    Vector<OrderDetail> orderDetail = da.getOrderDetailByOrderID(order.getOrderID());
+                    order.setOrderDetail(orderDetail);
+                }
+
+                // Truyền dữ liệu cho JSP
+                request.setAttribute("vector", vector);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("totalPages", totalPages);
+                request.setAttribute("status", status);
+                request.getRequestDispatcher("/jsp/OrderHistory.jsp").forward(request, response);
+            }
             }
         }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

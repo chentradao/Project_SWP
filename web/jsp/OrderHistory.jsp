@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Cart,entity.Voucher,entity.Order" %>
+<%@page import="entity.Accounts,java.sql.ResultSet,java.util.Vector,entity.Order,entity.OrderDetail" %>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.text.DecimalFormatSymbols"%>
 
@@ -19,6 +19,7 @@
         <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
         <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/main_styles.css">
+        <link rel="stylesheet" type="text/css" href="styles/orderHistory.css">
         <link rel="stylesheet" type="text/css" href="styles/responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
@@ -27,294 +28,210 @@
 
     <body class="bg-gray-50 min-h-screen">
         <%
-            Vector<Order> vector=(Vector<Order>)request.getAttribute("vector");
+            Vector<Order> vector = (Vector<Order>) request.getAttribute("vector");
             int currentPage = (Integer) request.getAttribute("currentPage");
             int totalPages = (Integer) request.getAttribute("totalPages");
             String status = (String) request.getAttribute("status");
-            String startDate = (String) request.getAttribute("startDate");
-            String endDate = (String) request.getAttribute("endDate");
-            String payment = (String) request.getAttribute("payment");
             String sortColumn = (String) request.getAttribute("sortColumn");
             String sortOrder = (String) request.getAttribute("sortOrder");
-            // Xác định service từ request để xây dựng baseUrl phù hợp
-    String service = request.getParameter("service") != null ? request.getParameter("service") : "orderHistory";
-    String baseUrl = "OrderHistoryURL?service=" + service;
-    
-    // Add sorting parameters for both services
-    if (sortColumn != null && !sortColumn.isEmpty()) baseUrl += "&sortColumn=" + sortColumn;
-    if (sortOrder != null && !sortOrder.isEmpty()) baseUrl += "&sortOrder=" + sortOrder;
-    // Chỉ thêm các tham số nếu service là orderFilter
-    if ("orderFilter".equals(service)) {
-        if (status != null ) baseUrl += "&status=" + status;
-        if (startDate != null && !startDate.isEmpty()) baseUrl += "&start=" + startDate;
-        if (endDate != null && !endDate.isEmpty()) baseUrl += "&end=" + endDate;
-        if (payment != null ) baseUrl += "&payment=" + payment;
-    }
-    DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-    symbols.setGroupingSeparator('.');
-    DecimalFormat formatter = new DecimalFormat("#,###", symbols);
-        %>
-        <!-- Header -->
 
+            String service = request.getParameter("service") != null ? request.getParameter("service") : "orderHistory";
+            String baseUrl = "OrderHistoryURL?service=" + service;
+            if (sortColumn != null && !sortColumn.isEmpty()) baseUrl += "&sortColumn=" + sortColumn;
+            if (sortOrder != null && !sortOrder.isEmpty()) baseUrl += "&sortOrder=" + sortOrder;
+            if (status != null && !status.isEmpty()) baseUrl += "&status=" + status;
+
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setGroupingSeparator('.');
+            DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+        %>
+
+        <!-- Header -->
         <%@ include file="/header.jsp" %>
 
-
         <!-- Menu -->
-
         <%@ include file="/menu.jsp" %>
 
         <!-- Home -->
         <div class="container mx-auto px-4 py-8 flex items-start">
-            <!-- Bộ lọc -->
+            <!-- Status Filter Buttons -->
             <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
-                <form action="OrderHistoryURL" id="filter" method="get">
-                    <input type="hidden" name="service" value="orderFilter" />
-                    <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
-
-                    <!-- Filter by Status -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
-                        <select id="filterStatus" name="status" class="mt-1 w-full border rounded-lg p-2">
-                            <option value="" <%= status == null || status.equals("") ? "selected" : "" %>>Tất cả</option>
-                            <option value="1" <%= "1".equals(status) ? "selected" : "" %>>Đang Chờ</option>
-                            <option value="2" <%= "2".equals(status) ? "selected" : "" %>>Đang Giao</option>
-                            <option value="3" <%= "3".equals(status) ? "selected" : "" %>>Hoàn Thành</option>
-                            <option value="0" <%= "0".equals(status) ? "selected" : "" %>>Đã Hủy</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter by Date -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Ngày đặt hàng</label>
-                        <input type="date" name="start" id="startDate" value="<%= startDate != null ? startDate : "" %>" class="mt-1 w-full border rounded-lg p-2">
-                        <input type="date" name="end" id="endDate" value="<%= endDate != null ? endDate : "" %>" class="mt-1 w-full border rounded-lg p-2">
-                        <span id="errorMessage" class="text-red-500 text-sm hidden"></span>
-                    </div>
-
-                    <!-- Filter by Payment Method -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Phương thức thanh toán</label>
-                        <select id="filterPayment" name="payment" class="mt-1 w-full border rounded-lg p-2">
-                            <option value="" <%= payment == null || payment.equals("") ? "selected" : "" %>>Tất cả</option>
-                            <option value="COD" <%= "COD".equals(payment) ? "selected" : "" %>>Thanh toán khi nhận hàng</option>
-                            <option value="VNPAY" <%= "VNPAY".equals(payment) ? "selected" : "" %>>VNPAY</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter by Price -->
-
-
-                    <button type="submit" onclick="applyFilters()" class="button_clear order_button">Lọc</button>
-                </form>
+                <h3 class="text-lg font-semibold mb-4">Trạng thái đơn hàng</h3>
+                <a href="OrderHistoryURL?service=orderHistory&status=" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= status == null || status.isEmpty() ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                    Tất cả
+                </a>
+                <a href="OrderHistoryURL?service=orderHistory&status=1" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "1".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                    Đang Chờ
+                </a>
+                <a href="OrderHistoryURL?service=orderHistory&status=2" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "2".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                    Vận Chuyển
+                </a>
+                <a href="OrderHistoryURL?service=orderHistory&status=3" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "3".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                    Hoàn Thành
+                </a>
+                <a href="OrderHistoryURL?service=orderHistory&status=0" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "0".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                    Đã Hủy
+                </a>
             </div>
+
             <!-- Main Content -->
-            <div class="w-4/5">
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <!-- Table Header -->
-                    <div class="p-5 border-b border-gray-200"></div>
-
-                    <!-- Table -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="border-b border-gray-300 bg-white">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">ID</th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortOrderDateHeader">
-                                        Ngày Đặt Hàng
-                                        <span class="ml-1">
-                                            <% if ("orderDate".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("orderDate".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortCustomerNameHeader">
-                                        Người Nhận
-                                        <span class="ml-1">
-                                            <% if ("customerName".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("customerName".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortPhoneHeader">
-                                        Số Điện Thoại
-                                        <span class="ml-1">
-                                            <% if ("phone".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("phone".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortTotalCostHeader">
-                                        Đơn giá
-                                        <span class="ml-1">
-                                            <% if ("totalCost".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("totalCost".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortPaymentMethodHeader">
-                                        Phương Thức
-                                        <span class="ml-1">
-                                            <% if ("paymentMethod".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("paymentMethod".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer" id="sortOrderStatusHeader">
-                                        Trạng Thái
-                                        <span class="ml-1">
-                                            <% if ("orderStatus".equals(sortColumn) && "asc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-up"></i>
-                                            <% } else if ("orderStatus".equals(sortColumn) && "desc".equals(sortOrder)) { %>
-                                            <i class="fas fa-sort-down"></i>
-                                            <% } else { %>
-                                            <i class="fas fa-sort"></i>
-                                            <% } %>
-                                        </span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <%
-                                    for(Order order : vector){
-                                %>
-                                <tr class="hover:bg-gray-50 transition duration-150">
-                                    <td class="px-4 py-3 text-gray-600"><%=order.getOrderID()%></td>
-                                    <td class="px-4 py-3 font-medium text-gray-800"><%=order.getOrderDate()%></td>
-                                    <td class="px-4 py-3 font-medium text-gray-800"><%=order.getCustomerName()%></td>
-                                    <td class="px-4 py-3"><%=order.getPhone()%></td>
-                                    <td class="px-4 py-3 text-gray-800"><%=formatter.format(order.getTotalCost())%>₫</td>
-                                    <td class="px-4 py-3 text-gray-800"><%=order.getPaymentMethod()%></td>
-                                    <% if(order.getOrderStatus()==1){%>
-                                    <td class="px-4 py-3 text-gray-800">Đang Chờ</td>
-                                    <%} else if(order.getOrderStatus()==2){%>
-                                    <td class="px-4 py-3 text-green-800">Đang Giao</td>
-                                    <%} else if(order.getOrderStatus()==3){%>
-                                    <td class="px-4 py-3 text-green-800">Hoàn Thành</td>
-                                    <%}else if(order.getOrderStatus()==0){%>
-                                    <td class="px-4 py-3 text-red-800">Đã Hủy</td>
-                                    <%}%>
-                                    <td class="px-4 py-3 w-[60px]">
-                                        <div class="flex justify-center space-x-2">
-                                            <a href="slider?action=edit&id=${slider.sliderID}" 
-                                               class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-full p-1 transition duration-300"
-                                               title="Cập nhật đơn hàng">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button"
-                                                    class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full p-1 transition duration-300"
-                                                    data-orderid="<%=order.getOrderID()%>"
-                                                    data-status="<%=order.getOrderStatus()%>"
-                                                    onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)"
-                                                    title="Hủy đơn hàng">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <%}%>
-                            </tbody>
-                        </table>
+            <div class="w-4/5 ml-6 bg-white rounded-xl shadow-lg overflow-hidden mt-20">
+                <%
+                        for (Order order : vector) {
+                %>
+                <a href="#">
+                <div class="overflow-x-auto border-b mb-5">
+                    <div class="order-header p-4 border-b">
+                        <span>ID đơn hàng: <%=order.getOrderID()%></span>
+                        <span>Ngày tạo đơn: <%=order.getOrderDate()%></span>
+                        <% if (order.getOrderStatus() == 1) { %>
+                        <span class=" px-4 py-3 text-gray-800">Đang Chờ</span>
+                        <% } else if (order.getOrderStatus() == 2) { %>
+                        <span class="px-4 py-3 text-green-800">Vận Chuyển</span>
+                        <% } else if (order.getOrderStatus() == 3) { %>
+                        <span class="px-4 py-3 text-green-800">Hoàn Thành</span>
+                        <% } else if (order.getOrderStatus() == 0) { %>
+                        <span class="px-4 py-3 text-red-800">Đã Hủy</span>
+                        <% } %>
                     </div>
-                    <!--Popup hủy đơn-->
-                    <div class="popup_clear" style="display: none;">
-                        <form action="OrderHistoryURL" method="post">
-                            <input type="hidden" name="service" value="deleteOrder" />
-                            <div class="popup_content">
-                                <h3 class="text-red-600">Bạn muốn hủy đơn hàng?</h3>
-                                <input type="hidden" name="oid" id="popupOrderID">
-                                <input type="text" name="cancel" class="w-full border rounded-lg p-2 mt-2" placeholder="Lý do hủy đơn">
-                                <div class="mt-4 flex justify-center space-x-2">
-                                    <button type="button" class="button_clear order_button" onclick="closePopup()">Trở Về</button>
-                                    <button type="submit" class="button_clear order_button">Hủy Đơn</button>
+                </a>
+                    <!-- Hiển thị danh sách sản phẩm từ OrderDetail -->
+                    <% for (OrderDetail detail : order.getOrderDetail()) {
+                    int subtotal =detail.getUnitPrice() * detail.getQuantity();
+                    %>
+                    <div class="order-item p-3 flex items-center border-b">
+                        <img src="<%=detail.getImage()%>" alt="Product" class="w-16 h-16 object-cover mr-4">
+                        <div class="order-details flex-1">
+                            <p><%=detail.getProductName()%></p>
+                            <div class="product-info text-sm text-gray-600">
+                                <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
+                                    <% if (detail.getColor() != null) { %>
+                                    <span>Màu: <%=detail.getColor()%></span>
+                                    <% } %>
+                                    <% if (detail.getSize() != null) { %>
+                                    <span> | Size: <%=detail.getSize()%></span>
+                                    <% } %>
                                 </div>
+                                <span>Số lượng: <%=detail.getQuantity()%></span>
+                                <span>Đơn giá: <%=formatter.format(detail.getUnitPrice())%>đ</span>
                             </div>
-                        </form>
+                        </div>
+                        <p class="price text-gray-800"><%=formatter.format(subtotal)%>đ</p>
                     </div>
-                    <!-- Popup thông báo lỗi -->
-                    <div class="popup_error" style="display: none;">
-                        <div class="popup_error_content">
-                            <h3 class="text-red-600">Thông báo</h3>
-                            <p class="mt-2">Chỉ có thể hủy đơn hàng khi trạng thái là "Đang Chờ".</p>
-                            <div class="mt-4 flex justify-center">
-                                <button type="button" class="button_clear order_button" onclick="closeErrorPopup()">Đóng</button>
-                            </div>
+                    <% } %>
+                    <div class="p-4 flex justify-between items-center flex-row-reverse">
+                        <p class="total">Tổng <%=order.getOrderDetail().size()%> mặt hàng: <%=formatter.format(order.getTotalCost())%>đ</p>
+                        <div class="flex space-x-2">
+                            <%if(order.getOrderStatus() == 1 || order.getOrderStatus() == 2){%>
+                            <button
+                                class="order_button_2">
+                                Cập Nhật 
+                            </button>
+                            <button type="button"
+                                    class="order_button_2"
+                                    data-orderid="<%=order.getOrderID()%>"
+                                    data-status="<%=order.getOrderStatus()%>"
+                                    onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)">
+                                Hủy Đơn Hàng
+                            </button>
+                            <%}else if(order.getOrderStatus() == 3){%>
+                            <button
+                                class="order_button_2">
+                                Mua Lại
+                            </button>
+                            <button
+                                class="order_button_2">
+                                Đánh Giá
+                            </button>
+                            <%}else if(order.getOrderStatus() == 0){%>
+                            <button
+                                class="order_button_2">
+                                Mua Lại
+                            </button>
+                            <%}%>
                         </div>
                     </div>
-                    <!-- Empty State (shown if no sliders) -->
-                    <c:if test="${empty vector}">
-                        <div class="py-12 flex flex-col items-center justify-center text-center">
-                            <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                                <i class="fas fa-image text-blue-500 text-xl"></i>
+                </div>
+                <% } %>
+
+                <!-- Popup hủy đơn -->
+                <div class="popup_clear fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" style="display: none;">
+                    <form action="OrderHistoryURL" method="post">
+                        <input type="hidden" name="service" value="deleteOrder" />
+                        <div class="popup_content">
+                            <h3 class="text-red-600 text-lg font-semibold">Bạn muốn hủy đơn hàng?</h3>
+                            <input type="hidden" name="oid" id="popupOrderID">
+                            <input type="text" name="cancel" class="w-full border rounded-lg p-2 mt-2" placeholder="Lý do hủy đơn">
+                            <div class="mt-4 flex justify-center space-x-2">
+                                <button type="button" class="button_clear order_button" onclick="closePopup()">Trở Về</button>
+                                <button type="submit" class="button_clear order_button">Hủy Đơn</button>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-700 mb-2">Không có đơn hàng nào được tìm thấy</h3>
-                            <p class="text-gray-500 max-w-md">Bạn chưa mua bất kỳ đơn hàng nào. Hãy đặt đơn đầu tiên ngay hôm nay để nhận ưu đãi đặc biệt!</p>
-                            <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
-                                <i class="fas fa-plus mr-1"></i> Mua đơn hàng đầu tiên của bạn
-                            </a>
                         </div>
-                    </c:if>
+                    </form>
+                </div>
 
-                    <!-- Pagination (optional) -->
-                    <div class="px-5 py-4 border-t border-gray-200 flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            Hiển thị đơn hàng
+                <!-- Popup thông báo lỗi -->
+                <div class="popup_error fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" style="display: none;">
+                    <div class="bg-white p-6 rounded-lg">
+                        <h3 class="text-red-600 text-lg font-semibold">Thông báo</h3>
+                        <p class="mt-2">Chỉ có thể hủy đơn hàng khi trạng thái là "Đang Chờ".</p>
+                        <div class="mt-4 flex justify-center">
+                            <button type="button" class="button_clear order_button" onclick="closeErrorPopup()">Đóng</button>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="flex space-x-1">
-                            <% if (currentPage > 1) { %>
-                            <a href="<%= baseUrl %>&page=<%= currentPage - 1 %>" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
-                                <i class="fas fa-chevron-left mr-1"></i> Trang trước
-                            </a>
-                            <% } else { %>
-                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-400 cursor-not-allowed" disabled>
-                                <i class="fas fa-chevron-left mr-1"></i> Trang trước
-                            </button>
-                            <% } %>
-                            <!-- Số trang -->
-                            <div class="pagination">
-                                <span class="px-3 py-1 text-gray-600">
-                                    Trang <%= currentPage %> / <%= totalPages %>
-                                </span>
-                            </div>
-
-                            <!-- Nút Next -->
-                            <% if (currentPage < totalPages) { %>
-                            <a href="<%= baseUrl %>&page=<%= currentPage + 1 %>" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
-                                Trang sau <i class="fas fa-chevron-right ml-1"></i>
-                            </a>
-                            <% } else { %>
-                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-400 cursor-not-allowed" disabled>
-                                Trang sau <i class="fas fa-chevron-right ml-1"></i>
-                            </button>
-                            <% } %>
+                <!-- Empty State -->
+                <c:if test="${empty vector}">
+                    <div class="py-12 flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-image text-blue-500 text-xl"></i>
                         </div>
+                        <h3 class="text-lg font-medium text-gray-700 mb-2">Không có đơn hàng nào được tìm thấy</h3>
+                        <p class="text-gray-500 max-w-md">Bạn chưa mua bất kỳ đơn hàng nào. Hãy đặt đơn đầu tiên ngay hôm nay để nhận ưu đãi đặc biệt!</p>
+                        <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-plus mr-1"></i> Mua đơn hàng đầu tiên của bạn
+                        </a>
+                    </div>
+                </c:if>
+
+                <!-- Pagination -->
+                <div class="px-5 py-4 border-t border-gray-200 flex items-center justify-between">
+                    <div class="text-sm text-gray-500">Hiển thị đơn hàng</div>
+                    <div class="flex space-x-1">
+                        <% if (currentPage > 1) { %>
+                        <a href="<%= baseUrl %>&page=<%= currentPage - 1 %>" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-chevron-left mr-1"></i> Trang trước
+                        </a>
+                        <% } else { %>
+                        <button class="px-3 py-1 rounded border border-gray-300 text-gray-400 cursor-not-allowed" disabled>
+                            <i class="fas fa-chevron-left mr-1"></i> Trang trước
+                        </button>
+                        <% } %>
+                        <div class="pagination">
+                            <span class="px-3 py-1 text-gray-600">Trang <%= currentPage %> / <%= totalPages %></span>
+                        </div>
+                        <% if (currentPage < totalPages) { %>
+                        <a href="<%= baseUrl %>&page=<%= currentPage + 1 %>" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                            Trang sau <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                        <% } else { %>
+                        <button class="px-3 py-1 rounded border border-gray-300 text-gray-400 cursor-not-allowed" disabled>
+                            Trang sau <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- JavaScript -->
         <script>
-// Hiển thị popup và set OrderID
             function checkStatusAndShowPopup(orderId, status) {
                 if (status === 1) {
                     showPopup(orderId);
@@ -326,102 +243,24 @@
                 document.querySelector(".popup_clear").style.display = "flex";
                 document.getElementById("popupOrderID").value = orderId;
             }
-
-            // Ẩn popup
             function closePopup() {
                 document.querySelector(".popup_clear").style.display = "none";
             }
-            // Hiển thị popup lỗi
             function showErrorPopup() {
                 document.querySelector(".popup_error").style.display = "flex";
             }
-
-            // Đóng popup lỗi
             function closeErrorPopup() {
                 document.querySelector(".popup_error").style.display = "none";
             }
-
-            // Ẩn popup khi click ra ngoài
             document.querySelector(".popup_clear").addEventListener("click", function (event) {
                 if (event.target === this) {
                     this.style.display = "none";
                 }
             });
-// Ẩn popup lỗi khi click ra ngoài
             document.querySelector(".popup_error").addEventListener("click", function (event) {
                 if (event.target === this) {
                     this.style.display = "none";
                 }
-            });
-
-        </script> 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const startDateInput = document.getElementById("startDate");
-                const endDateInput = document.getElementById("endDate");
-                const errorMessage = document.getElementById("errorMessage");
-
-                function validateDates() {
-                    const startDate = new Date(startDateInput.value);
-                    const endDate = new Date(endDateInput.value);
-                    const today = new Date();
-                    if (startDate > today) {
-                        errorMessage.textContent = "Ngày bắt đầu không được trong tương lai.";
-                        errorMessage.classList.remove("hidden");
-                        return false;
-                    }
-                    if (endDate > today) {
-                        errorMessage.textContent = "Ngày kết thúc không được trong tương lai.";
-                        errorMessage.classList.remove("hidden");
-                        return false;
-                    }
-                    if (startDateInput.value && endDateInput.value) {
-                        if (endDate < startDate) {
-                            errorMessage.textContent = "Ngày kết thúc phải sau ngày bắt đầu.";
-                            errorMessage.classList.remove("hidden");
-                            return false;
-                        } else {
-                            errorMessage.textContent = "";
-                            errorMessage.classList.add("hidden");
-                            return true;
-                        }
-                    }
-                    return true;
-                }
-
-                startDateInput.addEventListener("change", validateDates);
-                endDateInput.addEventListener("change", validateDates);
-
-                document.getElementById("filter").addEventListener("submit", function (event) {
-                    if (!validateDates()) {
-                        event.preventDefault();
-                    }
-                });
-                // Hàm xử lý sắp xếp chung
-                function handleSort(column) {
-                    const currentSortColumn = "<%= sortColumn != null ? sortColumn : "" %>";
-                    const currentSortOrder = "<%= sortOrder != null ? sortOrder : "" %>";
-                    let newSortOrder = "";
-
-                    if (currentSortColumn === column) {
-                        newSortOrder = currentSortOrder === "asc" ? "desc" : "asc";
-                    } else {
-                        newSortOrder = "asc";
-                    }
-
-                    const urlObj = new URL(window.location.href);
-                    urlObj.searchParams.set("sortColumn", column);
-                    urlObj.searchParams.set("sortOrder", newSortOrder);
-                    window.location.href = urlObj.toString();
-                }
-
-                // Gắn sự kiện click cho từng header
-                document.getElementById("sortOrderDateHeader").addEventListener("click", () => handleSort("orderDate"));
-                document.getElementById("sortCustomerNameHeader").addEventListener("click", () => handleSort("customerName"));
-                document.getElementById("sortPhoneHeader").addEventListener("click", () => handleSort("phone"));
-                document.getElementById("sortTotalCostHeader").addEventListener("click", () => handleSort("totalCost"));
-                document.getElementById("sortPaymentMethodHeader").addEventListener("click", () => handleSort("paymentMethod"));
-                document.getElementById("sortOrderStatusHeader").addEventListener("click", () => handleSort("orderStatus"));
             });
         </script>
         <script src="js/jquery-3.2.1.min.js"></script>
