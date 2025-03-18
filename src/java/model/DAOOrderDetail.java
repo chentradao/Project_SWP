@@ -21,7 +21,7 @@ public class DAOOrderDetail extends DBConnection{
         Vector<OrderDetail> ord = new Vector<>();
         String sql ="Select * "
                 + "From OrderDetail ord join ProductDetail pd on ord.ProductID = pd.ID join Products p on pd.ProductID = p.ProductID "
-                + "Where OrderID =?";
+                + "Where OrderID =? ";
         try {
             PreparedStatement pre = conn.prepareStatement(sql);
             pre.setInt(1, OrderID);

@@ -184,8 +184,8 @@ public class DAOOrder extends DBConnection {
                 String sql2 = "INSERT INTO [dbo].[OrderDetail]\n"
                         + "           ([OrderID]\n"
                         + "           ,[ProductID]\n"
-                        + "           ,[UnitPrice]\n"
-                        + "           ,[Quantity])\n"
+                        + "           ,[Quantity]\n"
+                        + "           ,[UnitPrice])\n"
                         + "     VALUES(?,?,?,?)";
                 PreparedStatement state = conn.prepareStatement(sql2);
                 state.setObject(1, oid);

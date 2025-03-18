@@ -22,7 +22,7 @@ public class DAOCart extends DBConnection{
     try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
             if(rs.next()){
-                cart = new Cart(rs.getInt("ProductID"), rs.getString("ProductName"), rs.getInt("Quantity"), rs.getInt("ID"), rs.getString("IdentityCode"), rs.getString("Size"), rs.getString("Color"), rs.getInt("Price"), rs.getString("Image"));
+                cart = new Cart(rs.getInt("ProductID"), rs.getString("ProductName"), rs.getInt("ID"), rs.getString("IdentityCode"), rs.getInt("Quantity"), rs.getString("Size"), rs.getString("Color"), rs.getInt("Price"), rs.getString("Image"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAOCart.class.getName()).log(Level.SEVERE, null, ex);

@@ -50,18 +50,6 @@ public class OrderHistoryController extends HttpServlet {
                 response.sendRedirect(request.getHeader("Referer"));
             }
 
-            if (service.equals("deleteOrder")) {
-                String cancel = request.getParameter("cancel");
-                int oid = Integer.parseInt(request.getParameter("oid"));
-                Vector<Order> vector = dao.getOrders("SELECT * FROM Orders WHERE OrderID = " + oid);
-                for (Order or : vector) {
-                    or.setCancelNotification(cancel);
-                    dao.updateOrder(or);
-                }
-                dao.deleteOrder(oid);
-                response.sendRedirect(request.getHeader("Referer"));
-            }
-
             if (service.equals("orderHistory")) {
                 if (acc == null) {
                     request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -93,7 +81,7 @@ public class OrderHistoryController extends HttpServlet {
                 if (status != null && !status.isEmpty()) {
                     sql += " AND OrderStatus = " + status;
                 }
-                sql += " ORDER BY OrderDate DESC OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
+                sql += " ORDER BY OrderID DESC OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
                 Vector<Order> vector = dao.getOrders(sql);
                 for(Order order : vector){
                     Vector<OrderDetail> orderDetail = da.getOrderDetailByOrderID(order.getOrderID());
