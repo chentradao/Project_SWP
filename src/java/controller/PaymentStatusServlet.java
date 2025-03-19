@@ -64,15 +64,18 @@ public class PaymentStatusServlet extends HttpServlet {
         if (acc != null) {
             CustomerID = acc.getAccountID();
         }
+        if(voucher != null){
         int newVQuantity = voucher.getQuantity() - 1;
         voucher.setQuantity(newVQuantity);
         if (newVQuantity <= 0) {
             voucher.setStatus(0);
         }
         d.updateVoucherByHank(voucher);
+        }
         DAOOrder dao = new DAOOrder();
-        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, "VNPay", "VNPay", VoucherID);
+        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, "VNPay", 1);
         int n = dao.insertOrder(o);
+        System.out.println(Email);
         if (n > 0) {
             // Insert các mục giỏ hàng vào OrderDetails
             Enumeration<String> enu = session.getAttributeNames();
@@ -183,6 +186,7 @@ public class PaymentStatusServlet extends HttpServlet {
         session.removeAttribute("voucher");
         session.removeAttribute("Discount");
         session.removeAttribute("cartQuantiry");
+        session.removeAttribute("Email");
         try {
             EmailHandler.sendEmail(Email, subject, content);
         } catch (AddressException ex) {

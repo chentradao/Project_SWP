@@ -94,25 +94,27 @@ public class OrderController extends HttpServlet {
                     String address = request.getParameter("address");
                     String ShipAddress = address + ", " + ward + ", " + district + ", " + city;
                     int Discount = Integer.parseInt(request.getParameter("discount"));
-                    String CancelNotification = null;
                     String Note = request.getParameter("Note");
                     int OrderStatus = 1;
 
                     String PaymentMethod = request.getParameter("payment");
                     if (PaymentMethod.equalsIgnoreCase("cod")) {
-                        Order o = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus);
+                        Order o = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, PaymentMethod, OrderStatus);
                         int n = dao.insertOrder(o);
-                        int newVQuantity = voucher.getQuantity() - 1;
-                        voucher.setQuantity(newVQuantity);
-                        if (newVQuantity <= 0) {
-                            voucher.setStatus(0);
-                        }
+                        if (voucher != null) {
+                            int newVQuantity = voucher.getQuantity() - 1;
+                            voucher.setQuantity(newVQuantity);
+                            if (newVQuantity <= 0) {
+                                voucher.setStatus(0);
+                            }
                         d.updateVoucherByHank(voucher);
-                        if(VoucherID > 1 || acc != null){
+                        }
+                        if (VoucherID > 1 || acc != null) {
                             AccountVoucher accv = new AccountVoucher(VoucherID, acc.getAccountID());
                             av.insertAccountVoucher(accv);
                         }
                         sendOrderConfirmationEmail(session, CustomerName, ShipAddress, Discount, Phone, Email, ShippingFee, TotalCost, Note);
+                        System.out.println("send Email to: " + Email);
                         if (n > 0) {
                             // Insert các mục giỏ hàng vào OrderDetails
                             Enumeration<String> enu = session.getAttributeNames();
@@ -217,13 +219,13 @@ public class OrderController extends HttpServlet {
                     + "</tr>";
             subtotal += cart.getPrice() * cart.getQuantity();
             ProductDetail pro = da.getProDetailbyID(cart.getID());
-                                    int updateQuantity = pro.getQuantity() - cart.getQuantity();
-                                    pro.setQuantity(updateQuantity);
-                                    pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
-                                    if (updateQuantity <= 0) {
-                                        pro.setProductStatus(0);
-                                    }
-                                    da.updateProductDetail(pro);
+            int updateQuantity = pro.getQuantity() - cart.getQuantity();
+            pro.setQuantity(updateQuantity);
+            pro.setSoldQuantity(pro.getSoldQuantity() + cart.getQuantity());
+            if (updateQuantity <= 0) {
+                pro.setProductStatus(0);
+            }
+            da.updateProductDetail(pro);
         }
         content += "<tr>"
                 + "<tr>"

@@ -146,7 +146,7 @@
                                                 <img src="<%= cart.getImage() != null ? cart.getImage() : "images/default-product.jpg" %>" alt=""style="object-fit: contain; width: auto; max-height: 150px;">
                                             </div>
                                             <!-- Product Name -->
-                                            <div class="cart_product_name"><a href="product.html"><%=cart.getProductName()%></a></div>
+                                            <div class="cart_product_name"><a href="<%= request.getContextPath() %>/ProductDetail?productId=<%= cart.getID() %>"><%=cart.getProductName()%></a></div>
                                             <div class="product_details">
                                                 <%if(cart.getSize() != null){%>
                                                 <span>Size: <%= cart.getSize() %></span> <%}%> |

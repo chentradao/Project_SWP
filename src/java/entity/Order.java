@@ -30,7 +30,7 @@ public class Order {
     private int OrderStatus;
     private Vector<OrderDetail> orderDetail;
 
-    public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+    public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String Note, String CancelNotification, String PaymentMethod, int OrderStatus) {
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;
         this.OrderDate = OrderDate;
@@ -41,8 +41,8 @@ public class Order {
         this.Phone = Phone;
         this.ShipAddress = ShipAddress;
         this.Discount = Discount;
-        this.CancelNotification = CancelNotification;
         this.Note = Note;
+        this.CancelNotification = CancelNotification;
         this.PaymentMethod = PaymentMethod;
         this.OrderStatus = OrderStatus;
     }

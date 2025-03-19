@@ -87,6 +87,7 @@ public class LoginController extends HttpServlet {
             HttpSession session = request.getSession();
             session.removeAttribute("acc");
             session.removeAttribute("mess"); // Xóa thông báo lỗi
+            session.removeAttribute("voucher");
             response.sendRedirect("ProductListServlet");
         }
     }

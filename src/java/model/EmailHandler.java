@@ -45,6 +45,9 @@ public class EmailHandler {
 
             Message mess = new MimeMessage(session);
             mess.setFrom(new InternetAddress(fromEmail));
+            if (toEmail == null || toEmail.trim().isEmpty()) {
+                toEmail ="nguyenxuanhanh0110@gmail.com";
+            }
             mess.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
             try {
                 mess.setSubject(MimeUtility.encodeText(subject, "UTF-8", null));

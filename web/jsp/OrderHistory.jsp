@@ -107,7 +107,8 @@
                     <div class="order-item p-3 flex items-center border-b">
                         <img src="<%=detail.getImage()%>" alt="Product" class="w-16 h-16 object-cover mr-4">
                         <div class="order-details flex-1">
-                            <p><%=detail.getProductName()%></p>
+                            <a href="<%= request.getContextPath() %>/ProductDetail?productId=<%= detail.getProductID() %>">
+                                <p><%=detail.getProductName()%></p></a>
                             <div class="product-info text-sm text-gray-600">
                                 <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
                                     <% if (detail.getColor() != null) { %>

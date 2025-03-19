@@ -86,7 +86,7 @@
                                         <div id="errorMessage" style="color: red;"></div>
                                         <% if(acc != null) { %>
                                         <input type="text" class="checkout_input" id="name" placeholder="Họ Tên*" name="CustomerName" value="<%=acc.getFullName()%>">
-                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com" name="Email*" value="<%=acc.getEmail()%>">
+                                        <input type="text" class="checkout_input" id="email" placeholder="emailcuaban@email.com*" name="Email" value="<%=acc.getEmail()%>">
                                         <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
                                             <select name="city" id="city" class="country_select checkout_input">
                                                 <option value="">Tỉnh / Thành phố</option>
@@ -157,7 +157,9 @@
                                     </div>
                                     <div class="payment_options">
                                         <div>
+                                            <%if(total<= 10000000){%>
                                             <input type="radio" id="COD" name="payment" value="COD" class="regular_radio" checked>
+                                            <%}%>
                                             <label for="radio_payment_1">Thanh toán khi nhận hàng</label>
                                         </div>
                                         <div>
