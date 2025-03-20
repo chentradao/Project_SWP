@@ -51,7 +51,7 @@
                 left: 10px;
                 top: 150px;
                 z-index: 1000;
-                display: none; /* Ẩn mặc định */
+                display: none;
                 background-color: #4e73df;
                 color: white;
                 border: none;
@@ -59,9 +59,78 @@
                 border-radius: 5px;
                 cursor: pointer;
             }
-            /* Hiện nút khi sidebar đã ẩn */
             .sidebar.toggled ~ #sidebarToggleTop {
                 display: block;
+            }
+            /* CSS cho chatbox */
+            .chatbox {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 300px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                overflow: hidden;
+                z-index: 1000;
+                transition: all 0.3s ease;
+            }
+            .chatbox-header {
+                background-color: #4e73df;
+                color: white;
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+            }
+            .chatbox-body {
+                padding: 10px;
+                height: 200px;
+                overflow-y: auto;
+                background-color: #f8f9fc;
+            }
+            .chatbox-body .message {
+                margin: 5px 0;
+                padding: 8px;
+                border-radius: 5px;
+                max-width: 80%;
+            }
+            .chatbox-body .message.sent {
+                background-color: #4e73df;
+                color: white;
+                margin-left: auto;
+            }
+            .chatbox-body .message.received {
+                background-color: #e2e8f0;
+                color: black;
+            }
+            .chatbox-footer {
+                padding: 10px;
+                display: flex;
+                border-top: 1px solid #ddd;
+            }
+            .chatbox-footer input {
+                flex-grow: 1;
+                border: none;
+                padding: 5px;
+                outline: none;
+            }
+            .chatbox-footer button {
+                background-color: #4e73df;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .chatbox.minimized {
+                height: 50px;
+                width: 200px;
+            }
+            .chatbox.minimized .chatbox-body,
+            .chatbox.minimized .chatbox-footer {
+                display: none;
             }
         </style>
     </head>
@@ -75,11 +144,11 @@
 
             <nav class="main_nav flex-grow-1 text-center">
                 <ul class="navbar-nav d-flex flex-row justify-content-center" style="font-size: 18px; font-weight: bold; gap: 20px;">
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Đơn hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quảng cáo</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Khách hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="Blog?service=listAllBlogs">Bài đăng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý đơn hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý quảng cáo</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý kho hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="Blog?service=listAllBlogs">Quản lý bài đăng</a></li>
                 </ul>
             </nav>
 
@@ -89,7 +158,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="manager.html">Thông tin tài khoản</a>
-                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
+                    <a class="dropdown-item" href="blank.html">Đăng xuất</a>
                 </div>
             </div>
         </header>
@@ -102,11 +171,14 @@
                     <form action="manager" method="post" class="p-3">
                         <div class="mt-4 text-white" style="font-size: 16px;">Lọc theo trạng thái</div>
                         <ul class="list-unstyled" style="font-size: 16px; font-weight: normal;">
-                            <li><input type="checkbox" name="status" value="1"> Hoàn thành</li>
-                            <li><input type="checkbox" name="status" value="2"> Chờ xử lý</li>
-                            <li><input type="checkbox" name="status" value="3"> Đang giao hàng</li>
-                            <li><input type="checkbox" name="status" value="4"> Đã hủy</li>
-                            <li><input type="checkbox" name="status" value="5"> Đã hoàn</li>
+                            <li><input type="checkbox" name="status" value="1"> Đang lấy hàng</li>
+                            <li><input type="checkbox" name="status" value="2"> Đang giao hàng</li>
+                            <li><input type="checkbox" name="status" value="3"> Đã giao hàng thành công</li>
+                            <li><input type="checkbox" name="status" value="4"> Giao hàng thất bại</li>
+                            <li><input type="checkbox" name="status" value="5"> Đang hoàn hàng</li>
+                            <li><input type="checkbox" name="status" value="6"> Đã hoàn hàng thành công</li>
+                            <li><input type="checkbox" name="status" value="7"> Hủy đơn hàng</li>
+                            <li><input type="checkbox" name="status" value="8"> Chờ xác nhận</li>
                         </ul>
 
                         <div class="mt-4 text-white" style="font-size: 16px;">Lọc theo thời gian</div>
@@ -193,7 +265,9 @@
                                     <th style="border: 1px solid black; padding: 8px;">Mã đơn hàng</th>
                                     <th style="border: 1px solid black; padding: 8px;">Tên sản phẩm</th>
                                     <th style="border: 1px solid black; padding: 8px;">Số lượng</th>
-                                    <th style="border: 1px solid black; padding: 8px;">Giá sản phẩm</th>
+                                    <th style="border: 1px solid black; padding: 8px;">Kho</th>
+                                    <th style="border: 1px solid black; padding: 8px;">Địa chỉ</th>
+                                    <th style="border: 1px solid black; padding: 8px;">Giá sản phẩm</th>                                    
                                     <th style="border: 1px solid black; padding: 8px;">Tổng tiền</th>
                                     <th style="border: 1px solid black; padding: 8px;">Tình trạng</th>
                                     <th style="border: 1px solid black; padding: 8px;">Hành động</th>
@@ -201,7 +275,7 @@
                             </thead>
                             <tbody>
                                 <c:set var="currentOrderID" value="" />
-                                <c:set var="pageSize" value="5" />
+                                <c:set var="pageSize" value="10" />
                                 <c:set var="currentPage" value="${param.page != null ? param.page : 1}" />
                                 <c:set var="startIndex" value="${(currentPage - 1) * pageSize}" />
                                 <c:set var="endIndex" value="${startIndex + pageSize - 1}" />
@@ -212,9 +286,11 @@
                                             <c:set var="currentOrderID" value="${order.OrderID}" />
                                         </c:if>
                                         <tr>
-                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.OrderID}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.orderCode}</td>
                                             <td style="border: 1px solid black; padding: 8px;">${order.ProductName}</td>
                                             <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Quantity}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Stock}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.ShipAddress}</td>
                                             <td style="border: 1px solid black; padding: 8px; text-align: right;">
                                                 <fmt:formatNumber type="currency" currencyCode="VND" value="${order.Price}" />
                                             </td>
@@ -225,19 +301,22 @@
                                             </td>
                                             <td style="border: 1px solid black; padding: 8px; text-align: center;">
                                                 <c:choose>
-                                                    <c:when test="${order.OrderStatus == 1}">Đã hoàn thành</c:when>
-                                                    <c:when test="${order.OrderStatus == 2}">Chờ xử lý</c:when>
-                                                    <c:when test="${order.OrderStatus == 3}">Đang giao</c:when>
-                                                    <c:when test="${order.OrderStatus == 4}">Đã hủy</c:when>
-                                                    <c:when test="${order.OrderStatus == 5}">Đã hoàn</c:when>
+                                                    <c:when test="${order.OrderStatus == 1}">Đang lấy hàng</c:when>
+                                                    <c:when test="${order.OrderStatus == 2}">Đang giao hàng</c:when>
+                                                    <c:when test="${order.OrderStatus == 3}">Đã giao hàng thành công</c:when>
+                                                    <c:when test="${order.OrderStatus == 4}">Giao hàng thất bại</c:when>
+                                                    <c:when test="${order.OrderStatus == 5}">Đang hoàn hàng</c:when>
+                                                     <c:when test="${order.OrderStatus == 6}">Đã hoàn hàng thành công</c:when>
+                                                    <c:when test="${order.OrderStatus == 7 }">Hủy đơn hàng</c:when>
+                                                     <c:when test="${order.OrderStatus == 8}">Chờ xác nhận</c:when>
                                                     <c:otherwise>Không xác định</c:otherwise>
                                                 </c:choose>
                                             </td>
                                             <td style="border: 1px solid black; padding: 8px; text-align: center;">
-                                                <c:if test="${order.OrderStatus == 2}">
-                                                    <form action="OrderManagementServlet" method="post" style="display: inline;">
+                                                <c:if test="${order.OrderStatus==8}">
+                                                    <form action="ghtkservlet" method="get" style="display: inline;">                                                        
+                                                        <input type="hidden" name="action" value="register" />
                                                         <input type="hidden" name="orderId" value="${order.OrderID}" />
-                                                        <input type="hidden" name="action" value="confirm" />
                                                         <input type="hidden" name="page" value="${currentPage}" />
                                                         <button type="submit" style="padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Xác nhận</button>
                                                     </form>
@@ -257,7 +336,7 @@
 
                         <!-- Phần phân trang -->
                         <div class="pagination mt-4 d-flex justify-content-center align-items-center">
-                            <c:set var="pageSize" value="5" />
+                            <c:set var="pageSize" value="10" />
                             <c:set var="currentPage" value="${param.page != null ? param.page : 1}" />
                             <c:set var="totalPages" value="${(orderList.size() + pageSize - 1) / pageSize}" />
 
@@ -282,7 +361,6 @@
 
                             <span class="ml-3">
                                 Trang ${currentPage} / ${totalPages} 
-                                
                                 (Tổng ${orderList.size()} đơn hàng)
                             </span>
                         </div>
@@ -296,6 +374,21 @@
         </div>
         <!-- End of Page Wrapper -->
 
+<!--         Chatbox 
+        <div class="chatbox" id="chatbox">
+            <div class="chatbox-header" id="chatbox-toggle">
+                <span>Chat Hỗ Trợ</span>
+                <i class="fas fa-minus" id="toggle-icon"></i>
+            </div>
+            <div class="chatbox-body" id="chatbox-body">
+                <div class="message received">Xin chào! Bạn cần hỗ trợ gì?</div>
+            </div>
+            <div class="chatbox-footer">
+                <input type="text" id="chat-input" placeholder="Nhập tin nhắn...">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>-->
+
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>
@@ -303,7 +396,7 @@
         <script src="plugins/parallax-js-master/parallax.min.js"></script>
         <script src="js/cart_custom.js"></script>
 
-        <!-- JavaScript cho toggle sidebar -->
+        <!-- JavaScript cho toggle sidebar và chatbox -->
         <script>
             $(document).ready(function () {
                 // Nút trong sidebar để ẩn
@@ -319,7 +412,41 @@
                     $(".sidebar").toggleClass("toggled");
                     $("#content-wrapper").toggleClass("toggled");
                 });
+
+                // Gắn sự kiện toggle cho header chatbox
+                $("#chatbox-toggle").on("click", function () {
+                    toggleChatbox();
+                });
             });
+
+            // JavaScript cho chatbox
+            function toggleChatbox() {
+                const chatbox = document.getElementById('chatbox');
+                const toggleIcon = document.getElementById('toggle-icon');
+                chatbox.classList.toggle('minimized');
+                if (chatbox.classList.contains('minimized')) {
+                    toggleIcon.classList.remove('fa-minus');
+                    toggleIcon.classList.add('fa-plus');
+                } else {
+                    toggleIcon.classList.remove('fa-plus');
+                    toggleIcon.classList.add('fa-minus');
+                }
+            }
+
+            function sendMessage() {
+                const input = document.getElementById('chat-input');
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatbox-body');
+                    const newMessage = document.createElement('div');
+                    newMessage.classList.add('message', 'sent');
+                    newMessage.textContent = message;
+                    chatBody.appendChild(newMessage);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    // Thêm logic gửi tin nhắn đến server tại đây nếu cần
+                }
+            }
         </script>
     </body>
 </html>

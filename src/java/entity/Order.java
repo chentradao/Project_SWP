@@ -29,7 +29,31 @@ public class Order {
     private String PaymentMethod;
     private int OrderStatus;
     private Vector<OrderDetail> orderDetail;
+    private String orderCode;
+    private String ShipCity;
+    
+    public Order(int OrderID, String orderCode,int CustomerID, int TotalCost, int OrderStatus, String CustomerName, String ShipAddress, String ShipCity, String Phone, Date OrderDate, Date ShippedDate) {
+        this.OrderID = OrderID;
+        this.orderCode = orderCode;
+        this.CustomerID = CustomerID;
+        this.TotalCost = TotalCost;
+        this.OrderStatus = OrderStatus;
+        this.CustomerName = CustomerName;
+        this.ShipAddress = ShipAddress;
+        this.ShipCity = ShipCity;
+        this.Phone = Phone;
+        this.OrderDate = OrderDate;
+        this.ShippedDate = ShippedDate;
+    }
 
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+    
     public Order(Integer CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String Note, String CancelNotification, String PaymentMethod, int OrderStatus) {
         this.CustomerID = CustomerID;
         this.CustomerName = CustomerName;

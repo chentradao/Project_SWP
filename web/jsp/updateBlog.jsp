@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html lang="vi">
     <head><%@ page import="entity.Blog" %>
         <%@ page import="java.util.Vector" %>
@@ -11,6 +13,8 @@
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <title>Quản lý bài viết</title>
+                <script src="https://cdn.tiny.cloud/1/6djxe59qtpyo7xk3et7sh1jayfb6gg079a4kiqdoa06oqut4/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
         <style>
             * {
                 box-sizing: border-box;
@@ -171,7 +175,7 @@
     <body>
         <header class="header">
                 <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
+                    <div class="logo"><a href="ProductListServlet">Estée Lauder</a></div>
                     <nav class="main_nav">
                         <ul>
                             <li><a href="index.jsp">Quản lý đơn hàng</a></li>
@@ -206,7 +210,7 @@
         <div class="card">
             <form action="Blog" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="service" value="updateBlog">
-                <h3 id="formTitle">Chỉnh sửa Blog</h3>
+                
                 <input type="hidden" id="blogID" name="blogID" value="<%=blog.getBlogID()%>">
                 <div class="title">
                     <label>Tiêu đề:</label>
@@ -222,7 +226,7 @@
                     <div class="meta-item">
                         Danh mục: <select id="blogCategoryID" name="blogCategoryID" required value="<%=blog.getBlogCategoryID()%> ">
                             <option value="1">Làm đẹp</option>
-                            <option value="2">Môi trường</option>
+                            <option value="2">Bảo vệ môi trường</option>
                             <option value="3">Sức khỏe</option>
                         </select>
                     </div>
@@ -242,20 +246,80 @@
                         <img src="<%=blog.getBlogThumbnail()%>" alt="Thumbnail" class="blog-thumbnail">
                         <input type="file" name="blogThumbnail">
                     </div>
-                    <div class="thumbnail">
-                        <img src="<%=blog.getImage()%>" alt="Thumbnail" class="main-image">
-                        <input type="file" name="image">
-                    </div>
                 </div>
                 <div class="content">
                     Mô tả 
                     <textarea id="blogDescription" name="blogDescription" rows="7" cols="100"><%= blog.getBlogDescription() %></textarea>
-
                 </div>
                 <button type="submit" class="btn btn-update" name="submit" value="updateBlog">Luu Blog</button>
             </form>
         </div>
         <%     }
         %>
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        tinymce.init({
+            selector: "textarea#blogDescription",
+            height: 300,
+            menubar: false,
+            plugins: [
+                "advlist autolink lists link image charmap preview",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount"
+            ],
+            toolbar:
+                "undo redo | formatselect | bold italic backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat | help",
+            branding: false,
+            setup: function (editor) {
+                editor.on('init', function () {
+                    console.log("TinyMCE đã khởi động!");
+                });
+            }
+        });
+    });
+</script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const fileInput = document.querySelector("input[name='blogThumbnail']");
+                fileInput.addEventListener("change", function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const fileName = file.name.toLowerCase();
+                        if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) {
+                            alert("Chỉ chấp nhận file ảnh .jpg, .jpeg, .png!");
+                            this.value = ""; // Xóa file đã chọn
+                        }
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const form = document.querySelector("form");
+                form.addEventListener("submit", function (event) {
+                    const blogTitle = document.getElementById("blogTitle").value.trim();
+                    const blogDescription = tinymce.get("blogDescription").getContent({ format: 'text' }).trim();
+
+                    if (blogTitle === "" || blogDescription === "") {
+                        alert("Tiêu đề và Mô tả không được để trống hoặc chỉ chứa khoảng trắng!");
+                        event.preventDefault(); // Ngăn form gửi đi
+                    }
+                });
+            });
+        </script>
+        
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function () {
+            tinymce.triggerSave(); // Đồng bộ nội dung TinyMCE vào textarea trước khi submit
+        });
+    });
+</script>
+
     </body>
 </html>

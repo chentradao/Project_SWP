@@ -15,7 +15,7 @@
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
-        <title>Quản lý Blog</title>
+        <title>Quản lý bài viết</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -59,7 +59,7 @@
                 transform: translateY(-2px);
             }
 
-            
+
 
             .selected {
                 background-color: #f0f9ff;
@@ -107,12 +107,11 @@
 
             <!-- Main Content -->
             <div class="main-content">
-                <h1>Danh sách Blog</h1>
-                
+                <h1>Danh sách bài viết</h1>
+
                 <!-- Nút thêm bài viết & xuất Excel -->
                 <div class="button-container">
                     <button onclick="location.href = 'addBlog.jsp'">Thêm bài viết</button>
-                    <button onclick="exportToExcel()">Xuất ra Excel</button>
                 </div>
                 <!-- Thêm phần lọc -->
                 <div class="filter-section">
@@ -129,7 +128,7 @@
                         <select name="filterCategory" class="filter-select">
                             <option value="all" ${param.filterCategory == 'all' ? 'selected' : ''}>Tất cả</option>
                             <option value="1" ${param.filterCategory == '1' ? 'selected' : ''}>Làm đẹp</option>
-                            <option value="2" ${param.filterCategory == '2' ? 'selected' : ''}>Môi trường</option>
+                            <option value="2" ${param.filterCategory == '2' ? 'selected' : ''}>Bảo vệ môi trường</option>
                             <option value="3" ${param.filterCategory == '3' ? 'selected' : ''}>Sức khỏe</option>
                         </select>
 
@@ -143,11 +142,20 @@
                             for (Blog blog : vectorBlog) {
                     %>
                     <div class="blog-item" onclick="selectBlog(<%= blog.getBlogID() %>)">
-                        <img src="<%= blog.getBlogThumbnail() %>" class="post-image">
-                        <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
-                        <p><%= blog.getBlogDescription() %></p>
-                        <p>Ngày đăng: <%= blog.getDate() %></p>
-
+                        <div class="col-1">
+                            <img src="<%= blog.getBlogThumbnail() %>" class="post-image" alt="<%= blog.getBlogThumbnail() %>">
+                        </div>
+                        <div class="col-11">
+                            <div class="col-12">
+                                <h3><a href="Blog?service=displayBlog&id=<%=blog.getBlogID()%>"><%= blog.getBlogTitle() %></a></h3>
+                            </div>
+                            <div class="col-12">
+                                <p><%= blog.getBlogDescription() %></p>  
+                            </div>
+                            <div class="col-12">
+                                <p>Ngày đăng: <%= blog.getDate() %></p>
+                            </div>
+                        </div>
                     </div>
                     <% 
                             }

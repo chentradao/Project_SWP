@@ -332,7 +332,31 @@ public class DAOOrder extends DBConnection {
         }
         return vector;
     }
-    
+    public Order getOrderByOrderID(int orderID) {
+    Order order = null;
+    String query = "SELECT * FROM Orders WHERE OrderID = ?";
+    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setInt(1, orderID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                order = new Order(rs.getInt("OrderID"),
+                    rs.getString("orderCode"),    
+                    rs.getInt("CustomerID"),
+                    rs.getInt("TotalCost"),
+                    rs.getInt("OrderStatus"),
+                    rs.getString("CustomerName"),
+                    rs.getString("ShipAddress"),
+                    rs.getString("ShipCity"),
+                    rs.getString("Phone"),
+                    rs.getDate("OrderDate"),
+                    rs.getDate("ShippedDate"));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return order;
+}
     public void addToOrder(Cart cart) {
         String sql = "select top 1 OrderID from Orders order by OrderID desc";
         PreparedStatement pre;
