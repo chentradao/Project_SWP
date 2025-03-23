@@ -5,6 +5,7 @@
 package controller;
 
 import entity.Accounts;
+import entity.Cart;
 import entity.Order;
 import entity.OrderDetail;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Vector;
+import model.DAOCart;
 import model.DAOOrder;
 import model.DAOOrderDetail;
 
@@ -31,12 +33,32 @@ public class OrderHistoryController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
+        int cartQuantiry = session.getAttribute("cartQuantiry") != null ? (int) session.getAttribute("cartQuantiry") : 0;
         Accounts acc = (Accounts) session.getAttribute("acc");
         DAOOrder dao = new DAOOrder();
         DAOOrderDetail da = new DAOOrderDetail();
+        DAOCart d = new DAOCart();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
-
+            if(service.equals("reOrder")){
+                int oid = Integer.parseInt(request.getParameter("oid"));
+                Vector<OrderDetail> vec = da.getOrderDetailByOrderID(oid);
+                for(OrderDetail ord : vec){
+                    int id = ord.getProductID();
+                    Cart newCart = d.getCart(id);
+                if (session.getAttribute(id + "") == null) {
+                    newCart.setQuantity(ord.getQuantity());
+                    session.setAttribute(id + "", newCart);
+                    cartQuantiry += 1;
+                } else {
+                    Cart oldCart = (Cart) session.getAttribute(id + "");
+                    oldCart.setQuantity(oldCart.getQuantity() + 1);
+                    session.setAttribute(id + "", oldCart);
+                }
+                }
+                session.setAttribute("cartQuantiry", cartQuantiry);
+                response.sendRedirect("CartURL?service=showCart");
+            }
             if (service.equals("deleteOrder")) {
                 String cancel = request.getParameter("cancel");
                 Order order;

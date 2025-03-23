@@ -142,7 +142,9 @@
                             </button>
                             <%}else if(order.getOrderStatus() == 3){%>
                             <button
-                                class="order_button_2">
+                                type="button"
+                                class="order_button_2"
+                                onclick="window.location.href = 'OrderHistoryURL?service=reOrder&oid=<%=order.getOrderID()%>'">
                                 Mua Lại
                             </button>
                             <button
@@ -151,7 +153,9 @@
                             </button>
                             <%}else if(order.getOrderStatus() == 0){%>
                             <button
-                                class="order_button_2">
+                                type="button"
+                                class="order_button_2"
+                                onclick="window.location.href = 'OrderHistoryURL?service=reOrder&oid=<%=order.getOrderID()%>'">
                                 Mua Lại
                             </button>
                             <%}%>
