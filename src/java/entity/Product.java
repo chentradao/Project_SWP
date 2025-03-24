@@ -5,6 +5,7 @@
 package entity;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -22,6 +23,22 @@ public class Product {
     private String productStatus;
     private String productImage;
     private ProductDetail productDetail;
+    private Category category;  // Add this field
+
+    private ArrayList<ProductDetail> productDetails;
+
+    public ArrayList<ProductDetail> getProductDetails() {
+
+        if (productDetails == null) {
+            return new ArrayList<>();
+        }
+
+        return productDetails;
+    }
+
+    public void setProductDetails(ArrayList<ProductDetail> productDetails) {
+        this.productDetails = productDetails;
+    }
 
     public Product() {
     }
@@ -141,4 +158,14 @@ public class Product {
         this.productDetail = productDetail;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+        if (category != null) {
+            this.categoryId = category.getCategoryId();
+        }
+    }
 }
