@@ -82,8 +82,8 @@
                 <%
                         for (Order order : vector) {
                 %>
-                <a href="#">
                 <div class="overflow-x-auto border-b mb-5">
+                    <a href="OrderDetailURL?service=orderDetail&oid=<%=order.getOrderID()%>">
                     <div class="order-header p-4 border-b">
                         <span>ID đơn hàng: <%=order.getOrderID()%></span>
                         <span>Ngày tạo đơn: <%=order.getOrderDate()%></span>

@@ -1,0 +1,66 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 24, 2025, 9:20:25 PM
+    Author     : nguye
+*/
+.order-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+.order-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+.order-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+}
+.order-item-details {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+.order-summary {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.order-summary th, .order-summary td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.order-summary th {
+    text-align: left;
+}
+.order-summary td {
+    text-align: right;
+}
+.text-highlight {
+    color: red;
+    font-weight: bold;
+}
+.customer-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.customer-details, .customer-note {
+    width: 48%;
+}
+
