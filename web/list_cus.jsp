@@ -15,7 +15,12 @@
     </head>
     <style>
         .super_container {
-            padding-top: 100px; /* Tạo khoảng cách giữa header và nội dung */
+            padding-top: 100px;
+        }
+        .search-sort-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
         }
     </style>
     <body>
@@ -27,7 +32,7 @@
                         <li><a href="index.jsp">Đơn hàng</a></li>
                         <li><a href="index.jsp">Quảng cáo</a></li>
                         <li><a href="index.jsp">Kho hàng</a></li>
-                        <li><a href="ListCus">Khách hàng</a></li> <!-- Sửa liên kết trỏ đến servlet -->
+                        <li><a href="ListCus">Khách hàng</a></li>
                         <li><a href="Blog?service=listAllBlogs">Bài đăng</a></li>
                     </ul>
                 </nav>
@@ -51,6 +56,27 @@
         <div class="super_container">
             <div class="body">
                 <div class="container mt-4">
+                    <div class="search-sort-container">
+                        <!-- Thanh search -->
+                        <form action="ListCus" method="get" class="form-inline">
+                            <input type="text" name="search" value="${sessionScope.search}" class="form-control mr-2" placeholder="Tìm theo tên, số điện thoại, email...">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </form>
+
+                        <!-- Dropdown sort -->
+                        <form action="ListCus" method="get" class="form-inline">
+                            <select name="sortBy" class="form-control mr-2" onchange="this.form.submit()">
+                                <option value="OrderQuality" ${sessionScope.sortBy == 'OrderQuality' ? 'selected' : ''}>Số lượng đơn</option>
+                                <option value="TotalSpending" ${sessionScope.sortBy == 'TotalSpending' ? 'selected' : ''}>Tổng tiền</option>
+                            </select>
+                            <select name="sortOrder" class="form-control mr-2" onchange="this.form.submit()">
+                                <option value="asc" ${sessionScope.sortOrder == 'asc' ? 'selected' : ''}>Tăng dần</option>
+                                <option value="desc" ${sessionScope.sortOrder == 'desc' ? 'selected' : ''}>Giảm dần</option>
+                            </select>
+                            <input type="hidden" name="search" value="${sessionScope.search}">
+                        </form>
+                    </div>
+
                     <div class="card shadow-lg">
                         <div class="card-header bg-secondary text-white text-center">
                             <h4>Danh Sách Khách Hàng</h4>
@@ -65,12 +91,21 @@
                                             <th>Số điện thoại</th>
                                             <th>Email</th>
                                             <th>Địa chỉ</th>
+                                            <th>Đơn đã order</th>
+                                            <th>Tổng số tiền</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <c:if test="${empty sessionScope.data}">
+                                            <tr>
+                                                <td colspan="7" class="text-center">Không có dữ liệu khách hàng.</td>
+                                            </tr>
+                                        </c:if>
                                         <c:forEach items="${sessionScope.data}" var="e">
                                             <tr class="text-center">
-                                                <td>${e.fullName}</td>
+                                                <td>
+                                                    <a href="ListOrdersByCustomer?customerID=${e.accountID}">${e.fullName}</a>
+                                                </td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${e.gender == 'M'}">Nam</c:when>
@@ -81,6 +116,8 @@
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
                                                 <td>${e.address}</td>
+                                                <td>${e.orderQuality}</td>
+                                                <td>${e.totalSpending}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -91,7 +128,7 @@
                                     <!-- Nút Trước -->
                                     <c:choose>
                                         <c:when test="${sessionScope.currentPage > 1}">
-                                            <a href="ListCus?page=${sessionScope.currentPage - 1}" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                                            <a href="ListCus?page=${sessionScope.currentPage - 1}&search=${sessionScope.search}&sortBy=${sessionScope.sortBy}&sortOrder=${sessionScope.sortOrder}" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
                                                 Trước
                                             </a>
                                         </c:when>
@@ -110,7 +147,7 @@
                                     <!-- Nút Tiếp -->
                                     <c:choose>
                                         <c:when test="${sessionScope.currentPage < sessionScope.totalPages}">
-                                            <a href="ListCus?page=${sessionScope.currentPage + 1}" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                                            <a href="ListCus?page=${sessionScope.currentPage + 1}&search=${sessionScope.search}&sortBy=${sessionScope.sortBy}&sortOrder=${sessionScope.sortOrder}" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
                                                 Tiếp
                                             </a>
                                         </c:when>

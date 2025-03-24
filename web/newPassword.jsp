@@ -24,7 +24,7 @@
             }
         </style>
     </head>
-    <body oncontextmenu='return false' class='snippet-body bg-info'>
+    <body oncontextmenu='return false' class='snippet-body bg-info' style="background-image: url('P_images/login.jpg');">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
         <div>
@@ -60,11 +60,9 @@
 
                                     <!-- Log in Button -->
                                     <div class="form-group row justify-content-center">
-                                        <div class="col-3 px-3 mt-3">
-                                            <input type="submit" value="Reset"
-                                                   class="btn btn-block btn-info">
-                                        </div>
+                                        <button type="submit" class="btn btn-success">Đặt lại mật khẩu</button>
                                     </div>
+
                                 </form>
                             </div>
                             <!-- Alternative Login -->
@@ -79,7 +77,7 @@
                                     <div class="row justify-content-center">
                                         <h5>
                                             Chưa có tài khoản ?<span><a href="signup.jsp"
-                                                                           class="text-danger"> Đăng kí ngay</a></span>
+                                                                        class="text-danger"> Đăng kí ngay</a></span>
                                         </h5>
                                     </div>
                                     <div

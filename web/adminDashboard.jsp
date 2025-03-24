@@ -133,7 +133,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="revenue">Doanh thu</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="orderManagement.jsp">Quản lý Đơn hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="inventory">Kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Tài khoản</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Tài khoản</a></li>
                 </ul>
             </nav>
             <div class="nav-item dropdown">

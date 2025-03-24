@@ -17,6 +17,17 @@
         .super_container {
             padding-top: 100px; /* Tạo khoảng cách giữa header và nội dung */
         }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .client-error {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
     <body>
         <header class="header" >
@@ -38,7 +49,7 @@
                         ${sessionScope.acc.fullName}
                     </a>
                     <div id="collapsePages" class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="collapse-item" href="profile">Thông tin tài khoản</a>
+                        <a class="collapse-item" href="profile">Thông tin nhân viên</a>
                         <c:choose>
                             <c:when test="${not empty sessionScope.acc}">
                                 <a id="logout-btn" class="logout-btn" href="login?ac=logout">Đăng xuất</a>
@@ -47,23 +58,21 @@
                     </div>
                 </div>
             </div>
-
         </header>
-
 
         <div class="super_container">      
             <div class="container mt-5" id="myprofile">
                 <div class="card shadow p-4">
-                    <h3 class="text-center mb-4">Thông tin cá nhân</h3>
+                    <h3 class="text-center mb-4">Thông tin nhân viên</h3>
 
-                    <form action="profile" method="POST" enctype="multipart/form-data" id="myForm" onsubmit="return validateForm()">
+                    <form action="profile" method="POST" enctype="multipart/form-data" id="myForm" onsubmit="return validateForm(event)">
 
                         <c:if test="${not empty sessionScope.acc.image}">
-                            <img src="./P_images/${sessionScope.acc.image}" alt="Profile Image"
+                            <img src="./P_images/${sessionScope.acc.image}" alt="Ảnh đại diện"
                                  class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                         </c:if>
                         <c:if test="${empty sessionScope.acc.image}">
-                            <img src="./P_images/Avatar.png" alt="Default Profile Image"
+                            <img src="./P_images/Avatar.png" alt="Ảnh đại diện mặc định"
                                  class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                         </c:if>
                             
@@ -71,7 +80,12 @@
 
                         <div class="mb-3">
                             <label class="form-label">Họ tên</label>
-                            <input type="text" class="form-control" name="FullName" value="${sessionScope.acc.fullName}" required>
+                            <input type="text" class="form-control" name="FullName" id="fullName"
+                                   value="${empty FullName ? sessionScope.acc.fullName : FullName}" required>
+                            <div id="fullNameError" class="client-error">Họ tên phải có ít nhất 10 ký tự và không chứa số</div>
+                            <c:if test="${not empty messFuName}">
+                                <div class="error-message">${messFuName}</div>
+                            </c:if>
                         </div>
 
                         <div class="mb-3">
@@ -84,24 +98,32 @@
 
                         <div class="mb-3">
                             <label class="form-label">Số điện thoại</label>
-                            <input id="mobile" type="text" class="form-control" name="Phone" value="${sessionScope.acc.phone}" oninput="checkPhoneNumber()" required>
-                            <div id="phoneError" class="text-danger" style="display:none;">Số điện thoại sai cú pháp.</div>
+                            <input id="mobile" type="text" class="form-control" name="Phone" 
+                                   value="${empty Phone ? sessionScope.acc.phone : Phone}" required>
+                            <div id="phoneFormatError" class="client-error">Số điện thoại phải có 10 số, bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2,6,8,9]</div>
+                            <div id="phoneDuplicateError" class="error-message" style="display:none;">${messPhone}</div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input id="email" type="text" class="form-control" name="Email" value="${sessionScope.acc.email}" oninput="checkEmail()" required>
-                            <div id="emailError" class="text-danger" style="display:none;">Email sai cú pháp.</div>
+                            <input id="email" type="text" class="form-control" name="Email" 
+                                   value="${empty Email ? sessionScope.acc.email : Email}" required>
+                            <div id="emailFormatError" class="client-error">Email phải có định dạng hợp lệ (ví dụ: ten@domain.com)</div>
+                            <div id="emailDuplicateError" class="error-message" style="display:none;">${messEmail}</div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" name="Address" value="${sessionScope.acc.address}" required>
+                            <input type="text" class="form-control" name="Address" 
+                                   value="${empty Address ? sessionScope.acc.address : Address}" required>
                         </div>
                         
                         <div class="mb-3">
                             <label class="form-label">Ảnh đại diện</label>
                             <input type="file" class="form-control" name="file" accept="image/*">
+                            <c:if test="${not empty errorMessage}">
+                                <div class="text-danger">${errorMessage}</div>
+                            </c:if>
                         </div>
 
                         <div class="text-end">
@@ -111,16 +133,6 @@
                 </div>
             </div>
         </div>  
-
-
-        <script>
-            document.getElementById('submitBtn').addEventListener('click', function (event) {
-                if (!validateForm()) {
-                    event.preventDefault(); // Ngăn chặn form gửi đi nếu dữ liệu không hợp lệ
-                }
-            });
-
-        </script>
 
         <script>
             function validateEmail(email) {
@@ -133,36 +145,65 @@
                 return phonePattern.test(number);
             }
 
+            function validateFullName(fullName) {
+                if (fullName.length < 10) return false;
+                return !/\d/.test(fullName);
+            }
+
             function validateForm(event) {
-                const email = document.getElementById("email").value;
-                const mobile = document.getElementById("mobile").value;
-                let isValid = true; // Biến kiểm tra tổng thể
+                event.preventDefault(); // Ngăn gửi form mặc định
+                
+                const email = document.getElementById("email").value.trim();
+                const mobile = document.getElementById("mobile").value.trim();
+                const fullName = document.getElementById("fullName").value.trim();
+                let isValid = true;
 
-                // Kiểm tra email
-                if (!validateEmail(email)) {
-                    document.getElementById("emailError").style.display = "block";
+                // Đặt lại tất cả thông báo lỗi client-side
+                document.getElementById("fullNameError").style.display = "none";
+                document.getElementById("phoneFormatError").style.display = "none";
+                document.getElementById("emailFormatError").style.display = "none";
+
+                // Kiểm tra họ tên
+                if (!validateFullName(fullName)) {
+                    document.getElementById("fullNameError").style.display = "block";
                     isValid = false;
-                } else {
-                    document.getElementById("emailError").style.display = "none";
                 }
 
-                // Kiểm tra số điện thoại
+                // Kiểm tra số điện thoại định dạng
                 if (!isVietnamesePhoneNumber(mobile)) {
-                    document.getElementById("phoneError").style.display = "block";
+                    document.getElementById("phoneFormatError").style.display = "block";
                     isValid = false;
-                } else {
-                    document.getElementById("phoneError").style.display = "none";
                 }
 
-                // Nếu có lỗi, ngăn form gửi đi
+                // Kiểm tra email định dạng
+                if (!validateEmail(email)) {
+                    document.getElementById("emailFormatError").style.display = "block";
+                    isValid = false;
+                }
+
+                // Kiểm tra lỗi từ client-side
                 if (!isValid) {
-                    alert("Vui lòng nhập đúng thông tin trước khi gửi!");
+                    alert("Vui lòng kiểm tra và sửa các lỗi trước khi lưu!");
                     return false;
                 }
 
-                return true; // Cho phép gửi form nếu hợp lệ
+                // Gửi form nếu hợp lệ
+                document.getElementById("myForm").submit();
+                return true;
             }
 
+            // Kiểm tra và hiển thị popup khi có lỗi từ server
+            window.onload = function() {
+                <c:if test="${not empty messPhone || not empty messEmail}">
+                    alert("localhost:9999 cho biết\nVui lòng kiểm tra và sửa các lỗi trước khi gửi!");
+                    <c:if test="${not empty messPhone}">
+                        document.getElementById("phoneDuplicateError").style.display = "block";
+                    </c:if>
+                    <c:if test="${not empty messEmail}">
+                        document.getElementById("emailDuplicateError").style.display = "block";
+                    </c:if>
+                </c:if>
+            };
         </script>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
@@ -170,6 +211,5 @@
         <script src="plugins/easing/easing.js"></script>
         <script src="plugins/parallax-js-master/parallax.min.js"></script>
         <script src="js/cart_custom.js"></script>
-
     </body>   
 </html>

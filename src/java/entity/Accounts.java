@@ -24,12 +24,14 @@ public class Accounts {
     private String Image;
     private String GoogleID;
     private Date CreateDate;
+    private int OrderQuality;
+    private int TotalSpending;
     private int AccountStatus;
 
     public Accounts() {
     }
 
-    public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String Role, String Image, String GoogleID, Date CreateDate, int AccountStatus) {
+    public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String Role, String Image, String GoogleID, Date CreateDate, int OrderQuality, int TotalSpending, int AccountStatus) {
         this.AccountID = AccountID;
         this.UserName = UserName;
         this.Password = Password;
@@ -42,6 +44,8 @@ public class Accounts {
         this.Image = Image;
         this.GoogleID = GoogleID;
         this.CreateDate = CreateDate;
+        this.OrderQuality = OrderQuality;
+        this.TotalSpending = TotalSpending;
         this.AccountStatus = AccountStatus;
     }
 
@@ -109,7 +113,6 @@ public class Accounts {
         this.Address = Address;
     }
 
-
     public String getRole() {
         return Role;
     }
@@ -142,6 +145,22 @@ public class Accounts {
         this.CreateDate = CreateDate;
     }
 
+    public int getOrderQuality() {
+        return OrderQuality;
+    }
+
+    public void setOrderQuality(int OrderQuality) {
+        this.OrderQuality = OrderQuality;
+    }
+
+    public int getTotalSpending() {
+        return TotalSpending;
+    }
+
+    public void setTotalSpending(int TotalSpending) {
+        this.TotalSpending = TotalSpending;
+    }
+
     public int getAccountStatus() {
         return AccountStatus;
     }
@@ -156,21 +175,23 @@ public class Accounts {
      */
     @Override
     public String toString() {
-            return "Accounts{" +
-            "AccountID=" + AccountID +
-            ", UserName='" + UserName + '\'' +
-            ", Password='" + Password + '\'' +  // Lưu ý: Không nên in mật khẩu ra log thực tế
-            ", FullName='" + FullName + '\'' +
-            ", Gender='" + Gender + '\'' +
-            ", Phone='" + Phone + '\'' +
-            ", Email='" + Email + '\'' +
-            ", Address='" + Address + '\'' +
-            ", Role=" + Role +
-            ", Image='" + Image + '\'' +
-            ", GoogleID='" + GoogleID + '\'' +
-            ", CreateDate=" + CreateDate +
-            ", AccountStatus=" + AccountStatus +
-            '}';
+        return "Accounts{"
+                + "AccountID=" + AccountID
+                + ", UserName='" + UserName + '\''
+                + ", Password='" + Password + '\''
+                + ", FullName='" + FullName + '\''
+                + ", Gender='" + Gender + '\''
+                + ", Phone='" + Phone + '\''
+                + ", Email='" + Email + '\''
+                + ", Address='" + Address + '\''
+                + ", Role=" + Role + '\''
+                + ", Image='" + Image + '\''
+                + ", GoogleID='" + GoogleID + '\''
+                + ", CreateDate=" + CreateDate + '\''
+                + ", OrderQuality=" + OrderQuality + '\''
+                + ", TotalSpending=" + TotalSpending + '\''
+                + ", AccountStatus=" + AccountStatus
+                + '}';
     }
 
 }

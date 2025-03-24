@@ -79,7 +79,7 @@ public class NewPassword extends HttpServlet {
             dispatcher.forward(request, response);
         } else {
             // Xử lý trường hợp mật khẩu không khớp
-            request.setAttribute("status", "passwordsDoNotMatch");
+            request.setAttribute("status", "Mật khẩu không khớp");
             dispatcher = request.getRequestDispatcher("newPassword.jsp"); // Quay lại trang nhập mật khẩu mới
             dispatcher.forward(request, response);
         }
@@ -94,8 +94,7 @@ public class NewPassword extends HttpServlet {
         boolean hasUpperCase = false;
         boolean hasLowerCase = false;
         boolean hasDigit = false;
-        boolean hasSpecialChar = false;
-        String specialCharacters = "!@#$%^&*()-+";
+        
 
         for (char c : password.toCharArray()) {
             if (Character.isUpperCase(c)) {
@@ -104,11 +103,9 @@ public class NewPassword extends HttpServlet {
                 hasLowerCase = true;
             } else if (Character.isDigit(c)) {
                 hasDigit = true;
-            } else if (specialCharacters.contains(String.valueOf(c))) {
-                hasSpecialChar = true;
             }
         }
 
-        return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+        return hasUpperCase && hasLowerCase && hasDigit;
     }
 }
