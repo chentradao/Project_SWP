@@ -30,6 +30,9 @@ public class ProductDetail {
     private String image;
     private Product product;
 
+    public ProductDetail() {
+    }
+
     public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, int productStatus, int ID, String size, String Color, int Price, String image) {
         this.productId = productId;
         this.productName = productName;
