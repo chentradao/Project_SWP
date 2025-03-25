@@ -69,9 +69,9 @@
                     <span class="px-4 py-3 text-red-800">Đã Hủy</span>
                     <% } %>
                 </div>
-                <p><strong>Mã đơn hàng:</strong> <%=order.getOrderID()%></p>
-                <p><strong>Thời gian:</strong> <%=order.getOrderDate()%></p>
-                <p><strong>Phương thức thanh toán:</strong> <%=order.getPaymentMethod()%></p>
+                <p class="text-dark"><strong>Mã đơn hàng:</strong> <%=order.getOrderID()%></p>
+                <p class="text-dark"><strong>Thời gian:</strong> <%=order.getOrderDate()%></p>
+                <p class="text-dark"><strong>Phương thức thanh toán:</strong> <%=order.getPaymentMethod()%></p>
                 <hr>
                 <%
                     int total = 0;
@@ -96,6 +96,9 @@
                 </div>
                 <%}%>
                 <hr>
+                <div class="customer-info">
+                    <h3 class="text-lg font-semibold"><i class="fa-solid fa-money-bill"></i> Thông tin thanh toán</h3>
+                </div>
                 <table class="order-summary">
                     <tr>
                         <th>Tổng tiền sản phẩm</th>
@@ -116,7 +119,7 @@
                     <tr>
                         <th>Đã thanh toán</th>
                             <%if(order.getPaymentMethod().equalsIgnoreCase("VNPAY") || order.getOrderStatus() == 3){%>
-                        <td class="text-green-800"><%=formatter.format(order.getTotalCost())%>đ</td>
+                        <td class="bold text-green-800"><strong><%= formatter.format(order.getTotalCost()) %>đ</strong></td>
                         <%}else if(order.getPaymentMethod().equalsIgnoreCase("COD")){%>
                         <td class="text-highlight">0đ</td>
                         <%}%>
@@ -126,12 +129,14 @@
                 <div class="customer-info">
                     <div class="customer-details">
                         <h5>Thông tin khách hàng</h5>
+                        <hr>
                         <p><i class="fa-solid fa-user-tie"></i> <strong><%=order.getCustomerName()%></strong></p>
                         <p><i class="fa-solid fa-phone"> </i> <%=order.getPhone()%></p>
                         <p> <i class="fa-solid fa-location-dot"></i> <%=order.getShipAddress()%></p>
                     </div>
                     <div class="customer-note">
                         <h5>Ghi chú</h5>
+                        <hr>
                         <% if (order.getNote() != null && !order.getNote().trim().isEmpty()) { %>
                         <p><%= order.getNote() %></p>
                         <% } %>
@@ -145,26 +150,26 @@
                     <hr>
                     <div class="mt-3">
                         <%if(order.getOrderStatus() == 1 || order.getOrderStatus() == 2){%>
-                            <button
-                                class="btn btn-custom">
-                                Cập Nhật 
-                            </button>
-                            <button type="button"
-                                    class="btn btn-outline-secondary"
-                                    data-orderid="<%=order.getOrderID()%>"
-                                    data-status="<%=order.getOrderStatus()%>"
-                                    onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)">
-                                Hủy Đơn Hàng
-                            </button>
-                            <%}else if(order.getOrderStatus() == 3){%>
+                        <button
+                            class="btn btn-custom">
+                            Cập Nhật 
+                        </button>
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-orderid="<%=order.getOrderID()%>"
+                                data-status="<%=order.getOrderStatus()%>"
+                                onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)">
+                            Hủy Đơn Hàng
+                        </button>
+                        <%}else if(order.getOrderStatus() == 3){%>
                         <button class="btn btn-custom">Đánh giá</button>
                         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href = 'OrderHistoryURL?service=reOrder&oid=<%=order.getOrderID()%>'">Mua lại</button>
                         <%}else if(order.getOrderStatus() == 0){%>
-                            <button
-                                class="btn btn-outline-secondary">
-                                Mua Lại
-                            </button>
-                            <%}%>
+                        <button
+                            class="btn btn-outline-secondary">
+                            Mua Lại
+                        </button>
+                        <%}%>
                     </div>
                 </div>
             </div>
