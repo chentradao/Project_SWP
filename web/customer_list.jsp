@@ -133,7 +133,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach items="${data}" var="e">
+                                        <c:forEach items="${CusData}" var="e">
                                             <tr class="text-center">
                                                 <td>${e.fullName}</td>
                                                 <td>${e.phone}</td>
@@ -148,7 +148,7 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}" 
+                                                    <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListCustomer" 
                                                        class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
                                                        onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
                                                         ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
@@ -159,7 +159,7 @@
                                                 </td>
                                             </tr>
                                         </c:forEach>
-                                        <c:if test="${empty data}">
+                                        <c:if test="${empty CusData}">
                                             <tr>
                                                 <td colspan="8" class="text-center">Không có dữ liệu để hiển thị</td>
                                             </tr>
@@ -172,15 +172,15 @@
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                 <ul class="pagination">
                                     <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListUser?page=${currentPage - 1}">Trang trước</a>
+                                        <a class="page-link" href="ListCustomer?page=${currentPage - 1}">Trang trước</a>
                                     </li>
                                     <c:forEach begin="1" end="${totalPages}" var="i">
                                         <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                            <a class="page-link" href="ListUser?page=${i}">${i}</a>
+                                            <a class="page-link" href="ListCustomer?page=${i}">${i}</a>
                                         </li>
                                     </c:forEach>
                                     <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListUser?page=${currentPage + 1}">Trang sau</a>
+                                        <a class="page-link" href="ListCustomer?page=${currentPage + 1}">Trang sau</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -194,5 +194,8 @@
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
     </body>
 </html>

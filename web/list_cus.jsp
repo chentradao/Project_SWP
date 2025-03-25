@@ -104,7 +104,7 @@
                                         <c:forEach items="${sessionScope.data}" var="e">
                                             <tr class="text-center">
                                                 <td>
-                                                    <a href="ListOrdersByCustomer?customerID=${e.accountID}">${e.fullName}</a>
+                                                    ${e.fullName}
                                                 </td>
                                                 <td>
                                                     <c:choose>

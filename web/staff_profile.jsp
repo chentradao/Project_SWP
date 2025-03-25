@@ -12,25 +12,35 @@
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
+        <style>
+            .super_container {
+                padding-top: 100px; /* Tạo khoảng cách giữa header và nội dung */
+            }
+            .error-message {
+                color: #dc3545;
+                font-size: 0.9em;
+                margin-top: 5px;
+            }
+            .client-error {
+                color: #dc3545;
+                font-size: 0.9em;
+                margin-top: 5px;
+                display: none;
+            }
+            .country_select {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+        </style>
     </head>
-    <style>
-        .super_container {
-            padding-top: 100px; /* Tạo khoảng cách giữa header và nội dung */
-        }
-        .error-message {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .client-error {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
-        }
-    </style>
     <body>
-        <header class="header" >
+        <header class="header">
             <div class="header_inner d-flex flex-row align-items-center justify-content-start">
                 <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
                 <nav class="main_nav">
@@ -42,8 +52,7 @@
                         <li><a href="Blog?service=listAllBlogs">Bài đăng</a></li>
                     </ul>
                 </nav>
-                <div class="header_content ml-auto">
-                </div>
+                <div class="header_content ml-auto"></div>
                 <div class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         ${sessionScope.acc.fullName}
@@ -65,20 +74,27 @@
                 <div class="card shadow p-4">
                     <h3 class="text-center mb-4">Thông tin nhân viên</h3>
 
+                    <c:if test="${not empty successMessage}">
+                        <div class="alert alert-success">${successMessage}</div>
+                    </c:if>
+                    <c:if test="${not empty errorMessage}">
+                        <div class="alert alert-danger">${errorMessage}</div>
+                    </c:if>
+
                     <form action="profile" method="POST" enctype="multipart/form-data" id="myForm" onsubmit="return validateForm(event)">
 
                         <c:if test="${not empty sessionScope.acc.image}">
                             <img src="./P_images/${sessionScope.acc.image}" alt="Ảnh đại diện"
-                                 class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                 class="rounded-circle img-fluid" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
                         </c:if>
                         <c:if test="${empty sessionScope.acc.image}">
                             <img src="./P_images/Avatar.png" alt="Ảnh đại diện mặc định"
-                                 class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                                 class="rounded-circle img-fluid" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
                         </c:if>
-                            
+
                         <input type="hidden" name="AccountID" value="${sessionScope.acc.accountID}" />
 
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Họ tên</label>
                             <input type="text" class="form-control" name="FullName" id="fullName"
                                    value="${empty FullName ? sessionScope.acc.fullName : FullName}" required>
@@ -88,7 +104,7 @@
                             </c:if>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Giới tính</label>
                             <select id="Gender" name="Gender" class="form-control" required>
                                 <option value="F" ${sessionScope.acc.gender == 'F' ? 'selected' : ''}>Nữ</option>
@@ -96,7 +112,7 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Số điện thoại</label>
                             <input id="mobile" type="text" class="form-control" name="Phone" 
                                    value="${empty Phone ? sessionScope.acc.phone : Phone}" required>
@@ -104,7 +120,7 @@
                             <div id="phoneDuplicateError" class="error-message" style="display:none;">${messPhone}</div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Email</label>
                             <input id="email" type="text" class="form-control" name="Email" 
                                    value="${empty Email ? sessionScope.acc.email : Email}" required>
@@ -112,13 +128,28 @@
                             <div id="emailDuplicateError" class="error-message" style="display:none;">${messEmail}</div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" name="Address" 
-                                   value="${empty Address ? sessionScope.acc.address : Address}" required>
+                            <div class="d-flex flex-lg-row flex-column align-items-start justify-content-between">
+                                <select name="city" id="city" class="country_select" required>
+                                    <option value="">Tỉnh / Thành phố</option>
+                                </select>
+                                <select name="district" id="district" class="country_select" required>
+                                    <option value="">Quận / Huyện</option>
+                                </select>
+                                <select name="ward" id="ward" class="country_select" required>
+                                    <option value="">Phường / Xã</option>
+                                </select>
+                            </div>
+                            <input type="text" class="form-control" name="specificAddress" id="specificAddress" placeholder="Số nhà, tên đường" value="${sessionScope.staffSpecificAddress != null ? sessionScope.staffSpecificAddress : ''}" required>
+                            <div id="addressError" class="client-error">Vui lòng chọn đầy đủ Tỉnh/Thành phố, Quận/Huyện, Phường/Xã và nhập địa chỉ cụ thể</div>
+                            <!-- Input ẩn để truyền giá trị từ session vào JavaScript -->
+                            <input type="hidden" id="savedCity" value="${sessionScope.staffCity != null ? sessionScope.staffCity : ''}">
+                            <input type="hidden" id="savedDistrict" value="${sessionScope.staffDistrict != null ? sessionScope.staffDistrict : ''}">
+                            <input type="hidden" id="savedWard" value="${sessionScope.staffWard != null ? sessionScope.staffWard : ''}">
                         </div>
-                        
-                        <div class="mb-3">
+
+                        <div class="form-group">
                             <label class="form-label">Ảnh đại diện</label>
                             <input type="file" class="form-control" name="file" accept="image/*">
                             <c:if test="${not empty errorMessage}">
@@ -133,6 +164,15 @@
                 </div>
             </div>
         </div>  
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+        <script src="js/checkout_provinces.js"></script>
+        <script src="styles/bootstrap4/popper.js"></script>
+        <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
 
         <script>
             function validateEmail(email) {
@@ -156,12 +196,17 @@
                 const email = document.getElementById("email").value.trim();
                 const mobile = document.getElementById("mobile").value.trim();
                 const fullName = document.getElementById("fullName").value.trim();
+                const city = document.getElementById("city").value;
+                const district = document.getElementById("district").value;
+                const ward = document.getElementById("ward").value;
+                const specificAddress = document.getElementById("specificAddress").value.trim();
                 let isValid = true;
 
                 // Đặt lại tất cả thông báo lỗi client-side
                 document.getElementById("fullNameError").style.display = "none";
                 document.getElementById("phoneFormatError").style.display = "none";
                 document.getElementById("emailFormatError").style.display = "none";
+                document.getElementById("addressError").style.display = "none";
 
                 // Kiểm tra họ tên
                 if (!validateFullName(fullName)) {
@@ -178,6 +223,12 @@
                 // Kiểm tra email định dạng
                 if (!validateEmail(email)) {
                     document.getElementById("emailFormatError").style.display = "block";
+                    isValid = false;
+                }
+
+                // Kiểm tra địa chỉ
+                if (!city || !district || !ward || !specificAddress || city === "Chọn" || district === "Chọn" || ward === "Chọn") {
+                    document.getElementById("addressError").style.display = "block";
                     isValid = false;
                 }
 
@@ -205,11 +256,5 @@
                 </c:if>
             };
         </script>
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="styles/bootstrap4/popper.js"></script>
-        <script src="styles/bootstrap4/bootstrap.min.js"></script>
-        <script src="plugins/easing/easing.js"></script>
-        <script src="plugins/parallax-js-master/parallax.min.js"></script>
-        <script src="js/cart_custom.js"></script>
     </body>   
 </html>

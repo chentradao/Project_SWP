@@ -52,6 +52,39 @@
                     </td>
                 </tr>
                 <tr>
+                    <td><label for="Password">Mật khẩu</label></td>
+                    <td>
+                        <input class="input_type" id="Password" type="password" name="Password" value="${Password}" required minlength="6">
+                        <div class="error-message">${messP}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="ConfirmPassword">Nhập lại mật khẩu</label></td>
+                    <td>
+                        <input class="input_type" id="ConfirmPassword" type="password" name="ConfirmPassword" value="${ConfirmPassword}" required>
+                        <div id="confirmPasswordError" class="error-message" style="display:none">Mật khẩu nhập lại không khớp</div>
+                        <div class="error-message">${messConfirmP}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="FullName">Họ tên</label></td>
+                    <td>
+                        <input class="input_type" id="FullName" type="text" name="FullName" value="${FullName}" required>
+                        <div class="error-message">${messFuName}</div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><label>Giới tính</label></td>
+                    <td>
+                        <input type="radio" id="Gender" name="Gender" value="M" ${Gender == 'M' ? 'checked' : ''} required>
+                        <label for="male">Nam</label>
+                        <input type="radio" id="Gender" name="Gender" value="F" ${Gender == 'F' ? 'checked' : ''} required>
+                        <label for="female">Nữ</label>
+                        <div class="error-message">${messGender}</div>
+                    </td>
+                </tr>
+                <tr>
                     <td><label for="email">Email</label></td>
                     <td>
                         <input class="input_type" id="email" type="email" name="Email" value="${Email}" required oninput="checkEmail()">
@@ -67,27 +100,7 @@
                         <div class="error-message">${messPhone}</div>
                     </td>
                 </tr>
-                <tr>
-                    <td><label for="Password">Mật khẩu</label></td>
-                    <td>
-                        <input class="input_type" id="Password" type="password" name="Password" value="${Password}" required minlength="6">
-                        <div class="error-message">${messP}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="FullName">Họ tên</label></td>
-                    <td>
-                        <input class="input_type" id="FullName" type="text" name="FullName" value="${FullName}" required>
-                        <div class="error-message">${messFuName}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="Address">Địa chỉ</label></td>
-                    <td>
-                        <input class="input_type" id="Address" type="text" name="Address" value="${Address}">
-                        <div class="error-message">${messAddress}</div>
-                    </td>
-                </tr>
+                
                 <tr>
                     <td colspan="2">
                         <input type="hidden" name="Role" value="staff">
@@ -130,10 +143,19 @@
                 phoneError.style.display = isVietnamesePhoneNumber(mobile) ? "none" : "block";
             }
 
+            function checkConfirmPassword() {
+                const password = document.getElementById("Password").value;
+                const confirmPassword = document.getElementById("ConfirmPassword").value;
+                const confirmPasswordError = document.getElementById("confirmPasswordError");
+                confirmPasswordError.style.display = (password === confirmPassword) ? "none" : "block";
+            }
+
             function validateForm() {
                 const email = document.getElementById("email").value;
                 const mobile = document.getElementById("mobile").value;
                 const password = document.getElementById("Password").value;
+                const confirmPassword = document.getElementById("ConfirmPassword").value;
+                const gender = document.querySelector('input[name="Gender"]:checked');
                 let isValid = true;
 
                 if (!validateEmail(email)) {
@@ -148,6 +170,16 @@
 
                 if (password.length < 6) {
                     alert("Password must be at least 6 characters long");
+                    isValid = false;
+                }
+
+                if (password !== confirmPassword) {
+                    document.getElementById("confirmPasswordError").style.display = "block";
+                    isValid = false;
+                }
+
+                if (!gender) {
+                    alert("Vui lòng chọn giới tính (Nam hoặc Nữ)");
                     isValid = false;
                 }
 

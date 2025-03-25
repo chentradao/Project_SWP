@@ -33,11 +33,12 @@ public class createStaff extends HttpServlet {
         String FullName = request.getParameter("FullName");
         String UserName = request.getParameter("UserName");
         String Password = request.getParameter("Password");
+        String ConfirmPassword = request.getParameter("ConfirmPassword"); // Lấy giá trị ConfirmPassword
         String Email = request.getParameter("Email");
-        String Address = request.getParameter("Address");
         String Phone = request.getParameter("Phone");
         String Role = request.getParameter("Role");
         int AccountStatus = Integer.parseInt(request.getParameter("AccountStatus"));
+        String Gender = request.getParameter("Gender");
 
         try {
             boolean isValidForm = true;
@@ -63,6 +64,12 @@ public class createStaff extends HttpServlet {
                 isValidForm = false;
             }
 
+            // Kiểm tra mật khẩu nhập lại
+            if (!Password.equals(ConfirmPassword)) {
+                request.setAttribute("messConfirmP", "Mật khẩu nhập lại không khớp");
+                isValidForm = false;
+            }
+
             // Kiểm tra họ tên
             if (!checkFullName(FullName)) {
                 request.setAttribute("messFuName", "Họ tên phải có ít nhất 10 ký tự và không bao gồm số");
@@ -83,9 +90,9 @@ public class createStaff extends HttpServlet {
                 isValidForm = false;
             }
 
-            // Kiểm tra địa chỉ
-            if (!checkAddress(Address)) {
-                request.setAttribute("messAddress", "Địa chỉ phải có ít nhất 10 ký tự");
+            // Kiểm tra giới tính
+            if (Gender == null || (!Gender.equals("M") && !Gender.equals("F"))) {
+                request.setAttribute("messGender", "Vui lòng chọn giới tính (Nam hoặc Nữ)");
                 isValidForm = false;
             }
 
@@ -94,15 +101,16 @@ public class createStaff extends HttpServlet {
                 request.setAttribute("FullName", FullName);
                 request.setAttribute("UserName", UserName);
                 request.setAttribute("Password", Password);
+                request.setAttribute("ConfirmPassword", ConfirmPassword); // Lưu giá trị ConfirmPassword
                 request.setAttribute("Email", Email);
-                request.setAttribute("Address", Address);
                 request.setAttribute("Phone", Phone);
                 request.setAttribute("Role", Role);
                 request.setAttribute("AccountStatus", AccountStatus);
+                request.setAttribute("Gender", Gender);
                 request.getRequestDispatcher("createStaff.jsp").forward(request, response);
             } else {
                 // Tạo tài khoản Staff mới
-                dao.createStaff(UserName, Password, FullName, Email, Address, Phone, Role, AccountStatus);
+                dao.createStaff(UserName, Password, FullName, Email, Phone, Role, AccountStatus, Gender);
                 request.setAttribute("message", "Tạo tài khoản thành công!");
                 response.sendRedirect("ListUser"); // Chuyển hướng khi thành công
             }
@@ -152,10 +160,6 @@ public class createStaff extends HttpServlet {
         return UserName.length() >= 5;
     }
 
-    // Kiểm tra địa chỉ
-    private boolean checkAddress(String Address) {
-        return Address != null && Address.length() >= 10;
-    }
 
     @Override
     public String getServletInfo() {

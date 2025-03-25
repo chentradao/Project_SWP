@@ -72,88 +72,7 @@ public class DAOAccounts extends DBConnection {
         return list;
     }
 
-    public Vector<Order> getOrdersByCustomer(int customerID, int offset, int pageSize, String sortBy, String sortOrder, String searchTerm) {
-        Vector<Order> list = new Vector<>();
-        String sql = "SELECT OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, "
-                + "ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus "
-                + // Thêm Discount vào query
-                "FROM Orders WHERE CustomerID = ?";
-
-        // Thêm điều kiện tìm kiếm
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            sql += " AND (PaymentMethod LIKE ? OR Email LIKE ? OR Phone LIKE ? OR ShipAddress LIKE ?)";
-        }
-
-        // Thêm sắp xếp với kiểm tra giá trị hợp lệ
-        String sortColumn = "OrderDate";  // Giá trị mặc định
-        if ("totalCost".equalsIgnoreCase(sortBy)) {
-            sortColumn = "TotalCost";
-        }
-        String sortDirection = "ASC";  // Giá trị mặc định
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            sortDirection = "DESC";
-        }
-        sql += " ORDER BY " + sortColumn + " " + sortDirection
-                + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = conn.prepareStatement(sql);
-            int paramIndex = 1;
-            ps.setInt(paramIndex++, customerID);
-
-            // Gán giá trị cho các tham số tìm kiếm
-            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-                String searchPattern = "%" + searchTerm.trim() + "%";
-                ps.setString(paramIndex++, searchPattern); // PaymentMethod
-                ps.setString(paramIndex++, searchPattern); // Email
-                ps.setString(paramIndex++, searchPattern); // Phone
-                ps.setString(paramIndex++, searchPattern); // ShipAddress
-            }
-
-            // Gán giá trị cho phân trang
-            ps.setInt(paramIndex++, offset);
-            ps.setInt(paramIndex, pageSize);
-
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Order order = new Order(
-                        rs.getInt("OrderID"), // Thêm OrderID
-                        rs.getInt("CustomerID"),
-                        rs.getString("CustomerName"),
-                        rs.getDate("OrderDate"),
-                        rs.getDate("ShippedDate"),
-                        rs.getInt("ShippingFee"),
-                        rs.getInt("TotalCost"),
-                        rs.getString("Email"),
-                        rs.getString("Phone"),
-                        rs.getString("ShipAddress"),
-                        rs.getInt("Discount"), // Thêm Discount
-                        rs.getString("CancelNotification"),
-                        rs.getString("Note"),
-                        rs.getString("PaymentMethod"),
-                        rs.getInt("OrderStatus")
-                );
-                list.add(order);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Lỗi khi truy vấn danh sách đơn hàng: " + e.getMessage(), e);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException("Lỗi khi đóng tài nguyên: " + e.getMessage(), e);
-            }
-        }
-        return list;
-    }
+    
 
     // Cập nhật phương thức đếm tổng số đơn hàng với tìm kiếm theo paymentMethod
     public int getOrderCountByCustomer(int customerID, String searchTerm) {
@@ -203,29 +122,29 @@ public class DAOAccounts extends DBConnection {
         return count;
     }
 
-    public void createStaff(String UserName, String Password, String FullName,
-            String Email, String Address, String Phone,
-            String Role, int AccountStatus) throws SQLException {
-        String sql = "INSERT INTO Accounts (UserName, Password, FullName, Email, Address, Phone, Role,CreateDate, AccountStatus) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?,?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, UserName);
-            ps.setString(2, Password);
-            ps.setString(3, FullName);
-            ps.setString(4, Email);
-            ps.setString(5, Address);
-            ps.setString(6, Phone);
-            ps.setString(7, Role);
-            ps.setDate(8, Date.valueOf(LocalDate.now()));
-            ps.setInt(9, AccountStatus);
+   public void createStaff(String UserName, String Password, String FullName,
+        String Email, String Phone,
+        String Role, int AccountStatus, String Gender) throws SQLException {
+    String sql = "INSERT INTO Accounts (UserName, Password, FullName, Email, Phone, Role, CreateDate, AccountStatus, Gender) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, UserName);
+        ps.setString(2, Password);
+        ps.setString(3, FullName);
+        ps.setString(4, Email);
+        ps.setString(5, Phone);
+        ps.setString(6, Role);
+        ps.setDate(7, Date.valueOf(LocalDate.now()));
+        ps.setInt(8, AccountStatus);
+        ps.setString(9, Gender); // Thêm giá trị Gender
 
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected); // Debug
-            if (rowsAffected == 0) {
-                throw new SQLException("Không thể tạo tài khoản, không có dòng nào được thêm.");
-            }
+        int rowsAffected = ps.executeUpdate();
+        System.out.println("Rows affected: " + rowsAffected); // Debug
+        if (rowsAffected == 0) {
+            throw new SQLException("Không thể tạo tài khoản, không có dòng nào được thêm.");
         }
     }
+}
 
     public boolean isUsernameExists(String UserName) {
         String sql = "SELECT COUNT(*) FROM Accounts WHERE UserName = ?";

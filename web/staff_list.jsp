@@ -7,56 +7,86 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Wish shop project">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <style>
-            .container {
-                display: flex;
-                justify-content: space-between;
-                padding: 20px;
+            /* Tối ưu header */
+            .header_inner {
+                height: 80px;
+                padding: 0 15px;
             }
+
+            .main_nav ul {
+                gap: 15px;
+            }
+
+            /* Căn chỉnh bố cục */
+            .content-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 40px;
+            }
+
+            /* Định dạng panel bên trái */
             .left-panel {
-                width: 20%; /* Giảm chiều rộng để gọn hơn */
+                max-width: 250px;
+                flex-shrink: 0;
+                text-align: center;
                 background-color: #f8f9fa;
                 padding: 20px;
-                border-right: 1px solid #dee2e6;
-                height: calc(100vh - 140px); /* Điều chỉnh chiều cao trừ header */
-                position: sticky;
-                top: 120px;
-                display: flex;
-                flex-direction: column; /* Xếp các nút theo chiều dọc */
-                gap: 10px; /* Khoảng cách giữa các nút */
+                border-radius: 8px;
             }
-            .right-panel {
-                width: 78%; /* Điều chỉnh chiều rộng để cân đối */
-                padding: 20px;
-            }
-            .button {
-                display: block;
+
+            /* Mở rộng nút bấm */
+            .left-panel .btn {
                 width: 100%;
-                padding: 10px;
+                padding: 12px 15px;
+                font-size: 14px;
+                white-space: nowrap;
                 text-align: center;
-                background-color: #007bff;
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
             }
-            .button:hover {
-                background-color: #0056b3;
+
+            /* Định dạng bảng */
+            .table-container {
+                flex-grow: 1;
+                width: 100%;
+            }
+
+            .table th, .table td {
+                text-align: center;
+                vertical-align: middle;
+                padding: 12px 8px;
+            }
+
+            /* Giới hạn chiều rộng cột Địa chỉ */
+            .table td:nth-child(4) {
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            /* Hiển thị đầy đủ nội dung khi hover vào cột Địa chỉ */
+            .table td:nth-child(4):hover {
+                white-space: normal;
+                overflow: visible;
+                background-color: #f8f9fa;
+                position: relative;
+                z-index: 1;
             }
         </style>
     </head>
     <body>
         <!-- Header -->
-        <header class="header_inner d-flex flex-row align-items-center justify-content-between" style="height: 120px; font-size: 16px; padding: 0px 64px 0px 60px">
+        <header class="header_inner d-flex flex-row align-items-center justify-content-between">
             <div class="logo">
                 <a href="index.jsp" class="logo">Estée Lauder</a>
             </div>
             <nav class="main_nav flex-grow-1 text-center">
-                <ul class="navbar-nav d-flex flex-row justify-content-start" style="font-size: 18px; font-weight: bold; gap: 20px;">
+                <ul class="navbar-nav d-flex flex-row justify-content-start" style="font-size: 18px; font-weight: bold;">
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Doanh thu</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quảng cáo</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Kho hàng</a></li>
@@ -73,74 +103,92 @@
             </div>
         </header>
 
-        <!-- Main Content -->
-        <div class="container">    
-            <!-- Left Panel (Navigation) -->
-            <div class="left-panel">
-                <a href="createStaff" class="button">Tạo quản lý</a>
-                <a href="ListStaff" class="button">Danh sách quản lý</a>
-                <a href="ListUser" class="button">Danh sách tài khoản</a>
-            </div>
+        <!-- Nội dung chính -->
+        <div class="container-fluid p-3">
+            <div class="content-wrapper">
+                <!-- Left Panel -->
+                <div class="left-panel">
+                    <a href="createStaff" class="btn btn-primary mb-2">Tạo nhân viên</a>
+                    <a href="ListStaff" class="btn btn-primary mb-2">Danh sách nhân viên</a>
+                    <a href="ListCustomer" class="btn btn-primary mb-2">Danh sách khách hàng</a>
+                    <a href="ListUser" class="btn btn-primary mb-2">Danh sách tài khoản</a>
+                </div>
 
-            <!-- Right Panel (Table Data) -->
-            <div class="right-panel">
-                <div class="body">
-                    <div class="container mt-4">
-                        <div class="card shadow-lg">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover">
-                                        <thead class="thead-dark text-center">
-                                            <tr>
-                                                <th>Họ tên</th>
-
-                                                <th>Số điện thoại</th>
-                                                <th>Email</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Role</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                <!-- Right Panel -->
+                <div class="table-container">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="thead-dark text-center">
+                                        <tr>
+                                            <th>Họ tên</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Role</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hoạt động</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${staffData}" var="e">
+                                            <tr class="text-center">
+                                                <td>${e.fullName}</td>
+                                                <td>${e.phone}</td>
+                                                <td>${e.email}</td>
+                                                <td>${e.address}</td>
+                                                <td>${e.role}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${e.accountStatus == 1}">Đang hoạt động</c:when>
+                                                        <c:when test="${e.accountStatus == 0}">Dừng hoạt động</c:when>
+                                                        <c:otherwise>${e.accountStatus}</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListStaff" 
+                                                       class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
+                                                       onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
+                                                        ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="userDetail?username=${e.userName}" class="btn btn-sm btn-primary">Xem</a>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${staffData}" var="e">
-                                                <tr class="text-center">
-                                                    <td>${e.fullName}</td>
-
-                                                    <td>${e.phone}</td>
-                                                    <td>${e.email}</td>
-                                                    <td>${e.address}</td>
-                                                    <td>${e.role}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${e.accountStatus == 1}">Active</c:when>
-                                                            <c:when test="${e.accountStatus == 0}">Inactive</c:when>
-                                                            <c:otherwise>${e.accountStatus}</c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListStaff" 
-                                                           class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
-                                                           onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
-                                                            ${e.accountStatus == 1 ? 'Deactivate' : 'Activate'}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            <c:if test="${empty data}">
-                                                <tr>
-                                                    <td colspan="8" class="text-center">Không có dữ liệu để hiển thị</td>
-                                                </tr>
-                                            </c:if>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        </c:forEach>
+                                        <c:if test="${empty staffData}">
+                                            <tr>
+                                                <td colspan="8" class="text-center">Không có dữ liệu để hiển thị</td>
+                                            </tr>
+                                        </c:if>
+                                    </tbody>
+                                </table>
                             </div>
+
+                            <!-- Phân trang -->
+                            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                                <ul class="pagination">
+                                    <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="ListStaff?page=${currentPage - 1}">Trang trước</a>
+                                    </li>
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="ListStaff?page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                    <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" href="ListStaff?page=${currentPage + 1}">Trang sau</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <!-- Scripts -->
         <script src="js/jquery-3.2.1.min.js"></script>

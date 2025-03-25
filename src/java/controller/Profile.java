@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import entity.Accounts;
@@ -21,10 +17,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import model.DAOAccounts;
 
-/**
- *
- * @author Admin
- */
 @MultipartConfig
 @WebServlet(name = "Profile", urlPatterns = {"/profile"})
 public class Profile extends HttpServlet {
@@ -33,8 +25,7 @@ public class Profile extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println(
-            "<!DOCTYPE html>");
+            out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet Profile</title>");
@@ -51,6 +42,10 @@ public class Profile extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Accounts acc = (Accounts) session.getAttribute("acc");
+        if (acc == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
         if (acc.getRole().equals("staff")) {
             request.getRequestDispatcher("staff_profile.jsp").forward(request, response);
         } else {
@@ -70,7 +65,11 @@ public class Profile extends HttpServlet {
         String Gender = request.getParameter("Gender");
         String Phone = request.getParameter("Phone");
         String Email = request.getParameter("Email");
-        String Address = request.getParameter("Address");
+        String city = request.getParameter("city");
+        String district = request.getParameter("district");
+        String ward = request.getParameter("ward");
+        String specificAddress = request.getParameter("specificAddress");
+        String Address = specificAddress + ", " + ward + ", " + district + ", " + city;
         String filename = "";
 
         try {
@@ -108,6 +107,13 @@ public class Profile extends HttpServlet {
                     request.setAttribute("messEmail", "Email đã được sử dụng");
                     isValidForm = false;
                 }
+            }
+
+            // Check Address
+            if (city == null || district == null || ward == null || specificAddress == null ||
+                city.isEmpty() || district.isEmpty() || ward.isEmpty() || specificAddress.isEmpty()) {
+                request.setAttribute("messAddress", "Vui lòng nhập đầy đủ địa chỉ");
+                isValidForm = false;
             }
 
             // File upload handling
@@ -158,7 +164,7 @@ public class Profile extends HttpServlet {
                 request.setAttribute("Gender", Gender);
                 request.setAttribute("Phone", Phone);
                 request.setAttribute("Email", Email);
-                request.setAttribute("Address", Address);
+                request.setAttribute("specificAddress", specificAddress);
 
                 if (currentAcc.getRole().equals("staff")) {
                     request.getRequestDispatcher("staff_profile.jsp").forward(request, response);
@@ -179,18 +185,44 @@ public class Profile extends HttpServlet {
             Accounts updatedAccount = dao.getAccountByAccountID(AccountID);
             session.setAttribute("acc", updatedAccount);
 
+            // Lưu các giá trị địa chỉ vào session với key riêng biệt dựa trên vai trò
+            if (updatedAccount.getRole().equals("staff")) {
+                session.setAttribute("staffCity", city);
+                session.setAttribute("staffDistrict", district);
+                session.setAttribute("staffWard", ward);
+                session.setAttribute("staffSpecificAddress", specificAddress);
+            } else {
+                session.setAttribute("customerCity", city);
+                session.setAttribute("customerDistrict", district);
+                session.setAttribute("customerWard", ward);
+                session.setAttribute("customerSpecificAddress", specificAddress);
+            }
+
+            // Thiết lập thông báo thành công
             request.setAttribute("successMessage", "Cập nhật thông tin thành công.");
-            response.sendRedirect("profile");
+
+            // Chuyển hướng về trang profile tương ứng
+            if (updatedAccount.getRole().equals("staff")) {
+                request.getRequestDispatcher("staff_profile.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("cus_profile.jsp").forward(request, response);
+            }
 
         } catch (IOException | ServletException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Đã xảy ra lỗi trong quá trình cập nhật thông tin.");
-            response.sendRedirect("profile");
+            HttpSession session = request.getSession();
+            Accounts acc = (Accounts) session.getAttribute("acc");
+            if (acc != null && acc.getRole().equals("staff")) {
+                request.getRequestDispatcher("staff_profile.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("cus_profile.jsp").forward(request, response);
+            }
         }
     }
 
     private boolean checkFullName(String FullName) {
-        if (FullName.length() < 10) {
+        if (FullName == null || FullName.length() < 10) {
             return false;
         }
         for (char c : FullName.toCharArray()) {
