@@ -19,6 +19,7 @@ public class FlashSale {
     private int Quantity;
     private int TimeFrame;
     private int Status;
+    private ProductDetail productDetail;
 
     public FlashSale(int ProductID, Date StartTime, Date EndTime, int Discount, int Quantity, int TimeFrame, int Status) {
         this.ProductID = ProductID;
@@ -40,6 +41,15 @@ public class FlashSale {
         this.TimeFrame = TimeFrame;
         this.Status = Status;
     }
+
+    public ProductDetail getProductDetail() {
+        return productDetail;
+    }
+
+    public void setProductDetail(ProductDetail productDetail) {
+        this.productDetail = productDetail;
+    }
+    
 
     public int getSaleID() {
         return SaleID;

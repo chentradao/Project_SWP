@@ -4,14 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/H:/kì%205/SWP/Cosmetic/web/jsp/OrderDetail.jsp</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/entity/Order.java</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/web/menu.jsp</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/controller/OrderHistoryController.java</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/controller/OrderController.java</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/web/jsp/OrderHistory.jsp</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/web/styles/OrderDetail.css</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/controller/OrderDetailController.java</file>
-            <file>file:/H:/kì%205/SWP/Cosmetic/web/jsp/MyOrder.jsp</file>
+            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/model/DAOFlashSale.java</file>
+            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/entity/FlashSale.java</file>
+            <file>file:/H:/kì%205/SWP/Cosmetic/src/java/model/DAOVoucher.java</file>
         </group>
     </open-files>
 </project-private>

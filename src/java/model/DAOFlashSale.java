@@ -65,9 +65,10 @@ public class DAOFlashSale extends DBConnection {
         }
         return n;
     }
-    public FlashSale findFSByID(int fid){
+
+    public FlashSale findFSByID(int fid) {
         FlashSale fs = null;
-         String sql = "SELECT * FROM FlashSale WHERE SaleID = ?";
+        String sql = "SELECT * FROM FlashSale WHERE SaleID = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, fid);
@@ -75,8 +76,8 @@ public class DAOFlashSale extends DBConnection {
 
             if (rs.next()) { // Chỉ lấy một dòng dữ liệu
                 fs = new FlashSale(
-                        rs.getInt("VoucherID"),
-                        rs.getInt("VoucherID"),
+                        rs.getInt("SaleID"),
+                        rs.getInt("ProductID"),
                         rs.getDate("StartTime"),
                         rs.getDate("EndTime"),
                         rs.getInt("Discount"),
@@ -90,6 +91,43 @@ public class DAOFlashSale extends DBConnection {
         }
         return fs;
     }
+    
+    public int getTotalFlashSale(String countQuery) {
+        int total = 0;
+        try {
+            ResultSet rs = getData(countQuery); // Giả sử getData trả về ResultSet từ SQL
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public Vector<FlashSale> getFlashSale(String sql) {
+        Vector<FlashSale> vector = new Vector<>();
+        try {
+            Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                int SaleID = rs.getInt("SaleID");
+                int ProductID = rs.getInt("ProductID");
+                Date StartTime = rs.getDate("StartTime");
+                Date EndTime = rs.getDate("EndTime");
+                int Discount = rs.getInt("Discount");
+                int Quantity = rs.getInt("Quantity");
+                int TimeFrame =rs.getInt("TimeFrame");
+                int Status = rs.getInt("Status");
+                FlashSale fs = new FlashSale(SaleID, ProductID, StartTime, EndTime, Discount, Quantity, TimeFrame, Status);
+                vector.add(fs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOVoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector;
+    }
+
     public static void main(String[] args) {
         DAOFlashSale dao = new DAOFlashSale();
         FlashSale n = dao.findFSByID(1);

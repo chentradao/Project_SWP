@@ -11,36 +11,61 @@ import java.util.Date;
  * @author ASUS
  */
 public class Product {
-    private int productID;
+    private int productId;
     private String productName;
-    private Integer categoryID;
-    private Integer quantity;
-    private Integer soldQuantity;
-    private Date date;
+    private int categoryId;
+    private int quantity;
+    private int soldQuantity;
+    private java.sql.Date date;
     private String description;
-    private int productStatus;
+    private String productStatus;
+    private String productImage;
+    private ProductDetail productDetail;
 
-    public Product(int productID, String productName, Integer categoryID, Integer quantity, Integer soldQuantity, Date date, String description, int productStatus) {
-        this.productID = productID;
+    public Product() {
+    }
+
+    public Product(int productId, String productName, int categoryId, int quantity, int soldQuantity, java.sql.Date date, String description, String productStatus, String productImage) {
+        this.productId = productId;
         this.productName = productName;
-        this.categoryID = categoryID;
+        this.categoryId = categoryId;
         this.quantity = quantity;
         this.soldQuantity = soldQuantity;
         this.date = date;
         this.description = description;
         this.productStatus = productStatus;
+        this.productImage = productImage;
     }
 
-    public Product() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Product(int productId, String productName, String productImage, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.description = description;
+
     }
 
-    public int getProductID() {
-        return productID;
+    public Product(int productId, String productName, int categoryId, String productImage, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.description = description;
+        this.categoryId = categoryId;
+
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public Product(int productId, String productName, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -51,35 +76,35 @@ public class Product {
         this.productName = productName;
     }
 
-    public Integer getCategoryID() {
-        return categoryID;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public Integer getSoldQuantity() {
+    public int getSoldQuantity() {
         return soldQuantity;
     }
 
-    public void setSoldQuantity(Integer soldQuantity) {
+    public void setSoldQuantity(int soldQuantity) {
         this.soldQuantity = soldQuantity;
     }
 
-    public Date getDate() {
+    public java.sql.Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(java.sql.Date date) {
         this.date = date;
     }
 
@@ -91,17 +116,28 @@ public class Product {
         this.description = description;
     }
 
-    public int getProductStatus() {
+    public String getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(int productStatus) {
+    public void setProductStatus(String productStatus) {
         this.productStatus = productStatus;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" + "productID=" + productID + ", productName=" + productName + ", categoryID=" + categoryID + ", quantity=" + quantity + ", soldQuantity=" + soldQuantity + ", date=" + date + ", description=" + description + ", productStatus=" + productStatus + '}';
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public ProductDetail getProductDetail() {
+        return productDetail;
+    }
+
+    public void setProductDetail(ProductDetail productDetail) {
+        this.productDetail = productDetail;
     }
     
 }
