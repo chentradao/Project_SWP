@@ -24,27 +24,80 @@ import java.util.List;
  */
 public class DAOAccounts extends DBConnection {
 
-    public List<Accounts> getAllAccounts1(String query) {
-        List<Accounts> list = new ArrayList<>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Accounts acc = new Accounts();
-                acc.setUserName(rs.getString("userName"));
-                acc.setFullName(rs.getString("fullName"));
-                acc.setPhone(rs.getString("phone"));
-                acc.setEmail(rs.getString("email"));
-                acc.setAddress(rs.getString("address"));
-                acc.setRole(rs.getString("role"));
-                acc.setAccountStatus(rs.getInt("accountStatus"));
-                list.add(acc);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public List<Accounts> getAccountsByPage(int start, int pageSize, String query) {
+    List<Accounts> list = new ArrayList<>();
+    // Thêm ORDER BY mặc định nếu query không có
+    String sql = query.contains("ORDER BY") ? query : query + " ORDER BY userName";
+    sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Dành cho SQL Server
+    
+    try {
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, start);
+        ps.setInt(2, pageSize);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Accounts acc = new Accounts();
+            acc.setUserName(rs.getString("userName"));
+            acc.setFullName(rs.getString("fullName"));
+            acc.setPhone(rs.getString("phone"));
+            acc.setEmail(rs.getString("email"));
+            acc.setAddress(rs.getString("address"));
+             acc.setCreateDate(rs.getDate("CreateDate"));
+            acc.setRole(rs.getString("role"));
+            acc.setAccountStatus(rs.getInt("accountStatus"));
+            list.add(acc);
         }
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
+
+public List<Accounts> getAllAccounts1(String query) {
+    List<Accounts> list = new ArrayList<>();
+    try {
+        PreparedStatement ps = conn.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Accounts acc = new Accounts();
+            acc.setUserName(rs.getString("userName"));
+            acc.setFullName(rs.getString("fullName"));
+            acc.setPhone(rs.getString("phone"));
+            acc.setEmail(rs.getString("email"));
+            acc.setAddress(rs.getString("address"));
+            acc.setCreateDate(rs.getDate("CreateDate"));
+            acc.setRole(rs.getString("role"));
+            acc.setAccountStatus(rs.getInt("accountStatus"));
+            list.add(acc);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+    
+//    public List<Accounts> getAllAccounts1(String query) {
+//        List<Accounts> list = new ArrayList<>();
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(query);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                Accounts acc = new Accounts();
+//                acc.setUserName(rs.getString("userName"));
+//                acc.setFullName(rs.getString("fullName"));
+//                acc.setPhone(rs.getString("phone"));
+//                acc.setEmail(rs.getString("email"));
+//                acc.setAddress(rs.getString("address"));
+//                acc.setRole(rs.getString("role"));
+//                acc.setAccountStatus(rs.getInt("accountStatus"));
+//                list.add(acc);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 
     // Phương thức mới để lấy dữ liệu theo trang
     public List<Accounts> getAccountsByPage(int start, int pageSize) {
