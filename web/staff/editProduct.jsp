@@ -1,0 +1,261 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .form-custom-control {
+            width: -webkit-fill-available;     
+                   padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+        .form-custom-control:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+            outline: none;
+            background: #ffffff;
+        }
+        .product-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .detail-row:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+        .variant-card {
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 12px;
+            width: -webkit-fill-available;
+            
+            padding: 16px;
+
+        }
+        .remove-variant {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            color: #d32f2f;
+            background: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .remove-variant:hover {
+            background-color: #ffebee;
+            transform: scale(1.05);
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #1976d2;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .btn-danger {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .buttons-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+        .material-icons {
+            font-size: 20px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <a href="${pageContext.request.contextPath}/staff/products" class="btn btn-secondary" style="text-decoration: none;">
+                    <span class="material-icons">arrow_back</span>
+                    Quay Lại
+                </a>
+                <h2 style="margin: 0; color: #1976d2">Chỉnh Sửa Sản Phẩm</h2>
+            </div>
+        </div>
+
+        <form action="${pageContext.request.contextPath}/staff/products/edit" method="post">
+            <input type="hidden" name="productId" value="${product.productId}">
+            
+            <div class="form-group">
+                <label>Tên Sản Phẩm</label>
+                <input type="text" name="productName" value="${product.productName}" required class="form-custom-control">
+            </div>
+            
+            <div class="form-group">
+                <label>Danh Mục</label>
+                <select name="categoryId" required class="form-custom-control">
+                    <c:forEach var="category" items="${categories}">
+                        <option value="${category.getCategoryId()}" ${category.getCategoryId() == product.getCategoryId() ? 'selected' : ''}>
+                            ${category.getCategoryName()}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Mô Tả</label>
+                <textarea name="description" class="form-custom-control" rows="4">${product.description}</textarea>
+            </div>
+            
+      
+            <div id="productDetails" class="product-details">
+                <div class="variant-header">
+                    <h3 style="margin-bottom: 10px">Biến Thể Sản Phẩm</h3>
+                </div>
+                <c:forEach var="detail" items="${product.productDetails}" varStatus="status">
+                    <div class="detail-row">
+                        <div class="variant-card">
+                            <input type="hidden" name="detailId" value="${detail.ID}">
+                            <div class="form-group">
+                                <label>Kích Thước</label>
+                                <input type="text" name="size" value="${detail.size}" required class="form-custom-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Màu Sắc</label>
+                                <input type="text" name="color" value="${detail.color}" required class="form-custom-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Số Lượng</label>
+                                <input type="number" name="quantity" value="${detail.quantity}" required class="form-custom-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Giá Nhập (VNĐ)</label>
+                                <input type="number" name="importPrice" value="${detail.importPrice}" required class="form-custom-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Giá Bán (VNĐ)</label>
+                                <input type="number" name="price" value="${detail.price}" required class="form-custom-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Hình Ảnh URL</label>
+                                <input type="text" name="image" value="${detail.image}" class="form-custom-control">
+                            </div>
+                        </div>
+                        <button type="button" class="remove-variant" onclick="removeDetailRow(this)">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                </c:forEach>
+            </div>
+            
+            <div class="buttons-container">
+                <button type="button" onclick="addDetailRow()" class="btn btn-secondary">
+                    <span class="material-icons">add</span>
+                    Thêm Biến Thể
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-icons">save</span>
+                    Cập Nhật Sản Phẩm
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function addDetailRow() {
+            const detailsDiv = document.getElementById('productDetails');
+            const template = document.querySelector('.detail-row').cloneNode(true);
+            
+            template.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                if (input.name === 'detailId') {
+                    input.value = '0';
+                }
+            });
+            
+            detailsDiv.appendChild(template);
+        }
+
+        function removeDetailRow(button) {
+            const row = button.closest('.detail-row');
+            row.remove();
+        }
+    </script>
+</body>
+</html>

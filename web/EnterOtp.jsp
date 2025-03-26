@@ -20,7 +20,7 @@
         </style>
     </head>
 
-    <body>
+    <body style="background-image: url('P_images/login.jpg');">
         <div class="form-gap"></div>
         <div class="container">
             <div class="row">
@@ -33,10 +33,10 @@
                                 </h3>
                                 <h2 class="text-center">Nhập OTP</h2>
                                 <%
-if(request.getAttribute("message")!=null)
-{
-        out.print("<p class='text-danger ml-1'>"+request.getAttribute("message")+"</p>");
-}
+                                            if(request.getAttribute("message")!=null)
+                                 {
+                                            out.print("<p class='text-danger ml-1'>"+request.getAttribute("message")+"</p>");
+                                 }
 		  
                                 %>
 
@@ -55,7 +55,7 @@ if(request.getAttribute("message")!=null)
                                         </div>
                                         <div class="form-group">
                                             <input name="recover-submit"
-                                                   class="btn btn-lg btn-primary btn-block"
+                                                   class="btn btn-success"
                                                    value="Nhập lại mật khẩu" type="submit">
                                         </div>
 
