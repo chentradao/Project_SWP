@@ -77,6 +77,33 @@
                 position: relative;
                 z-index: 1;
             }
+
+            /* Căn giữa tiêu đề */
+            .page-title {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* Định dạng thanh tìm kiếm */
+            .search-container {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .search-container input[type="text"] {
+                width: 300px;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            .search-container select {
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
         </style>
     </head>
     <body>
@@ -105,6 +132,21 @@
 
         <!-- Nội dung chính -->
         <div class="container-fluid p-3">
+            <h2 class="page-title">Danh sách tài khoản</h2>
+            
+            <!-- Thanh tìm kiếm -->
+            <div class="search-container">
+                <form action="ListUser" method="get">
+                    <input type="text" name="search" placeholder="Tìm theo họ tên, số điện thoại, email" value="${param.search}">
+                    <select name="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Đang hoạt động</option>
+                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Dừng hoạt động</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Tìm</button>
+                </form>
+            </div>
+
             <div class="content-wrapper">
                 <!-- Left Panel -->
                 <div class="left-panel">
@@ -125,7 +167,8 @@
                                             <th>Họ tên</th>
                                             <th>Số điện thoại</th>
                                             <th>Email</th>
-                                            <th>Địa chỉ</th>
+                                            
+                                            <th>Ngày tạo</th>
                                             <th>Role</th>
                                             <th>Trạng thái</th>
                                             <th>Hoạt động</th>
@@ -138,7 +181,8 @@
                                                 <td>${e.fullName}</td>
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
-                                                <td>${e.address}</td>
+                                                
+                                                <td>${e.createDate}</td>
                                                 <td>${e.role}</td>
                                                 <td>
                                                     <c:choose>
@@ -172,15 +216,15 @@
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                 <ul class="pagination">
                                     <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListUser?page=${currentPage - 1}">Trang trước</a>
+                                        <a class="page-link" href="ListUser?page=${currentPage - 1}&search=${param.search}&status=${param.status}">Trang trước</a>
                                     </li>
                                     <c:forEach begin="1" end="${totalPages}" var="i">
                                         <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                            <a class="page-link" href="ListUser?page=${i}">${i}</a>
+                                            <a class="page-link" href="ListUser?page=${i}&search=${param.search}&status=${param.status}">${i}</a>
                                         </li>
                                     </c:forEach>
                                     <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListUser?page=${currentPage + 1}">Trang sau</a>
+                                        <a class="page-link" href="ListUser?page=${currentPage + 1}&search=${param.search}&status=${param.status}">Trang sau</a>
                                     </li>
                                 </ul>
                             </nav>
