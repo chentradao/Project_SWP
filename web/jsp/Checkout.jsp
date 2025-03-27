@@ -22,13 +22,16 @@
             Vector<Cart> vector = (Vector<Cart>)request.getAttribute("vectorCart");
             Voucher voucher = (Voucher)request.getAttribute("voucher");
             int subtotal = 0;
+            int discount = 0;
             for(Cart cart : vector){
                 subtotal += (cart.getPrice() * cart.getQuantity());
+                if(cart.getFlash() != null){
+                    discount += cart.getPrice() - (cart.getPrice() * cart.getFlash().getDiscount())/100;
+                }
             }
             if(subtotal == 0){
                 response.sendRedirect("CartURL?service=showCart");
             }
-            int discount = 0;
             if(voucher != null){
                int rawDiscount = (voucher.getDiscount() * subtotal)/100;
                   if(voucher.getMaxDiscount() > 0){

@@ -100,8 +100,9 @@ public class ProductDetail {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public ProductDetail(int id, int productId,String IdentityCode ,String size, String color, int Quantity, int SoldQuantity, Date DateCreate, int ImportPrice,int price, String image, int ProductStatus) {
+    public ProductDetail(int id, String productName, int productId,String IdentityCode ,String size, String color, int Quantity, int SoldQuantity, Date DateCreate, int ImportPrice,int price, String image, int ProductStatus) {
         this.ID = id;
+        this.productName = productName;
         this.productId = productId;
         this.IdentityCode = IdentityCode;
         this.size = size;

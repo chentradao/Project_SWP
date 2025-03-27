@@ -75,6 +75,7 @@ public class PaymentStatusServlet extends HttpServlet {
         DAOOrder dao = new DAOOrder();
         Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, "VNPay", 1);
         int n = dao.insertOrder(o);
+        session.removeAttribute("flash");
         System.out.println(Email);
         if (n > 0) {
             // Insert các mục giỏ hàng vào OrderDetails
@@ -145,6 +146,7 @@ public class PaymentStatusServlet extends HttpServlet {
         }
         int subtotal = 0;
         for (Cart cart : vector) {
+            session.removeAttribute("flash_"+cart.getID());
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"
                     + "    <td style=\"padding:4px;\">" + cart.getColor() + "|" + cart.getSize() + "</td>"

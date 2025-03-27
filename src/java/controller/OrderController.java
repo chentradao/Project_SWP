@@ -7,6 +7,7 @@ package controller;
 import entity.AccountVoucher;
 import entity.Accounts;
 import entity.Cart;
+import entity.FlashSale;
 import entity.Order;
 import entity.ProductDetail;
 import entity.Voucher;
@@ -68,6 +69,12 @@ public class OrderController extends HttpServlet {
                             vector.add(cart);
                         }
                     }
+                    for(Cart cart : vector){
+                    FlashSale flashsale = (FlashSale)session.getAttribute("flash_"+cart.getID());
+                    if(flashsale != null){
+                        cart.setFlash(flashsale);
+                    }
+                }
                     request.setAttribute("voucher", voucher);
                     request.setAttribute("vectorCart", vector);
                     request.setAttribute("acc", acc);
@@ -115,6 +122,7 @@ public class OrderController extends HttpServlet {
                         }
                         sendOrderConfirmationEmail(session, CustomerName, ShipAddress, Discount, Phone, Email, ShippingFee, TotalCost, Note);
                         System.out.println("send Email to: " + Email);
+                        session.removeAttribute("flash");
                         if (n > 0) {
                             // Insert các mục giỏ hàng vào OrderDetails
                             Enumeration<String> enu = session.getAttributeNames();
@@ -210,6 +218,7 @@ public class OrderController extends HttpServlet {
         }
         int subtotal = 0;
         for (Cart cart : vector) {
+            session.removeAttribute("flash_"+cart.getID());
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"
                     + "    <td style=\"padding:4px;\">" + cart.getColor() + "|" + cart.getSize() + "</td>"

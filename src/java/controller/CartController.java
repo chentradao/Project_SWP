@@ -6,6 +6,7 @@ package controller;
 
 import entity.Accounts;
 import entity.Cart;
+import entity.FlashSale;
 import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,6 +42,7 @@ public class CartController extends HttpServlet {
         DAOAccountVoucher av = new DAOAccountVoucher();
         HttpSession session = request.getSession(true);
         Accounts acc = (Accounts) session.getAttribute("acc");
+        String flash = (String) session.getAttribute("flash");
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
             String quality = request.getParameter("qty");
@@ -85,10 +87,16 @@ public class CartController extends HttpServlet {
                 if (acc != null) {
                     String sql = "SELECT V.*\n"
                             + "FROM Voucher V\n"
-                            + "LEFT JOIN AccountVoucher AV ON V.VoucherID = AV.VoucherID AND AV.AccountID = \n"+acc.getAccountID()
+                            + "LEFT JOIN AccountVoucher AV ON V.VoucherID = AV.VoucherID AND AV.AccountID = \n" + acc.getAccountID()
                             + "WHERE AV.VoucherID IS NULL AND V.VoucherStatus = 1;";
                     Vector<Voucher> voucherlist = d.getVouchers(sql);
                     request.setAttribute("voucherlist", voucherlist);
+                }
+                for (Cart cart : vector) {
+                    FlashSale flashsale = (FlashSale) session.getAttribute("flash_" + cart.getID());
+                    if (flashsale != null) {
+                        cart.setFlash(flashsale);
+                    }
                 }
                 request.setAttribute("acc", acc);
                 request.setAttribute("error", session.getAttribute("error"));
@@ -132,6 +140,8 @@ public class CartController extends HttpServlet {
                 } else {
                     if (VoucherID == null || VoucherID.isEmpty()) {
                         session.setAttribute("error", "Vui lòng nhập voucher");
+                    } else if (flash != null) {
+                        session.setAttribute("error", "Chỉ áp dụng duy nhất một chương trình giảm giá tại một thời điểm");
                     } else {
                         Voucher voucher = d.getVoucherByName(VoucherID);
                         if (voucher == null || voucher.getVoucherStatus() == 0) {
