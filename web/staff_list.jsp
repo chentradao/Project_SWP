@@ -17,11 +17,9 @@
                 height: 80px;
                 padding: 0 15px;
             }
-
             .main_nav ul {
                 gap: 15px;
             }
-
             /* Căn chỉnh bố cục */
             .content-wrapper {
                 display: flex;
@@ -29,7 +27,6 @@
                 align-items: flex-start;
                 gap: 40px;
             }
-
             /* Định dạng panel bên trái */
             .left-panel {
                 max-width: 250px;
@@ -39,8 +36,6 @@
                 padding: 20px;
                 border-radius: 8px;
             }
-
-            /* Mở rộng nút bấm */
             .left-panel .btn {
                 width: 100%;
                 padding: 12px 15px;
@@ -48,34 +43,42 @@
                 white-space: nowrap;
                 text-align: center;
             }
-
             /* Định dạng bảng */
             .table-container {
                 flex-grow: 1;
                 width: 100%;
             }
-
             .table th, .table td {
                 text-align: center;
                 vertical-align: middle;
                 padding: 12px 8px;
             }
-
-            /* Giới hạn chiều rộng cột Địa chỉ */
-            .table td:nth-child(4) {
-                max-width: 200px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+            .page-title {
+                text-align: center;
+                margin-bottom: 20px;
             }
-
-            /* Hiển thị đầy đủ nội dung khi hover vào cột Địa chỉ */
-            .table td:nth-child(4):hover {
-                white-space: normal;
-                overflow: visible;
-                background-color: #f8f9fa;
-                position: relative;
-                z-index: 1;
+            .search-container {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+            .search-container input[type="text"] {
+                width: 300px;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+            .search-container select {
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+            /* Định dạng nút trong cột Hoạt động */
+            .action-buttons {
+                display: flex;
+                gap: 5px;
+                justify-content: center;
             }
         </style>
     </head>
@@ -105,6 +108,21 @@
 
         <!-- Nội dung chính -->
         <div class="container-fluid p-3">
+            <h2 class="page-title">Danh sách nhân viên</h2>
+
+            <!-- Thanh tìm kiếm -->
+            <div class="search-container">
+                <form action="ListStaff" method="get">
+                    <input type="text" name="search" placeholder="Tìm theo họ tên, số điện thoại, email" value="${param.search}">
+                    <select name="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Đang hoạt động</option>
+                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Dừng hoạt động</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Tìm</button>
+                </form>
+            </div>
+
             <div class="content-wrapper">
                 <!-- Left Panel -->
                 <div class="left-panel">
@@ -122,10 +140,30 @@
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead class="thead-dark text-center">
                                         <tr>
-                                            <th>Họ tên</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Email</th>
-                                            <th>Địa chỉ</th>
+                                            <th>
+                                                Họ tên 
+                                                <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=fullName&sortOrder=${param.sortBy == 'fullName' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                    <i class="fa ${param.sortBy == 'fullName' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Số điện thoại 
+                                                <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=phone&sortOrder=${param.sortBy == 'phone' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                    <i class="fa ${param.sortBy == 'phone' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Email 
+                                                <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=email&sortOrder=${param.sortBy == 'email' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                    <i class="fa ${param.sortBy == 'email' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Ngày tạo 
+                                                <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=createDate&sortOrder=${param.sortBy == 'createDate' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                    <i class="fa ${param.sortBy == 'createDate' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
+                                                </a>
+                                            </th>
                                             <th>Role</th>
                                             <th>Trạng thái</th>
                                             <th>Hoạt động</th>
@@ -138,7 +176,7 @@
                                                 <td>${e.fullName}</td>
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
-                                                <td>${e.address}</td>
+                                                <td>${e.createDate}</td>
                                                 <td>${e.role}</td>
                                                 <td>
                                                     <c:choose>
@@ -148,11 +186,22 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListStaff" 
-                                                       class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
-                                                       onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
-                                                        ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
-                                                    </a>
+                                                    <div class="action-buttons">
+                                                        <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListStaff" 
+                                                           class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
+                                                           onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
+                                                            ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
+                                                        </a>
+                                                        <a href="DeleteStaff?username=${e.userName}" 
+                                                           class="btn btn-sm btn-danger"
+                                                           onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?')">
+                                                            Xóa
+                                                        </a>
+                                                        <a href="EditStaff?username=${e.userName}" 
+                                                           class="btn btn-sm btn-success">
+                                                            Sửa
+                                                        </a>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <a href="userDetail?username=${e.userName}" class="btn btn-sm btn-primary">Xem</a>
@@ -168,19 +217,19 @@
                                 </table>
                             </div>
 
-                            <!-- Phân trang -->
+                            
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                 <ul class="pagination">
                                     <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListStaff?page=${currentPage - 1}">Trang trước</a>
+                                        <a class="page-link" href="ListStaff?page=${currentPage - 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}">Trang trước</a>
                                     </li>
                                     <c:forEach begin="1" end="${totalPages}" var="i">
                                         <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                            <a class="page-link" href="ListStaff?page=${i}">${i}</a>
+                                            <a class="page-link" href="ListStaff?page=${i}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}">${i}</a>
                                         </li>
                                     </c:forEach>
                                     <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
-                                        <a class="page-link" href="ListStaff?page=${currentPage + 1}">Trang sau</a>
+                                        <a class="page-link" href="ListStaff?page=${currentPage + 1}&search=${param.search}&status=${param.status}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}">Trang sau</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -194,8 +243,5 @@
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>
-        <script src="plugins/easing/easing.js"></script>
-        <script src="plugins/parallax-js-master/parallax.min.js"></script>
-        <script src="js/cart_custom.js"></script>
     </body>
 </html>

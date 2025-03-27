@@ -147,7 +147,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý quảng cáo</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Quản lý khách hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
                 </ul>
             </nav>
@@ -157,8 +157,8 @@
                     ${sessionScope.acc.fullName}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="manager.html">Thông tin tài khoản</a>
-                    <a class="dropdown-item" href="blank.html">Đăng xuất</a>
+                    <a class="dropdown-item" href="profile">Thông tin tài khoản</a>
+                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
                 </div>
             </div>
         </header>

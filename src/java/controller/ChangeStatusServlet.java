@@ -67,7 +67,10 @@ public class ChangeStatusServlet extends HttpServlet {
 
         if ("ListStaff".equals(returnTo)) {
             request.getRequestDispatcher("ListStaff").forward(request, response);
-        } else {
+        }else if ("ListCustomer".equals(returnTo)) {
+            request.getRequestDispatcher("ListCustomer").forward(request, response);
+        }
+          else {
             request.getRequestDispatcher("ListUser").forward(request, response);
         }
     }
