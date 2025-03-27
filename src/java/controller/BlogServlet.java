@@ -4,7 +4,6 @@
  */
 package controller;
 
-import entity.Blog;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -26,6 +25,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 import model.DAOBlog;
+import entity.Blog;
+import entity.Comment;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.DAOAccounts;
+import model.DAOComment;
+import entity.Accounts;
 
 /**
  *
@@ -42,34 +49,24 @@ public class BlogServlet extends HttpServlet {
     private static final String UPLOAD_DIR = "Blog_Image";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
         DAOBlog dao = new DAOBlog();
+        DAOComment daoComment = new DAOComment();
+        DAOAccounts daoAcc = new DAOAccounts();
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
             if (service == null) {
                 service = "listAllBlogs";
-            } //update a blog
-            else if (service.equals("updateBlog")) {
-                String submit = request.getParameter("submit");
-                Blog oldBlog = dao.getBlogByID(Integer.parseInt(request.getParameter("blogID"))); // Lấy thông tin cũ
-                if (submit == null) {
-                    String id = (request.getParameter("blogID"));
-                    Vector<Blog> vector
-                            = dao.getAllBlogs("select * from Blog where BlogID = " + id);
-                    request.setAttribute("selectedBlog", vector);
-                    request.getRequestDispatcher("/jsp/updateBlog.jsp").forward(request, response);
-                }
-
-            } //display blog
+            } //display all blog
             else if (service.equals("listAllBlogs")) {
                 String filterDate = request.getParameter("filterDate");
                 String filterCategory = request.getParameter("filterCategory");
 
-                String query = "SELECT * FROM Blog";
+                String query = "SELECT * FROM Blog WHERE [BlogStatus] = 2";
 
                 if (filterCategory != null && !filterCategory.equals("all")) {
-                    query += " WHERE [BlogCategoryID] = " + filterCategory;
+                    query += " AND [BlogCategoryID] = " + filterCategory;
                 }
 
                 if (filterDate != null) {
@@ -79,55 +76,75 @@ public class BlogServlet extends HttpServlet {
                         query += " ORDER BY [Date] ASC";
                     }
                 }
+                Vector<Blog> topPosts = dao.getAllBlogs("SELECT TOP 5 * FROM Blog b WHERE [BlogStatus] = 2 ORDER BY b.Date DESC");
                 Vector<Blog> vectorBlog = dao.getAllBlogs(query);
                 request.setAttribute("vectorBlog", vectorBlog);
-                request.getRequestDispatcher("blogpage.jsp").forward(request, response);
-            } else if (service.equals("displayBlog")) {
+                request.setAttribute("topPosts", topPosts);
+                request.getRequestDispatcher("blog.jsp").forward(request, response);
+            } // display blog by id
+            else if (service.equals("displayBlog")) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                Vector<Blog> blog = dao.getAllBlogs("select * from Blog where BlogID=" + id);
-                request.setAttribute("blog", blog);
-                request.getRequestDispatcher("/jsp/displayBlog.jsp").forward(request, response);
-            } 
+                Blog blog = dao.getBlogByID(id);
+                Accounts author = daoAcc.getAccountByAccountID(blog.getBlogAuthor());
 
-            //delete a blog
-            else if (service.equals("deleteBlog")) {
-                String id = (request.getParameter("blogID"));
-                
-                dao.deleteBlog(id);
-                response.sendRedirect("Blog?service=listAllBlogs");
+                Vector<Blog> relatedPosts = dao.getAllBlogs(
+                        "SELECT * FROM Blog b WHERE [BlogStatus] = 2 AND b.BlogCategoryID = " + blog.getBlogCategoryID()
+                );
+
+                Vector<Blog> topPosts = dao.getAllBlogs(
+                        "SELECT TOP 3 b.BlogID, b.BlogTitle, b.BlogDescription, b.BlogThumbnail, " +
+             "b.BlogAuthor, b.BlogCategoryID, b.Date, b.BlogStatus " +
+             "FROM Blog b LEFT JOIN Comment c ON b.BlogID = c.BlogID " +
+             "WHERE b.BlogStatus = 2 " +
+             "GROUP BY b.BlogID, b.BlogTitle, b.BlogDescription, b.BlogThumbnail, " +
+             "b.BlogAuthor, b.BlogCategoryID, b.Date, b.BlogStatus " +
+             "ORDER BY COUNT(c.CommentID) DESC;"
+                );
+
+                Vector<Comment> comments = daoComment.getAllCommentByBlogID(id);
+
+                request.setAttribute("blog", blog);
+                request.setAttribute("author", author);
+                request.setAttribute("relatedPosts", relatedPosts);
+                request.setAttribute("topPosts", topPosts);
+                request.setAttribute("comments", comments);
+                request.getRequestDispatcher("detailBlog.jsp").forward(request, response);
             }
         }
     }
 
     private String getFileName(Part part) {
-    String contentDisp = part.getHeader("content-disposition");
-    String[] items = contentDisp.split(";");
-    for (String s : items) {
-        if (s.trim().startsWith("filename")) {
-            String fileName = s.substring(s.indexOf("=") + 2, s.length() - 1); // Lấy tên file
-            if (isValidImageFile(fileName)) {
-                return fileName;
-            } else {
-                return ""; // Nếu không hợp lệ, trả về chuỗi rỗng
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                String fileName = s.substring(s.indexOf("=") + 2, s.length() - 1); // Lấy tên file
+                if (isValidImageFile(fileName)) {
+                    return fileName;
+                } else {
+                    return ""; // Nếu không hợp lệ, trả về chuỗi rỗng
+                }
             }
         }
+        return "";
     }
-    return "";
-}
 
 // Hàm kiểm tra định dạng file
-private boolean isValidImageFile(String fileName) {
-    String lowerCaseFileName = fileName.toLowerCase();
-    return lowerCaseFileName.endsWith(".jpg") || 
-           lowerCaseFileName.endsWith(".jpeg") || 
-           lowerCaseFileName.endsWith(".png");
-}
-
+    private boolean isValidImageFile(String fileName) {
+        String lowerCaseFileName = fileName.toLowerCase();
+        return lowerCaseFileName.endsWith(".jpg")
+                || lowerCaseFileName.endsWith(".jpeg")
+                || lowerCaseFileName.endsWith(".png");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(BlogServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -172,90 +189,90 @@ private boolean isValidImageFile(String fileName) {
                 e.printStackTrace();
                 request.setAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
             }
-        }else if (service.equals("updateBlog")) {
-    try {
-        // Lấy ID blog cần cập nhật
-        int blogID = Integer.parseInt(request.getParameter("blogID"));
+        } else if (service.equals("updateBlog")) {
+            try {
+                // Lấy ID blog cần cập nhật
+                int blogID = Integer.parseInt(request.getParameter("blogID"));
 
-        // Lấy thông tin blog hiện tại từ DB
-        Blog existingBlog = dao.getBlogByID(blogID);
-        if (existingBlog == null) {
-            throw new Exception("Không tìm thấy blog với ID: " + blogID);
-        }
-
-        // Xử lý upload ảnh
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();  
-        }
-
-        // Xử lý thumbnail (nếu có thay đổi)
-        String blogThumbnail = existingBlog.getBlogThumbnail(); // Giữ nguyên ảnh cũ nếu không đổi
-        Part thumbnailPart = request.getPart("blogThumbnail");
-
-        if (thumbnailPart != null && thumbnailPart.getSize() > 0) {
-            String thumbnailFileName = getFileName(thumbnailPart);
-            if (thumbnailFileName != null && !thumbnailFileName.isEmpty()) {
-                // Xóa ảnh cũ nếu có
-                String oldThumbnailPath = getServletContext().getRealPath("/") + existingBlog.getBlogThumbnail();
-                File oldFile = new File(oldThumbnailPath);
-                if (oldFile.exists()) {
-                    oldFile.delete();
+                // Lấy thông tin blog hiện tại từ DB
+                Blog existingBlog = dao.getBlogByID(blogID);
+                if (existingBlog == null) {
+                    throw new Exception("Không tìm thấy blog với ID: " + blogID);
                 }
 
-                // Lưu ảnh mới
-                String newFileName = UUID.randomUUID() + "_" + thumbnailFileName;
-                String thumbnailPath = uploadPath + File.separator + newFileName;
-                thumbnailPart.write(thumbnailPath);
+                // Xử lý upload ảnh
+                String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
 
-                blogThumbnail = "Blog_Image/" + newFileName;
+                // Xử lý thumbnail (nếu có thay đổi)
+                String blogThumbnail = existingBlog.getBlogThumbnail(); // Giữ nguyên ảnh cũ nếu không đổi
+                Part thumbnailPart = request.getPart("blogThumbnail");
+
+                if (thumbnailPart != null && thumbnailPart.getSize() > 0) {
+                    String thumbnailFileName = getFileName(thumbnailPart);
+                    if (thumbnailFileName != null && !thumbnailFileName.isEmpty()) {
+                        // Xóa ảnh cũ nếu có
+                        String oldThumbnailPath = getServletContext().getRealPath("/") + existingBlog.getBlogThumbnail();
+                        File oldFile = new File(oldThumbnailPath);
+                        if (oldFile.exists()) {
+                            oldFile.delete();
+                        }
+
+                        // Lưu ảnh mới
+                        String newFileName = UUID.randomUUID() + "_" + thumbnailFileName;
+                        String thumbnailPath = uploadPath + File.separator + newFileName;
+                        thumbnailPart.write(thumbnailPath);
+
+                        blogThumbnail = "Blog_Image/" + newFileName;
+                    }
+                }
+
+                // Cập nhật các thông tin khác từ form
+                String blogTitle = request.getParameter("blogTitle");
+                String blogDescription = request.getParameter("blogDescription");
+                int blogCategoryID = Integer.parseInt(request.getParameter("blogCategoryID"));
+                int blogAuthor = Integer.parseInt(request.getParameter("blogAuthor"));
+                int blogStatus = Integer.parseInt(request.getParameter("blogStatus"));
+
+                // Log để debug
+                System.out.println("Cập nhật Blog: " + blogID);
+                System.out.println("Tiêu đề: " + blogTitle);
+                System.out.println("Mô tả: " + blogDescription);
+                System.out.println("Danh mục: " + blogCategoryID);
+                System.out.println("Tác giả: " + blogAuthor);
+                System.out.println("Trạng thái: " + blogStatus);
+                System.out.println("Thumbnail: " + blogThumbnail);
+
+                // Tạo đối tượng BlogServlet mới với thông tin cập nhật
+                Blog updatedBlog = new Blog(
+                        blogID,
+                        blogTitle,
+                        blogDescription,
+                        blogThumbnail,
+                        blogCategoryID,
+                        blogAuthor,
+                        existingBlog.getDate(),
+                        null,
+                        blogStatus
+                );
+
+                // Gọi phương thức update
+                int n = dao.updateBlog(updatedBlog);
+
+                if (n > 0) {
+                    System.out.println("Cập nhật thành công!");
+                } else {
+                    System.out.println("Cập nhật thất bại!");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            response.sendRedirect("Blog?service=listAllBlogs");
         }
-
-        // Cập nhật các thông tin khác từ form
-        String blogTitle = request.getParameter("blogTitle");
-        String blogDescription = request.getParameter("blogDescription");
-        int blogCategoryID = Integer.parseInt(request.getParameter("blogCategoryID"));
-        int blogAuthor = Integer.parseInt(request.getParameter("blogAuthor"));
-        int blogStatus = Integer.parseInt(request.getParameter("blogStatus"));
-
-        // Log để debug
-        System.out.println("Cập nhật Blog: " + blogID);
-        System.out.println("Tiêu đề: " + blogTitle);
-        System.out.println("Mô tả: " + blogDescription);
-        System.out.println("Danh mục: " + blogCategoryID);
-        System.out.println("Tác giả: " + blogAuthor);
-        System.out.println("Trạng thái: " + blogStatus);
-        System.out.println("Thumbnail: " + blogThumbnail);
-
-        // Tạo đối tượng Blog mới với thông tin cập nhật
-        Blog updatedBlog = new Blog(
-                blogID,
-                blogTitle,
-                blogDescription,
-                blogThumbnail,
-                blogCategoryID,
-                blogAuthor,
-                existingBlog.getDate(),
-                null,
-                blogStatus
-        );
-
-        // Gọi phương thức update
-        int n = dao.updateBlog(updatedBlog);
-
-        if (n > 0) {
-            System.out.println("Cập nhật thành công!");
-        } else {
-            System.out.println("Cập nhật thất bại!");
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    response.sendRedirect("Blog?service=listAllBlogs");
-}
 
     }
 

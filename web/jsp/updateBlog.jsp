@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi">
+<html lang="en">
     <head><%@ page import="entity.Blog" %>
         <%@ page import="java.util.Vector" %>
         <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -178,10 +178,10 @@
                     <div class="logo"><a href="ProductListServlet">Estée Lauder</a></div>
                     <nav class="main_nav">
                         <ul>
-                            <li><a href="index.jsp">Quản lý đơn hàng</a></li>
+                             <li><a href="manager">Quản lý đơn hàng</a></li>
                             <li><a href="index.jsp">Quản lý kho hàng</a></li>
                             <li><a href="index.jsp">Quản lý nhân viên</a></li>
-                            <li><a href="Blog?service=listAllBlogs">Quản lý bài đăng</a></li>
+                            <li><a href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
                         </ul>
                     </nav>
                     <div class="header_content ml-auto">
@@ -208,7 +208,7 @@
 
         <!-- Show update form -->
         <div class="card">
-            <form action="Blog" method="post" enctype="multipart/form-data">
+            <form action="BlogManager" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="service" value="updateBlog">
                 
                 <input type="hidden" id="blogID" name="blogID" value="<%=blog.getBlogID()%>">
@@ -219,19 +219,19 @@
 
                 <div class="meta-info">
                     <div class="meta-item">
-                        Tác giả:
+                        📝 Đăng bởi
                         <input type="number" id="blogAuthor" name="blogAuthor" required value="<%=blog.getBlogAuthor()%>">
 
                     </div>
                     <div class="meta-item">
-                        Danh mục: <select id="blogCategoryID" name="blogCategoryID" required value="<%=blog.getBlogCategoryID()%> ">
+                        📁 Danh mục: <select id="blogCategoryID" name="blogCategoryID" required value="<%=blog.getBlogCategoryID()%> ">
                             <option value="1">Làm đẹp</option>
                             <option value="2">Bảo vệ môi trường</option>
                             <option value="3">Sức khỏe</option>
                         </select>
                     </div>
                     <div class="meta-item">
-                        Ngày đăng: <%=blog.getDate()%>
+                        📅 Ngày đăng: <%=blog.getDate()%>
                     </div>
                     <div class="meta-item">
                         Trạng thái: <select id="blogStatus" name="blogStatus" required value="<%=blog.getBlogStatus()%>">

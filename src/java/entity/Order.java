@@ -30,9 +30,8 @@ public class Order {
     private int OrderStatus;
     private Vector<OrderDetail> orderDetail;
     private String orderCode;
-    private String ShipCity;
     
-    public Order(int OrderID, String orderCode,int CustomerID, int TotalCost, int OrderStatus, String CustomerName, String ShipAddress, String ShipCity, String Phone, Date OrderDate, Date ShippedDate) {
+    public Order(int OrderID, String orderCode,int CustomerID, int TotalCost, int OrderStatus, String CustomerName, String ShipAddress, String Phone, Date OrderDate, Date ShippedDate) {
         this.OrderID = OrderID;
         this.orderCode = orderCode;
         this.CustomerID = CustomerID;
@@ -40,12 +39,28 @@ public class Order {
         this.OrderStatus = OrderStatus;
         this.CustomerName = CustomerName;
         this.ShipAddress = ShipAddress;
-        this.ShipCity = ShipCity;
         this.Phone = Phone;
         this.OrderDate = OrderDate;
         this.ShippedDate = ShippedDate;
     }
-
+public Order(Integer OrderID,String OrderCode, int CustomerID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus) {
+        this.OrderID = OrderID;
+        this.orderCode = OrderCode;
+        this.CustomerID = CustomerID;
+        this.CustomerName = CustomerName;
+        this.OrderDate = OrderDate;
+        this.ShippedDate = ShippedDate;
+        this.ShippingFee = ShippingFee;
+        this.TotalCost = TotalCost;
+        this.Email = Email;
+        this.Phone = Phone;
+        this.ShipAddress = ShipAddress;
+        this.Discount = Discount;
+        this.CancelNotification = CancelNotification;
+        this.Note = Note;
+        this.PaymentMethod = PaymentMethod;
+        this.OrderStatus = OrderStatus;
+    }
     public String getOrderCode() {
         return orderCode;
     }

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DAOInventory extends DBConnection {
 
@@ -43,39 +45,39 @@ public class DAOInventory extends DBConnection {
     }
 
     public List<InventoryItem> getInventoryByDateRange(String startDate, String endDate) {
-    List<InventoryItem> inventoryList = new ArrayList<>();
-    String sql = "SELECT pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.Quantity, pd.SoldQuantity, pd.Price " +
-                 "FROM ProductDetail pd " +
-                 "JOIN Products p ON pd.ProductID = p.ProductID " +
-                 "WHERE pd.DateCreate BETWEEN ? AND ?";
+        List<InventoryItem> inventoryList = new ArrayList<>();
+        String sql = "SELECT pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.Quantity, pd.SoldQuantity, pd.Price "
+                + "FROM ProductDetail pd "
+                + "JOIN Products p ON pd.ProductID = p.ProductID "
+                + "WHERE pd.DateCreate BETWEEN ? AND ?";
 
-    try {
-         PreparedStatement pstmt = conn.prepareStatement(sql);
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        pstmt.setString(1, startDate);
-        pstmt.setString(2, endDate);
-        try (ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                InventoryItem item = new InventoryItem(
-                    rs.getInt("productDetailId"),
-                    rs.getInt("ProductID"),
-                    rs.getString("ProductName"),
-                    rs.getString("Size"),
-                    rs.getString("Color"),
-                    rs.getInt("Quantity"),
-                    rs.getInt("SoldQuantity"),
-                    rs.getDouble("Price")
-                );
-                inventoryList.add(item);
+            pstmt.setString(1, startDate);
+            pstmt.setString(2, endDate);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    InventoryItem item = new InventoryItem(
+                            rs.getInt("productDetailId"),
+                            rs.getInt("ProductID"),
+                            rs.getString("ProductName"),
+                            rs.getString("Size"),
+                            rs.getString("Color"),
+                            rs.getInt("Quantity"),
+                            rs.getInt("SoldQuantity"),
+                            rs.getDouble("Price")
+                    );
+                    inventoryList.add(item);
+                }
             }
+        } catch (SQLException e) {
+            // Ghi log lỗi (có thể thay bằng logging framework như SLF4J)
+            System.err.println("Error fetching inventory by date range: " + e.getMessage());
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        // Ghi log lỗi (có thể thay bằng logging framework như SLF4J)
-        System.err.println("Error fetching inventory by date range: " + e.getMessage());
-        e.printStackTrace();
+        return inventoryList;
     }
-    return inventoryList;
-}
 
     // Lấy số lượng sản phẩm có tồn kho thấp (giả định ngưỡng < 10)
     public int getLowStockCount() {
@@ -140,85 +142,119 @@ public class DAOInventory extends DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }   
-    
-    
+    }
+
     public Map<String, Object> getRevenueChartData(String filterType, String startDate, String endDate) {
-    Map<String, Object> chartData = new HashMap<>();
-    List<String> labels = new ArrayList<>();
-    List<Double> data = new ArrayList<>();
-    
-    // Xây dựng câu SQL với WHERE trước GROUP BY và ORDER BY
-    String sql = buildChartQuery(filterType, startDate, endDate);
+        Logger logger = Logger.getLogger(DAOInventory.class.getName());
+        Map<String, Object> chartData = new HashMap<>();
+        List<String> labels = new ArrayList<>();
+        List<Double> data = new ArrayList<>();
 
-    try {
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, startDate);
-        pstmt.setString(2, endDate);
-        try (ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                labels.add(rs.getString("dateLabel"));
-                data.add(rs.getDouble("revenue"));
+        // Chuẩn hóa đầu vào
+        startDate = validateDate(startDate, "2025-01-01");
+        endDate = validateDate(endDate, LocalDate.now().toString());
+        filterType = (filterType == null || filterType.trim().isEmpty()) ? "month" : filterType.toLowerCase();
+
+        logger.info("Fetching revenue chart data - Filter: " + filterType + ", Start: " + startDate + ", End: " + endDate);
+
+        String sql = buildChartQuery(filterType);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if (conn == null) {
+                logger.severe("Database connection is null!");
+                throw new SQLException("Database connection is null");
             }
+
+            pstmt.setString(1, startDate);
+            pstmt.setString(2, endDate);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    labels.add(rs.getString("dateLabel"));
+                    double revenue = rs.getDouble("revenue");
+                    data.add(rs.wasNull() ? 0.0 : revenue); // Xử lý NULL
+                    logger.info("Data point - Label: " + rs.getString("dateLabel") + ", Revenue: " + revenue);
+                }
+            }
+            chartData.put("labels", labels);
+            chartData.put("data", data);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching revenue chart data: " + e.getMessage(), e);
         }
-        chartData.put("labels", labels);
-        chartData.put("data", data);
-    } catch (SQLException e) {
-        System.err.println("Error fetching revenue chart data: " + e.getMessage());
-        e.printStackTrace();
-    }
-    return chartData;
-}
 
-private String buildChartQuery(String filterType, String startDate, String endDate) {
-    String baseSql = "SELECT ";
-    String whereClause = " WHERE pd.DateCreate BETWEEN ? AND ? ";
-    String groupBy = " GROUP BY ";
-    String orderBy = " ORDER BY ";
-
-    switch (filterType) {
-        case "year":
-            baseSql += "YEAR(pd.DateCreate) AS dateLabel, SUM(pd.SoldQuantity * pd.Price) AS revenue ";
-            groupBy += "YEAR(pd.DateCreate)";
-            orderBy += "YEAR(pd.DateCreate)";
-            break;
-        case "quarter":
-            baseSql += "CAST(YEAR(pd.DateCreate) AS VARCHAR) + ' Q' + DATENAME(quarter, pd.DateCreate) AS dateLabel, SUM(pd.SoldQuantity * pd.Price) AS revenue ";
-            groupBy += "YEAR(pd.DateCreate), DATENAME(quarter, pd.DateCreate)";
-            orderBy += "YEAR(pd.DateCreate), DATEPART(quarter, pd.DateCreate)";
-            break;
-        case "month":
-        default:
-            baseSql += "CAST(YEAR(pd.DateCreate) AS VARCHAR) + ' ' + DATENAME(month, pd.DateCreate) AS dateLabel, SUM(pd.SoldQuantity * pd.Price) AS revenue ";
-            groupBy += "YEAR(pd.DateCreate), DATENAME(month, pd.DateCreate), MONTH(pd.DateCreate)";
-            orderBy += "YEAR(pd.DateCreate), MONTH(pd.DateCreate)";
-            break;
-        case "day":
-            baseSql += "CAST(pd.DateCreate AS DATE) AS dateLabel, SUM(pd.SoldQuantity * pd.Price) AS revenue ";
-            groupBy += "CAST(pd.DateCreate AS DATE)";
-            orderBy += "CAST(pd.DateCreate AS DATE)";
-            break;
+        logger.info("Returning chart data - Labels: " + labels + ", Data: " + data);
+        return chartData;
     }
 
-    return baseSql + " FROM [SWP].[dbo].[ProductDetail] pd " + whereClause + groupBy + orderBy;
-}
+    private String buildChartQuery(String filterType) {
+        String baseSql = "SELECT ";
+        String whereClause = " WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ? ";
+        String groupBy = " GROUP BY ";
+        String orderBy = " ORDER BY ";
+        String fromClause = " FROM [SWP].[dbo].[OrderDetail] od "
+                + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID ";
+
+        switch (filterType) {
+            case "year":
+                baseSql += "YEAR(o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+                groupBy += "YEAR(o.OrderDate)";
+                orderBy += "YEAR(o.OrderDate)";
+                break;
+            case "quarter":
+                baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' Q' + DATENAME(quarter, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+                groupBy += "YEAR(o.OrderDate), DATENAME(quarter, o.OrderDate)";
+                orderBy += "YEAR(o.OrderDate), DATEPART(quarter, o.OrderDate)";
+                break;
+            case "day":
+                baseSql += "CAST(o.OrderDate AS DATE) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+                groupBy += "CAST(o.OrderDate AS DATE)";
+                orderBy += "CAST(o.OrderDate AS DATE)";
+                break;
+            case "month":
+            default:
+                baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' ' + DATENAME(month, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+                groupBy += "YEAR(o.OrderDate), DATENAME(month, o.OrderDate), MONTH(o.OrderDate)";
+                orderBy += "YEAR(o.OrderDate), MONTH(o.OrderDate)";
+                break;
+        }
+
+        return baseSql + fromClause + whereClause + groupBy + orderBy;
+    }
+
+    private String validateDate(String date, String defaultDate) {
+        if (date == null || date.trim().isEmpty()) {
+            return defaultDate;
+        }
+        try {
+            LocalDate.parse(date);
+            return date;
+        } catch (Exception e) {
+            Logger.getLogger(DAOInventory.class.getName()).warning("Invalid date: " + date + ", using default: " + defaultDate);
+            return defaultDate;
+        }
+    }
 
     // Lấy dữ liệu tóm tắt (giữ nguyên)
     public RevenueSummary getRevenueSummary(String startDate, String endDate) {
+        Logger logger = Logger.getLogger(DAOInventory.class.getName());
         RevenueSummary summary = new RevenueSummary();
-        String sql = "SELECT SUM(pd.SoldQuantity * pd.Price) AS totalRevenue, SUM(pd.SoldQuantity) AS totalSold, SUM(pd.Quantity) AS totalStock " +
-                     "FROM [SWP].[dbo].[ProductDetail] pd " +
-                     "WHERE pd.DateCreate BETWEEN ? AND ?";
+        String sql = "SELECT SUM(o.TotalCost) AS totalRevenue, "
+                + "SUM(od.Quantity) AS totalSold, "
+                + "SUM(pd.Quantity - pd.SoldQuantity) AS totalStock "
+                + "FROM [SWP].[dbo].[OrderDetail] od "
+                + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID "
+                + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
+                + "WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ?";
 
-        if (startDate == null || startDate.trim().isEmpty()) {
-            startDate = "2025-01-01";
-        }
-        if (endDate == null || endDate.trim().isEmpty()) {
-            endDate = LocalDate.now().toString();
-        }
+        // Chuẩn hóa ngày
+        startDate = validateDate(startDate, "2025-01-01");
+        endDate = validateDate(endDate, LocalDate.now().toString());
 
-        try {
-             PreparedStatement pstmt = conn.prepareStatement(sql);
+        logger.info("Fetching revenue summary - Start Date: " + startDate + ", End Date: " + endDate);
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if (conn == null) {
+                logger.severe("Database connection is null!");
+                throw new SQLException("Database connection is null");
+            }
 
             pstmt.setString(1, startDate);
             pstmt.setString(2, endDate);
@@ -228,31 +264,41 @@ private String buildChartQuery(String filterType, String startDate, String endDa
                     int totalSold = rs.getInt("totalSold");
                     int totalStock = rs.getInt("totalStock");
 
-                    summary.setTotalRevenue(rs.wasNull() ? BigDecimal.ZERO : totalRevenue);
-                    summary.setTotalSold(rs.wasNull() ? 0 : totalSold);
-                    summary.setTotalStock(rs.wasNull() ? 0 : totalStock);
+                    logger.info("Raw data from DB - totalRevenue: " + totalRevenue
+                            + ", totalSold: " + totalSold
+                            + ", totalStock: " + (rs.wasNull() ? "NULL" : totalStock));
+
+                    summary.setTotalRevenue(totalRevenue != null ? totalRevenue : BigDecimal.ZERO);
+                    summary.setTotalSold(totalSold);
+                    summary.setTotalStock(rs.wasNull() ? 0 : totalStock); // Xử lý NULL cho totalStock
                 } else {
+                    logger.warning("No data found for the given date range");
                     summary.setTotalRevenue(BigDecimal.ZERO);
                     summary.setTotalSold(0);
                     summary.setTotalStock(0);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching revenue summary: " + e.getMessage());
-            e.printStackTrace();
-            
+            logger.log(Level.SEVERE, "SQL Error fetching revenue summary: " + e.getMessage(), e);
+            summary.setTotalRevenue(BigDecimal.ZERO);
+            summary.setTotalSold(0);
+            summary.setTotalStock(0);
         }
+
+        logger.info("Returning summary - totalRevenue: " + summary.getTotalRevenue()
+                + ", totalSold: " + summary.getTotalSold()
+                + ", totalStock: " + summary.getTotalStock());
         return summary;
     }
 
     // Lấy top sản phẩm bán chạy (giữ nguyên)
     public List<InventoryItem> getTopSellingProducts(int limit, String startDate, String endDate) {
         List<InventoryItem> topSellingList = new ArrayList<>();
-        String sql = "SELECT TOP (?) pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.SoldQuantity, pd.Price " +
-                     "FROM [SWP].[dbo].[ProductDetail] pd " +
-                     "JOIN [SWP].[dbo].[Products] p ON pd.ProductID = p.ProductID " +
-                     "WHERE pd.DateCreate BETWEEN ? AND ? " +
-                     "ORDER BY pd.SoldQuantity DESC";
+        String sql = "SELECT TOP (?) pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.SoldQuantity, pd.Price "
+                + "FROM [SWP].[dbo].[ProductDetail] pd "
+                + "JOIN [SWP].[dbo].[Products] p ON pd.ProductID = p.ProductID "
+                + "WHERE pd.DateCreate BETWEEN ? AND ? "
+                + "ORDER BY pd.SoldQuantity DESC";
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -263,14 +309,14 @@ private String buildChartQuery(String filterType, String startDate, String endDa
 
             while (rs.next()) {
                 InventoryItem item = new InventoryItem(
-                    rs.getInt("productDetailId"),
-                    rs.getInt("ProductID"),
-                    rs.getString("ProductName"),
-                    rs.getString("Size"),
-                    rs.getString("Color"),
-                    0, // Quantity không cần cho top selling
-                    rs.getInt("SoldQuantity"),
-                    rs.getDouble("Price")
+                        rs.getInt("productDetailId"),
+                        rs.getInt("ProductID"),
+                        rs.getString("ProductName"),
+                        rs.getString("Size"),
+                        rs.getString("Color"),
+                        0, // Quantity không cần cho top selling
+                        rs.getInt("SoldQuantity"),
+                        rs.getDouble("Price")
                 );
                 topSellingList.add(item);
             }
@@ -280,42 +326,62 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         }
         return topSellingList;
     }
-    // Phương thức mới
+
     public Map<String, Object> getCategoryRevenueData(String startDate, String endDate) {
+        Logger logger = Logger.getLogger(DAOInventory.class.getName());
         Map<String, Object> categoryData = new HashMap<>();
         List<String> categories = new ArrayList<>();
         List<Double> categoryRevenue = new ArrayList<>();
-        String sql = "SELECT c.CategoryName, SUM(pd.SoldQuantity * pd.Price) as CategoryRevenue " +
-                     "FROM ProductDetail pd " +
-                     "JOIN Products p ON pd.ProductID = p.ProductID " +
-                     "JOIN Categories c ON p.CategoryID = c.CategoryID " +
-                     "WHERE pd.DateCreate BETWEEN ? AND ? " +
-                     "GROUP BY c.CategoryName";
 
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        // Chuẩn hóa ngày
+        startDate = validateDate(startDate, "2025-01-01");
+        endDate = validateDate(endDate, LocalDate.now().toString());
+
+        logger.info("Fetching category revenue data - Start: " + startDate + ", End: " + endDate);
+
+        // Đồng bộ với Orders thay vì ProductDetail
+        String sql = "SELECT c.CategoryName, SUM(o.TotalCost) AS CategoryRevenue "
+                + "FROM [SWP].[dbo].[OrderDetail] od "
+                + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID "
+                + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
+                + "JOIN [SWP].[dbo].[Products] p ON pd.ProductID = p.ProductID "
+                + "JOIN [SWP].[dbo].[Categories] c ON p.CategoryID = c.CategoryID "
+                + "WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ? "
+                + "GROUP BY c.CategoryName";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if (conn == null) {
+                logger.severe("Database connection is null!");
+                throw new SQLException("Database connection is null");
+            }
+
             pstmt.setString(1, startDate);
             pstmt.setString(2, endDate);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                categories.add(rs.getString("CategoryName"));
-                categoryRevenue.add(rs.getDouble("CategoryRevenue"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String categoryName = rs.getString("CategoryName");
+                    double revenue = rs.getDouble("CategoryRevenue");
+                    categories.add(categoryName);
+                    categoryRevenue.add(rs.wasNull() ? 0.0 : revenue); // Xử lý NULL
+                    logger.info("Category: " + categoryName + ", Revenue: " + revenue);
+                }
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching category revenue data: " + e.getMessage());
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error fetching category revenue data: " + e.getMessage(), e);
         }
+
         categoryData.put("categories", categories);
         categoryData.put("categoryRevenue", categoryRevenue);
+        logger.info("Returning category data - Categories: " + categories + ", Revenue: " + categoryRevenue);
         return categoryData;
     }
 
     public List<InventoryItem> getLowStockProducts(int threshold) {
         List<InventoryItem> products = new ArrayList<>();
-        String sql = "SELECT pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.Quantity " +
-                     "FROM ProductDetail pd " +
-                     "JOIN Products p ON pd.ProductID = p.ProductID " +
-                     "WHERE pd.Quantity < ? AND pd.ProductStatus = 1";
+        String sql = "SELECT pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.Quantity "
+                + "FROM ProductDetail pd "
+                + "JOIN Products p ON pd.ProductID = p.ProductID "
+                + "WHERE pd.Quantity < ? AND pd.ProductStatus = 1";
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -323,14 +389,14 @@ private String buildChartQuery(String filterType, String startDate, String endDa
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 InventoryItem item = new InventoryItem(
-                    rs.getInt("productDetailId"),
-                    rs.getInt("ProductID"),
-                    rs.getString("ProductName"),
-                    rs.getString("Size"),
-                    rs.getString("Color"),
-                    rs.getInt("Quantity"),
-                    0, // SoldQuantity không cần
-                    0.0 // Price không cần
+                        rs.getInt("productDetailId"),
+                        rs.getInt("ProductID"),
+                        rs.getString("ProductName"),
+                        rs.getString("Size"),
+                        rs.getString("Color"),
+                        rs.getInt("Quantity"),
+                        0, // SoldQuantity không cần
+                        0.0 // Price không cần
                 );
                 products.add(item);
             }
@@ -351,28 +417,28 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         switch (filterType) {
             case "year":
                 dateFormat = "YYYY";
-                sql = "SELECT YEAR(CreateDate) AS dateLabel, COUNT(AccountID) AS NewCustomers " +
-                      "FROM Accounts " +
-                      "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? " +
-                      "GROUP BY YEAR(CreateDate) " +
-                      "ORDER BY YEAR(CreateDate)";
+                sql = "SELECT YEAR(CreateDate) AS dateLabel, COUNT(AccountID) AS NewCustomers "
+                        + "FROM Accounts "
+                        + "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? "
+                        + "GROUP BY YEAR(CreateDate) "
+                        + "ORDER BY YEAR(CreateDate)";
                 break;
             case "month":
             default:
                 dateFormat = "YYYY MM";
-                sql = "SELECT CAST(YEAR(CreateDate) AS VARCHAR) + ' ' + DATENAME(month, CreateDate) AS dateLabel, COUNT(AccountID) AS NewCustomers " +
-                      "FROM Accounts " +
-                      "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? " +
-                      "GROUP BY YEAR(CreateDate), DATENAME(month, CreateDate), MONTH(CreateDate) " +
-                      "ORDER BY YEAR(CreateDate), MONTH(CreateDate)";
+                sql = "SELECT CAST(YEAR(CreateDate) AS VARCHAR) + ' ' + DATENAME(month, CreateDate) AS dateLabel, COUNT(AccountID) AS NewCustomers "
+                        + "FROM Accounts "
+                        + "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? "
+                        + "GROUP BY YEAR(CreateDate), DATENAME(month, CreateDate), MONTH(CreateDate) "
+                        + "ORDER BY YEAR(CreateDate), MONTH(CreateDate)";
                 break;
             case "day":
                 dateFormat = "YYYY-MM-DD";
-                sql = "SELECT CAST(CreateDate AS DATE) AS dateLabel, COUNT(AccountID) AS NewCustomers " +
-                      "FROM Accounts " +
-                      "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? " +
-                      "GROUP BY CAST(CreateDate AS DATE) " +
-                      "ORDER BY CAST(CreateDate AS DATE)";
+                sql = "SELECT CAST(CreateDate AS DATE) AS dateLabel, COUNT(AccountID) AS NewCustomers "
+                        + "FROM Accounts "
+                        + "WHERE Role = 'Customer' AND AccountStatus = 1 AND CreateDate BETWEEN ? AND ? "
+                        + "GROUP BY CAST(CreateDate AS DATE) "
+                        + "ORDER BY CAST(CreateDate AS DATE)";
                 break;
         }
 
@@ -398,11 +464,11 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         Map<String, Object> inventoryData = new HashMap<>();
         List<String> productNames = new ArrayList<>();
         List<Integer> stockQuantities = new ArrayList<>();
-        String sql = "SELECT p.ProductName, pd.Quantity " +
-                     "FROM ProductDetail pd " +
-                     "JOIN Products p ON pd.ProductID = p.ProductID " +
-                     "WHERE pd.ProductStatus = 1 " +
-                     "ORDER BY pd.Quantity DESC";
+        String sql = "SELECT p.ProductName, pd.Quantity "
+                + "FROM ProductDetail pd "
+                + "JOIN Products p ON pd.ProductID = p.ProductID "
+                + "WHERE pd.ProductStatus = 1 "
+                + "ORDER BY pd.Quantity DESC";
 
         try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
@@ -418,7 +484,7 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         inventoryData.put("stockQuantities", stockQuantities);
         return inventoryData;
     }
-    
+
     public static void main(String[] args) {
         // Khởi tạo DAOInventory
         DAOInventory dao = new DAOInventory();
@@ -433,7 +499,7 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         // 2. Kiểm tra getInventoryByDateRange
         System.out.println("\n=== Kiểm tra getInventoryByDateRange ===");
         String startDate = "2025-01-01";
-        String endDate = LocalDate.now().toString();
+        String endDate = "2025-03-27";
         List<InventoryItem> inventoryByDate = dao.getInventoryByDateRange(startDate, endDate);
         for (InventoryItem item : inventoryByDate) {
             System.out.println("Product: " + item.getProductName() + ", Quantity: " + item.getQuantity());
@@ -455,11 +521,6 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         int newQuantity = 15;
         dao.updateQuantity(productDetailId, newQuantity);
         System.out.println("Đã cập nhật Quantity cho productDetailId = " + productDetailId + " thành " + newQuantity);
-
-        // 6. Kiểm tra deleteItem (giả định productDetailId = 1, chỉ để test, không thực hiện thật)
-        // System.out.println("\n=== Kiểm tra deleteItem ===");
-        // dao.deleteItem(productDetailId);
-        // System.out.println("Đã xóa productDetailId = " + productDetailId);
 
         // 7. Kiểm tra getRevenueChartData
         System.out.println("\n=== Kiểm tra getRevenueChartData (month) ===");
@@ -507,5 +568,3 @@ private String buildChartQuery(String filterType, String startDate, String endDa
         System.out.println("Stock Quantities: " + inventoryData.get("stockQuantities"));
     }
 }
-
-

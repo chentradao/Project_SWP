@@ -2,11 +2,17 @@
 <%@ page import="java.util.Vector" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Display Blog</title>
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+        <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
+        <script src="https://cdn.tiny.cloud/1/6djxe59qtpyo7xk3et7sh1jayfb6gg079a4kiqdoa06oqut4/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
         <style>
             * {
                 box-sizing: border-box;
@@ -22,6 +28,7 @@
             }
 
             .blog-container {
+                padding-top: 80px;
                 max-width: 1200px;
                 margin: 0 auto;
                 background: white;
@@ -200,17 +207,48 @@
             #homePageButton {
                 background-color: #45a049;
             }
+            .container {
+                display: flex;
+                gap: 20px;
+                padding: 20px;
+            }
         </style>
     </head>
     <body>
+        <div class="container">
         <%      
             Vector<Blog> blogList = (Vector<Blog>) request.getAttribute("blog");
             for (Blog blog : blogList) {
         %>
 
+        <header class="header">
+                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="manager">Quản lý đơn hàng</a></li>
+                            <li><a href="index.jsp">Quản lý kho hàng</a></li>
+                            <li><a href="index.jsp">Quản lý nhân viên</a></li>
+                            <li><a href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header_content ml-auto">
 
+
+                    </div>
+                    <div class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tên tài khoản
+                        </a>
+                        <div id="collapsePages" class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="collapse-item" href="manager.html">Thông tin tài khoản</a>
+                            <a class="collapse-item" href="blank.html">Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
         <div class="blog-container">
-            <a href="Blog?service=listAllBlogs" id="homePageButton">Trang chủ</a>
+            <a href="BlogManager?service=listAllBlogs" id="homePageButton">Trang chủ</a>
             <!-- Header -->
             <div class="blog-header">
                 <h1 class="blog-title"><%=blog.getBlogTitle()%></h1>
@@ -232,12 +270,13 @@
                 </div>
 
                 <div class="action-buttons">
-                    <a href="Blog?service=updateBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-update">✏️ Cập nhật</a>
-                    <a href="Blog?service=deleteBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-delete">🗑️ Xóa bài</a>
+                    <a href="BlogManager?service=updateBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-update">✏️ Cập nhật</a>
+                    <a href="BlogManager?service=deleteBlog&blogID=<%=blog.getBlogID()%>" class="btn btn-delete">🗑️ Xóa bài</a>
                 </div>
             </div>
         </div>
         <%     }
         %>
+        </div>
     </body>
 </html>

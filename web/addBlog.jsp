@@ -4,9 +4,9 @@
     Author     : admin
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -107,10 +107,10 @@
                     <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
                     <nav class="main_nav">
                         <ul>
-                            <li><a href="index.jsp">Quản lý đơn hàng</a></li>
+                             <li><a href="manager">Quản lý đơn hàng</a></li>
                             <li><a href="index.jsp">Quản lý kho hàng</a></li>
                             <li><a href="index.jsp">Quản lý nhân viên</a></li>
-                            <li><a href="Blog?service=listAllBlogs">Quản lý bài đăng</a></li>
+                            <li><a href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
                         </ul>
                     </nav>
                     <div class="header_content ml-auto">
@@ -121,7 +121,7 @@
 
             <!-- Form thêm blog -->
             <div class="main-content">
-                <form action="Blog?service=add" method="post" enctype="multipart/form-data"> 
+                <form action="BlogManager" method="post" enctype="multipart/form-data"> 
                     <input type="hidden" name="service" value="add">
                     <a href="Blog?service=listAllBlogs" id="homePageButton">Trang chủ</a>
                     <div class="form-group">
@@ -164,8 +164,10 @@
         <script>
             tinymce.init({
                 selector: '#blogDescription',
+                language: 'vi',
                 plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-                toolbar_mode: 'floating'
+                toolbar_mode: 'floating',
+                entity_encoding: "raw"
             });
         </script>
 

@@ -24,28 +24,86 @@ import java.util.List;
  */
 public class DAOAccounts extends DBConnection {
 
-    public List<Accounts> getAllAccounts1(String query) {
-        List<Accounts> list = new ArrayList<>();
-        try {
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Accounts acc = new Accounts();
-                acc.setUserName(rs.getString("userName"));
-                acc.setFullName(rs.getString("fullName"));
-                acc.setPhone(rs.getString("phone"));
-                acc.setEmail(rs.getString("email"));
-                acc.setAddress(rs.getString("address"));
-                acc.setRole(rs.getString("role"));
-                acc.setAccountStatus(rs.getInt("accountStatus"));
-                list.add(acc);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean updateStaff(String username, String fullName, String phone, String email) {
+        String sql = "UPDATE Accounts SET FullName = ?, Phone = ?, Email = ? WHERE UserName = ?";
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, fullName);
+            st.setString(2, phone);
+            st.setString(3, email);
+            st.setString(4, username);
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating staff: " + e.getMessage());
+            return false;
         }
-        return list;
     }
+    
+public boolean deleteAccount(String username) {
+        String query = "DELETE FROM Accounts WHERE userName = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu xóa thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public List<Accounts> getAccountsByPage(int start, int pageSize, String query) {
+    List<Accounts> list = new ArrayList<>();
+    // Thêm ORDER BY mặc định nếu query không có
+    String sql = query.contains("ORDER BY") ? query : query + " ORDER BY userName";
+    sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // Dành cho SQL Server
+    
+    try {
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, start);
+        ps.setInt(2, pageSize);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Accounts acc = new Accounts();
+            acc.setUserName(rs.getString("userName"));
+            acc.setFullName(rs.getString("fullName"));
+            acc.setPhone(rs.getString("phone"));
+            acc.setEmail(rs.getString("email"));
+            acc.setAddress(rs.getString("address"));
+             acc.setCreateDate(rs.getDate("CreateDate"));
+            acc.setRole(rs.getString("role"));
+            acc.setAccountStatus(rs.getInt("accountStatus"));
+            list.add(acc);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
 
+public List<Accounts> getAllAccounts1(String query) {
+    List<Accounts> list = new ArrayList<>();
+    try {
+        PreparedStatement ps = conn.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Accounts acc = new Accounts();
+            acc.setUserName(rs.getString("userName"));
+            acc.setFullName(rs.getString("fullName"));
+            acc.setPhone(rs.getString("phone"));
+            acc.setEmail(rs.getString("email"));
+            acc.setAddress(rs.getString("address"));
+            acc.setCreateDate(rs.getDate("CreateDate"));
+            acc.setRole(rs.getString("role"));
+            acc.setAccountStatus(rs.getInt("accountStatus"));
+            list.add(acc);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+    
     // Phương thức mới để lấy dữ liệu theo trang
     public List<Accounts> getAccountsByPage(int start, int pageSize) {
         List<Accounts> list = new ArrayList<>();
@@ -318,7 +376,38 @@ public class DAOAccounts extends DBConnection {
         }
         return null;
     }
-
+    
+    public Accounts getAccountByAccountID(int AccountID) {
+        String sql = "Select * from Accounts where AccountID =?";
+        try {
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, AccountID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Accounts acc = new Accounts(rs.getInt("AccountID"),
+                        rs.getString("UserName"),
+                        rs.getString("Password"),
+                        rs.getString("FullName"),
+                        rs.getString("Gender"),
+                        rs.getString("Phone"),
+                        rs.getString("Email"),
+                        rs.getString("Address"),
+                        rs.getString("Role"),
+                        rs.getString("Image"),
+                        rs.getString("GoogleID"),
+                        rs.getDate("CreateDate"),
+                        rs.getInt("OrderQuality"),
+                        rs.getInt("TotalSpending"),
+                        rs.getInt("AccountStatus"));
+                return acc;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error cannot get account");
+            return null;
+        }
+        return null;
+    }
+    
     public Accounts getAccountByEmail(String Email) {
         String sql = "Select * from Accounts where Email =?";
         try {
@@ -428,66 +517,76 @@ public class DAOAccounts extends DBConnection {
         return count;
     }
 
-    public Vector<Accounts> getCustomers(int offset, int pageSize, String search, String sortBy, String sortOrder) {
-        Vector<Accounts> vector = new Vector<>();
-        String sql = "SELECT a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, a.Role, "
-                + "a.Image, a.GoogleID, a.CreateDate, a.AccountStatus, "
-                + "COUNT(o.OrderID) AS OrderQuality, COALESCE(SUM(o.TotalCost), 0) AS TotalSpending "
-                + "FROM Accounts a "
-                + "LEFT JOIN Orders o ON a.AccountID = o.CustomerID "
-                + "WHERE a.Role = 'Customer' ";
-        if (!search.isEmpty()) {
-            sql += "AND (a.FullName LIKE ? OR a.Phone LIKE ? OR a.Email LIKE ?) ";
-        }
-        sql += "GROUP BY a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, "
-                + "a.Role, a.Image, a.GoogleID, a.CreateDate, a.AccountStatus "
-                + "ORDER BY ";
-        if ("OrderQuality".equalsIgnoreCase(sortBy)) {
-            sql += "COUNT(o.OrderID) ";
-        } else if ("TotalSpending".equalsIgnoreCase(sortBy)) {
-            sql += "COALESCE(SUM(o.TotalCost), 0) ";
-        } else {
-            sql += "a.AccountID "; // Mặc định sort theo AccountID nếu sortBy không hợp lệ
-        }
-        sql += sortOrder.equalsIgnoreCase("desc") ? "DESC " : "ASC ";
-        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            int paramIndex = 1;
-            if (!search.isEmpty()) {
-                ps.setString(paramIndex++, "%" + search + "%");
-                ps.setString(paramIndex++, "%" + search + "%");
-                ps.setString(paramIndex++, "%" + search + "%");
-            }
-            ps.setInt(paramIndex++, offset);
-            ps.setInt(paramIndex++, pageSize);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int AccountID = rs.getInt("AccountID");
-                String UserName = rs.getString("UserName");
-                String Password = rs.getString("Password");
-                String FullName = rs.getString("FullName");
-                String Gender = rs.getString("Gender");
-                String Phone = rs.getString("Phone");
-                String Email = rs.getString("Email");
-                String Address = rs.getString("Address");
-                String Role = rs.getString("Role");
-                String Image = rs.getString("Image");
-                String GoogleID = rs.getString("GoogleID");
-                Date CreateDate = rs.getDate("CreateDate");
-                int AccountStatus = rs.getInt("AccountStatus");
-                int OrderQuality = rs.getInt("OrderQuality");
-                double TotalSpending = rs.getDouble("TotalSpending");
-
-                Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender,
-                        Phone, Email, Address, Role, Image, GoogleID, CreateDate, OrderQuality, (int) TotalSpending, AccountStatus);
-                vector.add(acc);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOAccounts.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return vector;
+    public Vector<Accounts> getCustomers(int offset, int pageSize, String search, String status, String sortBy, String sortOrder) {
+    Vector<Accounts> vector = new Vector<>();
+    String sql = "SELECT a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, a.Role, "
+            + "a.Image, a.GoogleID, a.CreateDate, a.AccountStatus, "
+            + "COUNT(o.OrderID) AS OrderQuality, COALESCE(SUM(o.TotalCost), 0) AS TotalSpending "
+            + "FROM Accounts a "
+            + "LEFT JOIN Orders o ON a.AccountID = o.CustomerID "
+            + "WHERE a.Role = 'Customer' ";
+    
+    if (!search.isEmpty()) {
+        sql += "AND (a.FullName LIKE ? OR a.Phone LIKE ? OR a.Email LIKE ?) ";
     }
+    if (status != null && !status.isEmpty()) {
+        sql += "AND a.AccountStatus = ? ";
+    }
+    
+    sql += "GROUP BY a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, "
+            + "a.Role, a.Image, a.GoogleID, a.CreateDate, a.AccountStatus "
+            + "ORDER BY ";
+    
+    if ("OrderQuality".equalsIgnoreCase(sortBy)) {
+        sql += "COUNT(o.OrderID) ";
+    } else if ("TotalSpending".equalsIgnoreCase(sortBy)) {
+        sql += "COALESCE(SUM(o.TotalCost), 0) ";
+    } else {
+        sql += "a.AccountID "; // Mặc định sort theo AccountID nếu sortBy không hợp lệ
+    }
+    sql += sortOrder.equalsIgnoreCase("desc") ? "DESC " : "ASC ";
+    sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        int paramIndex = 1;
+        if (!search.isEmpty()) {
+            ps.setString(paramIndex++, "%" + search + "%");
+            ps.setString(paramIndex++, "%" + search + "%");
+            ps.setString(paramIndex++, "%" + search + "%");
+        }
+        if (status != null && !status.isEmpty()) {
+            ps.setInt(paramIndex++, Integer.parseInt(status)); // Chuyển status thành int vì AccountStatus là int
+        }
+        ps.setInt(paramIndex++, offset);
+        ps.setInt(paramIndex++, pageSize);
+        
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int AccountID = rs.getInt("AccountID");
+            String UserName = rs.getString("UserName");
+            String Password = rs.getString("Password");
+            String FullName = rs.getString("FullName");
+            String Gender = rs.getString("Gender");
+            String Phone = rs.getString("Phone");
+            String Email = rs.getString("Email");
+            String Address = rs.getString("Address");
+            String Role = rs.getString("Role");
+            String Image = rs.getString("Image");
+            String GoogleID = rs.getString("GoogleID");
+            Date CreateDate = rs.getDate("CreateDate");
+            int AccountStatus = rs.getInt("AccountStatus");
+            int OrderQuality = rs.getInt("OrderQuality");
+            double TotalSpending = rs.getDouble("TotalSpending");
+
+            Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender,
+                    Phone, Email, Address, Role, Image, GoogleID, CreateDate, OrderQuality, (int) TotalSpending, AccountStatus);
+            vector.add(acc);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(DAOAccounts.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return vector;
+}
 
     public static void main(String[] args) {
         DAOAccounts acc = new DAOAccounts();

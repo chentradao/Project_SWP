@@ -66,30 +66,16 @@ public class ManagerController extends HttpServlet {
                 start_date = "2025-01-01";
             }
             
-            Vector<Order> waiting = dao.getOrderBy("SELECT TOP (1000) [OrderID]\n"
-                    + "      ,[CustomerID]\n"
-                    + "      ,[CustomerName]\n"
-                    + "      ,[OrderDate]\n"
-                    + "      ,[ShippedDate]\n"
-                    + "      ,[TotalCost]\n"
-                    + "      ,[Phone]\n"
-                    + "      ,[ShipAddress]\n"
-                    + "      ,[ShipCity]\n"
-                    + "      ,[OrderStatus]\n"
-                    + "  FROM [SWP].[dbo].[Orders]\n"
+            Vector<Order> waiting = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], " +
+        "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], " +
+        "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] " +
+        "FROM [SWP].[dbo].[Orders] "
                     + " WHERE [OrderStatus] = 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
             
-            Vector<Order> cancelled = dao.getOrderBy("SELECT TOP (1000) [OrderID]\n"
-                    + "      ,[CustomerID]\n"
-                    + "      ,[CustomerName]\n"
-                    + "      ,[OrderDate]\n"
-                    + "      ,[ShippedDate]\n"
-                    + "      ,[TotalCost]\n"
-                    + "      ,[Phone]\n"
-                    + "      ,[ShipAddress]\n"
-                    + "      ,[ShipCity]\n"
-                    + "      ,[OrderStatus]\n"
-                    + "  FROM [SWP].[dbo].[Orders]\n"
+            Vector<Order> cancelled = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], " +
+        "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], " +
+        "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] " +
+        "FROM [SWP].[dbo].[Orders] "
                     + " WHERE [OrderStatus] = 4 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
             
             int OrderCount = dao.getNumberOrder("SELECT COUNT(*) AS OrderCount FROM [SWP].[dbo].[Orders] WHERE OrderStatus = 1  AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");

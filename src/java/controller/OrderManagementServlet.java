@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,37 +13,58 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.DAOOrder;
 
 @WebServlet(name = "OrderManagementServlet", urlPatterns = {"/OrderManagementServlet"})
 public class OrderManagementServlet extends HttpServlet {
+    
+    private DAOOrder dao = new DAOOrder();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            DAOOrder dao = new DAOOrder();
-            String action = request.getParameter("action");
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            if ("confirm".equals(action)) {
-                dao.updateStatus(orderId, 3); // 1 = Đang giao
-            } else if ("cancel".equals(action)) {
-                dao.updateStatus(orderId, 4); // 4 = Đã hủy
+        String action = request.getParameter("action"); // Đổi từ "action" thành "service" để đồng bộ với JSP
+        
+        if ("order".equals(action)) {
+            // Lấy tham số sắp xếp từ request
+            String sortBy = request.getParameter("sortBy");
+            String sortOrder = request.getParameter("sortOrder");
+
+            // Xây dựng câu truy vấn SQL dựa trên tham số sắp xếp
+            String sql = "SELECT * FROM Orders WHERE OrderCode IS NOT NULL";
+            if (sortBy != null && sortOrder != null) {
+                if (sortBy.equals("orderID")) {
+                    sql += " ORDER BY OrderID " + (sortOrder.equals("asc") ? "ASC" : "DESC");
+                } else if (sortBy.equals("shippedDate")) {
+                    // Xử lý null trong shippedDate: null sẽ xếp cuối khi ASC, đầu khi DESC
+                    sql += " ORDER BY ISNULL(ShippedDate, '9999-12-31') " + (sortOrder.equals("asc") ? "ASC" : "DESC");
+                }
             }
-            request.getRequestDispatcher("manager").forward(request, response);
+
+            // Lấy danh sách đơn hàng từ DAO
+            Vector<Order> vectorOrder = dao.getOrders(sql);
+            System.out.println("SQL Query: " + sql); // Debug câu truy vấn
+            System.out.println("Number of orders: " + (vectorOrder != null ? vectorOrder.size() : "null")); // Debug số lượng đơn hàng
+
+            // Gửi danh sách đơn hàng tới JSP
+            request.setAttribute("vectorOrder", vectorOrder);
+            request.getRequestDispatcher("orderManagement.jsp").forward(request, response);
+        } else if ("confirm".equals(action)) {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            dao.updateStatus(orderId, 3); // 3 = Đã giao thành công (dựa trên JSP trước)
+            response.sendRedirect("manager"); // Chuyển hướng thay vì forward để tránh gửi lại dữ liệu
+        } else if ("cancel".equals(action)) {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            dao.updateStatus(orderId, 4); // 4 = Đã hủy
+            response.sendRedirect("manager"); // Chuyển hướng thay vì forward
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid service parameter");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,17 +72,11 @@ public class OrderManagementServlet extends HttpServlet {
             processRequest(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(OrderManagementServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -68,17 +84,13 @@ public class OrderManagementServlet extends HttpServlet {
             processRequest(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(OrderManagementServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet for managing orders with sorting and status updates";
+    }
 }
