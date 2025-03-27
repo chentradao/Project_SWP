@@ -5,6 +5,7 @@
 package model;
 
 import entity.ProductDetail;
+import entity.ProductResponse;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,10 +28,10 @@ public class DAOProductDetail extends DBConnection {
     public ProductDetail getProductDetailById(int productId) {
         String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, pd.Quantity, pd.SoldQuantity, "
                 + "p.Date, p.Description, p.ProductStatus, "
-                + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image "
+                + "pd.ID, pd.Size, pd.Color, pd.Price, pd.Image, pd.Details "
                 + "FROM Products p "
                 + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID "
-                + "WHERE p.ProductID = ?";
+                + "WHERE pd.ID = ?";
         try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, productId);
             try (ResultSet rs = st.executeQuery()) {
@@ -48,7 +49,8 @@ public class DAOProductDetail extends DBConnection {
                             rs.getString("Size"),
                             rs.getString("Color"),
                             rs.getInt("Price"),
-                            rs.getString("Image")
+                            rs.getString("Image"),
+                            rs.getString("Details")
                     );
                 }
             }
@@ -90,7 +92,7 @@ public class DAOProductDetail extends DBConnection {
         String sql = "UPDATE [dbo].[ProductDetail]\n"
                 + "   SET [ProductID] = ?,[IdentityCode] = ?,[Size] = ?,[Color] = ?\n"
                 + "      ,[Quantity] = ?,[SoldQuantity] = ?,[DateCreate] = ?\n"
-                + "      ,[ImportPrice] = ?,[Price] = ?,[Image] = ?,[ProductStatus] = ?\n"
+                + "      ,[ImportPrice] = ?,[Price] = ?,[Image] = ?,[ProductStatus] = ?,[Details] = ?\n"
                 + " WHERE [ID] = ?";
         try {
             PreparedStatement pre = conn.prepareStatement(sql);
@@ -105,7 +107,8 @@ public class DAOProductDetail extends DBConnection {
             pre.setObject(9, pro.getPrice());
             pre.setObject(10, pro.getImage());
             pre.setObject(11, pro.getProductStatus());
-            pre.setObject(12, pro.getID());
+            pre.setObject(12, pro.getDetails());
+            pre.setObject(13, pro.getID());
             n = pre.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DAOProductDetail.class.getName()).log(Level.SEVERE, null, ex);
@@ -176,10 +179,113 @@ public class DAOProductDetail extends DBConnection {
 
         return productDetail; // Trả về đối tượng ProductDetail (hoặc null nếu không tìm thấy)
     }
-    public static void main(String[] args) {
-        DAOProductDetail dao = new DAOProductDetail();
-        ProductDetail pro =dao.getProDetailbyID(10);
-        System.out.println(pro);
+    public List<ProductResponse> getProductsWithFilter(int page, int pageSize,
+            Integer minPrice, Integer maxPrice, String size, String color,
+            Integer categoryId, String orderByPrice, String orderBySize) {
+
+        List<ProductResponse> productList = new ArrayList<>();
+
+        // Tính toán offset dựa trên page và pageSize
+        int offset = (page - 1) * pageSize;
+
+        // Base SQL query
+        StringBuilder sql = new StringBuilder("SELECT p.ProductID, p.ProductName, p.CategoryID, pd.Quantity, pd.SoldQuantity,\n"
+                + "p.Date, p.Description, p.ProductStatus, pd.ID, \n"
+                + "pd.Size, pd.Color, pd.Price, pd.Image\n"
+                + "FROM Products p\n"
+                + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID\n"
+                + "WHERE 1=1 "); // Default condition to simplify adding further conditions
+
+        // Adding conditions dynamically based on the filters
+        if (minPrice != null) {
+            sql.append("AND pd.Price >= ? ");
+        }
+        if (maxPrice != null) {
+            sql.append("AND pd.Price <= ? ");
+        }
+        if (size != null && !size.isEmpty()) {
+            sql.append("AND pd.Size = ? ");
+        }
+        if (color != null && !color.isEmpty()) {
+            sql.append("AND pd.Color = ? ");
+        }
+
+        // Lọc sản phẩm dựa vào categoryId và danh mục con
+        if (categoryId != null) {
+            sql.append("AND (p.CategoryID IN (SELECT CategoryID FROM Categories WHERE RootCategoryID = ?) ");
+            sql.append("OR p.CategoryID = ?) ");
+        }
+
+        // Sorting conditions
+        // Always add ORDER BY to support OFFSET-FETCH
+        if (orderByPrice != null && orderByPrice.equals("asc")) {
+            sql.append("ORDER BY pd.Price ASC ");
+        } else if (orderByPrice != null && orderByPrice.equals("desc")) {
+            sql.append("ORDER BY pd.Price DESC ");
+        } else if (orderBySize != null && orderBySize.equals("asc")) {
+            sql.append("ORDER BY pd.sizeInt ASC ");
+        } else if (orderBySize != null && orderBySize.equals("desc")) {
+            sql.append("ORDER BY pd.sizeInt DESC ");
+        } else {
+            // Default ordering by ProductID if no sorting specified
+            sql.append("ORDER BY p.ProductID ASC ");
+        }
+
+        // Adding offset and fetch for pagination (SQL Server)
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int index = 1;
+
+            // Set the parameters dynamically based on the filters
+            if (minPrice != null) {
+                ps.setInt(index++, minPrice);
+            }
+            if (maxPrice != null) {
+                ps.setInt(index++, maxPrice);
+            }
+            if (size != null && !size.isEmpty()) {
+                ps.setString(index++, size);
+            }
+            if (color != null && !color.isEmpty()) {
+                ps.setString(index++, color);
+            }
+
+            // If categoryId is provided, set it for filtering the child categories
+            if (categoryId != null) {
+                ps.setInt(index++, categoryId); // Set categoryId for filtering subcategories
+                ps.setInt(index++, categoryId); // For filtering the category itself
+            }
+
+            // Set pagination parameters
+            ps.setInt(index++, offset); // OFFSET (skip rows)
+            ps.setInt(index++, pageSize);  // FETCH NEXT (fetch rows)
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int productId = rs.getInt("ProductID");
+                    String productName = rs.getString("ProductName");
+                    int categoryIdRes = rs.getInt("CategoryID");
+                    int quantity = rs.getInt("Quantity");
+                    int soldQuantity = rs.getInt("SoldQuantity");
+                    java.sql.Date date = rs.getDate("Date");
+                    String description = rs.getString("Description");
+                    String productStatus = rs.getString("ProductStatus");
+                    String productImage = rs.getString("Image");
+                    int ID = rs.getInt("ID");
+                    String Size = rs.getString("Size");
+                    String Color = rs.getString("Color");
+                    int Price = rs.getInt("Price");
+                    String Image = rs.getString("Image");
+
+                    ProductResponse pd = new ProductResponse(productId, productName, Price, ID, quantity, Size, Color, Image);
+                    productList.add(pd);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error while fetching products with filters", e);
+        }
+        return productList;
     }
 
 }

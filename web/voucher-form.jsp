@@ -37,13 +37,13 @@
 
                     <form action="VoucherController" method="post">
                         <% if (isEdit) { %>
-                        <input type="hidden" name="id" value="<%= voucher.getId() %>">
+                        <input type="hidden" name="id" value="<%= voucher.getVoucherID() %>">
                         <% } %>
 
                         <div class="form-group">
                             <label>Tên Voucher</label>
                             <input type="text" name="name" class="form-control" 
-                                   value="<%= isEdit ? voucher.getName() : "" %>" required>
+                                   value="<%= isEdit ? voucher.getVoucherName() : "" %>" required>
                         </div>
 
                         <div class="row">
@@ -54,6 +54,13 @@
                                            value="<%= isEdit ? voucher.getDiscount() : "" %>" min="1" max="100" required>
                                 </div>
                             </div>
+                                           <div class="col-md-6">
+                                               <div class="form-group">
+                                                   <label>Giảm giá tối đa</label>
+                                                   <input type="number" name="maxDiscount" class="form-control" 
+                                                          value="<%= isEdit ? voucher.getMaxDiscount() : "" %>"  required>
+                                               </div>
+                                           </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Số lượng</label>

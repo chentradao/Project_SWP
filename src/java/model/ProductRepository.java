@@ -245,5 +245,23 @@ public class ProductRepository {
         }
         return sizes;
     }
+    public List<String> getDistinctColors() {
+        List<String> colors = new ArrayList<>();
+        String sql = "SELECT DISTINCT [Color] FROM [SWP].[dbo].[ProductDetail]";
+
+        try (Connection conn = DBContext.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            // Lặp qua kết quả và thêm màu vào danh sách
+            while (rs.next()) {
+                colors.add(rs.getString("Color"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return colors;
+    }
 
 }

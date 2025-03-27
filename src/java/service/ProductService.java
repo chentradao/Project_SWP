@@ -20,4 +20,7 @@ public class ProductService {
     public List<String> getAvailableSizes() {
         return productRepository.findAvailableSizesByCategory();
     }
+     public List<String> getAvailableColors() {
+        return productRepository.getDistinctColors();
+    }
 }

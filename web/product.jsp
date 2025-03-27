@@ -308,6 +308,154 @@
             .admin-reply {
                 animation: fadeIn 0.5s ease;
             }
+            .product{
+                    padding-top: 26px;
+            }
+            .related-products{
+                margin-top: 20px;
+            }
+            .related-products h2{
+                font-size: 24px;
+                text-align: center;
+                
+            }
+
+            .related-products {
+    margin-top: 20px;
+}
+
+.related-products h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.product-list {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-related {
+    width: 220px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.product-related:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product_image_related img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.product_content_related {
+    padding: 10px;
+    text-align: center;
+}
+
+.product_name_related a {
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.product_price_related {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.product_details_related span {
+    font-size: 12px;
+    color: #555;
+}
+
+.no-related-products {
+    color: #777;
+    font-style: italic;
+    text-align: center;
+}
+.image-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.image-row img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover hiệu ứng bật lên */
+.image-row img:hover {
+    transform: translateY(-10px); /* Nhảy lên 10px */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Đổ bóng đậm hơn */
+}
+.reviews_container {
+    max-height: 200px; /* Giới hạn chiều cao */
+    overflow: hidden; /* Ẩn nội dung dư */
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+
+.reviews_container {
+    max-height: 200px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+
+/* Căn giữa nút và làm đẹp */
+.toggle_wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Style cho nút "Xem thêm" */
+#toggleButton {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: black;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#toggleButton:hover {
+    color: #45a049;
+}
+
+/* Style cho mũi tên */
+.arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Khi mở ra, mũi tên xoay lên */
+#toggleButton.open .arrow {
+    transform: rotate(180deg);
+}
+
+
 
             @keyframes fadeIn {
                 from {
@@ -321,6 +469,7 @@
             }
 
         </style>
+        
         <div class="super_container">
 
 
@@ -374,7 +523,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row product_row">
+                    <div class="row product_row" style="padding-top: 10px;">
 
                         <!-- Product Image -->
                         <div class="col-lg-7">
@@ -393,7 +542,7 @@
                                 <!-- Dynamic product name -->
                                 <div class="product_name">${productDetail.productName}</div>
                                 <!-- Dynamic product price (format as needed) -->
-                                <div class="product_price">${productDetail.price} VND</div>
+                                <div class="product_price"><fmt:formatNumber value="${productDetail.price}" type="number" groupingUsed="true" /> VND</div>
                                 <div class="rating rating_4" data-rating="4">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -404,7 +553,7 @@
                                 <!-- In Stock -->
                                 <div class="in_stock_container">
                                     <div class="in_stock in_stock_true"></div>
-                                    <span>in stock</span>
+                                    <span>${productDetail.quantity < soldQuantity?"Hết hàng":"Còn hàng"}</span>
                                 </div>
                                 <!-- Dynamic product description -->
                                 <div class="product_text">
@@ -412,12 +561,13 @@
                                 </div>
                                 <!-- Display product details such as size and color -->
                                 <div class="product_details">
-                                    <p><strong>Size:</strong> ${productDetail.size}</p>
-                                    <p><strong>Color:</strong> ${productDetail.color}</p>
+                                    <p><strong>Kích cỡ:</strong> ${productDetail.size}</p>
+                                    <p><strong>Màu sắc:</strong> ${empty productDetail.color ? 'Trong suốt' : productDetail.color}</p>
+                                    <p><strong>Xuất xứ:</strong> Mỹ</p>
                                 </div>
                                 <!-- Product Quantity -->
                                 <div class="product_quantity_container">
-                                    <span>Quantity</span>
+                                    <span>Số lượng</span>
                                     <div class="product_quantity clearfix">
                                         <input id="quantity_input" type="text" pattern="[0-9]*" value="1">
                                         <div class="quantity_buttons">
@@ -432,10 +582,10 @@
                                 </div>
                                 <!-- Link to add the product to cart -->
                                 <div class="button cart_button">
-                                    <a id="buttonAddtoCart" href="CartURL?service=add2cart&id=${productDetail.productId}">add to cart</a>
+                                    <a id="buttonAddtoCart" href="CartURL?service=add2cart&id=${productDetail.productId}">thêm vào giỏ</a>
                                 </div>
                                 <div class="button cart_button">
-                                    <a href="FeedbackDisplayController?productId=${productDetail.productId}">View Feedback</a>
+                                    <a href="FeedbackDisplayController?productId=${productDetail.productId}">Xem đánh giá</a>
                                 </div>
                             </div>
                         </div>
@@ -446,108 +596,171 @@
 
                         </div>
                     </div>
+                    <div class="image-row" style="padding-top: 20px">
+                        <img src="https://image.hsv-tech.io/1920x640/tfs/common/ff78c7b4-edef-43eb-a5a4-b9757d45a271.webp" style="cursor: pointer;"onclick="window.location.href='/Project_SWP/product-list?categoryId=1'" alt="Ảnh 1">
+                        <img src="https://image.hsv-tech.io/1920x640/tfs/common/e1ef9046-69fb-41ae-9444-c48598958b7a.webp" style="cursor: pointer;"onclick="window.location.href='/Project_SWP/product-list?categoryId=1'" alt="Ảnh 2">
+                        <img src="https://image.hsv-tech.io/1920x640/tfs/common/926385f9-6987-46c3-bc92-441611fffb50.webp" style="cursor: pointer;"onclick="window.location.href='/Project_SWP/product-list?categoryId=1'" alt="Ảnh 3">
+                    </div>
 
+                    <div class="row">
+                        <div class="col">
+<div class="reviews">
+    <div class="reviews_title">GIỚI THIỆU</div>
+    <div class="reviews_container" id="reviewContent">
+        ${productDetail.getDetails()}
+    </div>
+    <div class="toggle_wrapper">
+        <button id="toggleButton" onclick="toggleContent()">
+            Xem thêm
+        </button>
+    </div>
+</div>
+
+
+                        </div>
+                    </div>
                     <!-- Reviews -->
 
-			<div class="row">
-				<div class="col">
-					<div class="reviews">
-						<div class="reviews_title">reviews</div>
-						<div class="reviews_container">
-							<ul>
-								<!-- Review -->
-								<li class=" review clearfix">
-									<div class="review_image"><img src="images/review_1.jpg" alt=""></div>
-									<div class="review_content">
-										<div class="review_name"><a href="#">Maria Smith</a></div>
-										<div class="review_date">Nov 29, 2017</div>
-										<div class="rating rating_4 review_rating" data-rating="4">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="review_text">
-											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
-										</div>
-									</div>
-								</li>
-								<!-- Review -->
-								<li class=" review clearfix">
-									<div class="review_image"><img src="images/review_2.jpg" alt=""></div>
-									<div class="review_content">
-										<div class="review_name"><a href="#">Maria Smith</a></div>
-										<div class="review_date">Nov 29, 2017</div>
-										<div class="rating rating_4 review_rating" data-rating="4">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="review_text">
-											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
-										</div>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="reviews">
+                                <div class="reviews_title">Đánh giá</div>
+                                <div class="reviews_container">
+                                    <ul>
+                                        <!-- Review -->
+                                        <li class=" review clearfix">
+                                            <div class="review_image"><img src="images/review_1.jpg" alt=""></div>
+                                            <div class="review_content">
+                                                <div class="review_name"><a href="#">Maria Smith</a></div>
+                                                <div class="review_date">Nov 29, 2017</div>
+                                                <div class="rating rating_4 review_rating" data-rating="4">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="review_text">
+                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!-- Review -->
+                                        <li class=" review clearfix">
+                                            <div class="review_image"><img src="images/review_2.jpg" alt=""></div>
+                                            <div class="review_content">
+                                                <div class="review_name"><a href="#">Maria Smith</a></div>
+                                                <div class="review_date">Nov 29, 2017</div>
+                                                <div class="rating rating_4 review_rating" data-rating="4">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="review_text">
+                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis quam ipsum. Pellentesque consequat tellus non tortor tempus, id egestas elit iaculis. Proin eu dui porta, pretium metus vitae, pharetra odio. Sed ac mi commodo, pellentesque erat eget, accumsan justo. Etiam sed placerat felis. Proin non rutrum ligula. </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-			<!-- Leave a Review -->
+                    <!-- Leave a Review -->
 
-			<div class="row">
-				<div class="col">
-					<div class="review_form_container">
-						<div class="review_form_title">leave a review</div>
-						<div class="review_form_content">
-							<form action="#" id="review_form" class="review_form">
-								<div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
-									<input type="text" class="review_form_input" placeholder="Name" required="required">
-									<input type="email" class="review_form_input" placeholder="E-mail" required="required">
-									<input type="text" class="review_form_input" placeholder="Subject">
-								</div>
-								<textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
-								<button type="submit" class="review_form_button">leave a review</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>		
-	</div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="review_form_container">
+                                <div class="review_form_title">Để lại 1 đánh giá</div>
+                                <div class="review_form_content">
+                                    <form action="#" id="review_form" class="review_form">
+                                        <div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
+                                            <input type="text" class="review_form_input" placeholder="Name" required="required">
+                                            <input type="email" class="review_form_input" placeholder="E-mail" required="required">
+                                            <input type="text" class="review_form_input" placeholder="Subject">
+                                        </div>
+                                        <textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
+                                        <button type="submit" class="review_form_button">leave a review</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>	
+<div class="related-products">
+    <h2>Sản phẩm liên quan</h2>
+    <div class="product-list">
+        <c:forEach items="${requestScope.relatedProducts}" var="related">
+            <div class="product-related">
+                <div class="product_image_related">
+                    <img src="${related.getProductImage() != null ? related.getProductImage() : 'images/default-product.jpg'}" alt="${related.getProductName()}">
+                </div>
 
-	<!-- Newsletter -->
+                <div class="product_content_related">
+                    <div class="product_name_related">
+                        <a href="<%= request.getContextPath() %>/ProductDetail?productId=${related.getProductId()}">
+                            ${related.getProductName()}
+                        </a>
+                    </div>
 
-	<div class="newsletter">
-		<div class="newsletter_content">
-			<div class="newsletter_image" style="background-image:url(images/newsletter.jpg)"></div>
-			<div class="container">
-				<div class="row">
-					<div class="col">
-						<div class="section_title_container text-center">
-							<div class="section_subtitle">only the best</div>
-							<div class="section_title">subscribe for a 20% discount</div>
-						</div>
-					</div>
-				</div>
-				<div class="row newsletter_container">
-					<div class="col-lg-10 offset-lg-1">
-						<div class="newsletter_form_container">
-							<form action="#">
-								<input type="email" class="newsletter_input" required="required" placeholder="E-mail here">
-								<button type="submit" class="newsletter_button">subscribe</button>
-							</form>
-						</div>
-						<div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <div class="product_price_related">
+                        <fmt:formatNumber value="${related.getProductPrice()}" type="number" groupingUsed="true" /> VND
+                    </div>
+
+                    <div class="product_details_related">
+                        <c:if test="${not empty related.productSize}">
+                            <span>Kích cỡ: ${related.productSize}</span>
+                        </c:if>
+
+                        <c:if test="${not empty related.productColor}">
+                            <c:if test="${not empty related.productSize}">
+                                | 
+                            </c:if>
+                            <span>Màu sắc: ${related.productColor}</span>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+    </div>
+</div>
+            </div>
+                         
+
+
+
+                                
+            <!-- Newsletter -->
+
+            <div class="newsletter">
+                <div class="newsletter_content">
+                    <div class="newsletter_image" style="background-image:url(images/newsletter.jpg)"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="section_title_container text-center">
+                                    <div class="section_subtitle">only the best</div>
+                                    <div class="section_title">subscribe for a 20% discount</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row newsletter_container">
+                            <div class="col-lg-10 offset-lg-1">
+                                <div class="newsletter_form_container">
+                                    <form action="#">
+                                        <input type="email" class="newsletter_input" required="required" placeholder="E-mail here">
+                                        <button type="submit" class="newsletter_button">subscribe</button>
+                                    </form>
+                                </div>
+                                <div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <!-- Footer -->
@@ -588,37 +801,49 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
         <script>
 
-           document.addEventListener("DOMContentLoaded", function () {
-    const quantityInput = document.getElementById("quantity_input");
-    const addToCartButton = document.getElementById("buttonAddtoCart");
+            document.addEventListener("DOMContentLoaded", function () {
+                const quantityInput = document.getElementById("quantity_input");
+                const addToCartButton = document.getElementById("buttonAddtoCart");
 
-    if (quantityInput && addToCartButton) {
-        function updateHref() {
-            let currentHref = addToCartButton.getAttribute("href") || "#";
-            let qty = parseInt(quantityInput.value) || 1; // M?c ??nh là 1 n?u không có giá tr? nh?p
+                if (quantityInput && addToCartButton) {
+                    function updateHref() {
+                        let currentHref = addToCartButton.getAttribute("href") || "#";
+                        let qty = parseInt(quantityInput.value) || 1; // M?c ??nh là 1 n?u không có giá tr? nh?p
 
-            // Chuy?n ??i URL ?? d? dàng thao tác tham s?
-            let url = new URL(currentHref, window.location.origin);
+                        // Chuy?n ??i URL ?? d? dàng thao tác tham s?
+                        let url = new URL(currentHref, window.location.origin);
 
-            // ??m b?o ???ng d?n có ch?a /Project_SWP/
-            if (!url.pathname.includes("/Project_SWP/")) {
-                url.pathname = "/Project_SWP" + url.pathname;
-            }
+                        // ??m b?o ???ng d?n có ch?a /Project_SWP/
+                        if (!url.pathname.includes("/Project_SWP/")) {
+                            url.pathname = "/Project_SWP" + url.pathname;
+                        }
 
-            // C?p nh?t giá tr? qty
-            url.searchParams.set("qty", qty);
+                        // C?p nh?t giá tr? qty
+                        url.searchParams.set("qty", qty);
 
-            addToCartButton.setAttribute("href", url.toString());
-        }
+                        addToCartButton.setAttribute("href", url.toString());
+                    }
 
-        quantityInput.addEventListener("input", updateHref);
-        addToCartButton.addEventListener("click", function () {
-            updateHref(); // ??m b?o href ???c c?p nh?t ngay tr??c khi click
-        });
+                    quantityInput.addEventListener("input", updateHref);
+                    addToCartButton.addEventListener("click", function () {
+                        updateHref(); // ??m b?o href ???c c?p nh?t ngay tr??c khi click
+                    });
+                }
+            });
+function toggleContent() {
+    const content = document.getElementById('reviewContent');
+    const button = document.getElementById('toggleButton');
+
+    if (content.style.maxHeight === "200px") {
+        content.style.maxHeight = content.scrollHeight + "px";
+        button.innerHTML = 'Thu gọn';
+        button.classList.add('open');
+    } else {
+        content.style.maxHeight = "200px";
+        button.innerHTML = 'Xem thêm';
+        button.classList.remove('open');
     }
-});
-
-
+}
 
 
         </script>
@@ -630,51 +855,51 @@
         <script src="js/product_custom.js"></script>
         <script>
 
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        const stars = document.querySelectorAll(".rating-stars .star");
-                                        const ratingDisplay = document.getElementById("selected-rating");
-                                        let selectedRating = 0;
+            document.addEventListener("DOMContentLoaded", function () {
+                const stars = document.querySelectorAll(".rating-stars .star");
+                const ratingDisplay = document.getElementById("selected-rating");
+                let selectedRating = 0;
 
-                                        stars.forEach(star => {
-                                            star.addEventListener("mouseover", function () {
-                                                highlightStars(this.dataset.value);
-                                            });
+                stars.forEach(star => {
+                    star.addEventListener("mouseover", function () {
+                        highlightStars(this.dataset.value);
+                    });
 
-                                            star.addEventListener("mouseout", function () {
-                                                highlightStars(selectedRating);
-                                            });
+                    star.addEventListener("mouseout", function () {
+                        highlightStars(selectedRating);
+                    });
 
-                                            star.addEventListener("click", function () {
-                                                selectedRating = this.dataset.value;
-                                                ratingDisplay.textContent = selectedRating;
-                                            });
-                                        });
+                    star.addEventListener("click", function () {
+                        selectedRating = this.dataset.value;
+                        ratingDisplay.textContent = selectedRating;
+                    });
+                });
 
-                                        function highlightStars(rating) {
-                                            stars.forEach(star => {
-                                                if (star.dataset.value <= rating) {
-                                                    star.classList.add("hovered");
-                                                } else {
-                                                    star.classList.remove("hovered");
-                                                }
-                                            });
-                                        }
-                                    });
+                function highlightStars(rating) {
+                    stars.forEach(star => {
+                        if (star.dataset.value <= rating) {
+                            star.classList.add("hovered");
+                        } else {
+                            star.classList.remove("hovered");
+                        }
+                    });
+                }
+            });
 
 
-                                    function previewImage(event) {
-                                        const input = event.target;
-                                        const preview = document.getElementById('imagePreview');
+            function previewImage(event) {
+                const input = event.target;
+                const preview = document.getElementById('imagePreview');
 
-                                        if (input.files && input.files[0]) {
-                                            const reader = new FileReader();
-                                            reader.onload = function (e) {
-                                                preview.src = e.target.result;
-                                                preview.classList.remove('d-none');
-                                            };
-                                            reader.readAsDataURL(input.files[0]);
-                                        }
-                                    }
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
 
 
         </script>
