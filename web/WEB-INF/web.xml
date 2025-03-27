@@ -52,6 +52,10 @@
         <servlet-name>FeedbackDisplayController</servlet-name>
         <servlet-class>controller.FeedbackDisplayController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchProductServlet</servlet-name>
+        <servlet-class>controller.SearchProductServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
     <servlet-mapping>
@@ -101,6 +105,10 @@
     <servlet-mapping>
         <servlet-name>FeedbackDisplayController</servlet-name>
         <url-pattern>/FeedbackDisplayController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductServlet</servlet-name>
+        <url-pattern>/SearchProductServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

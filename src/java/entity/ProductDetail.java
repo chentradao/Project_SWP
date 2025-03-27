@@ -29,9 +29,38 @@ public class ProductDetail {
     private int Price;
     private String image;
     private Product product;
+    private String Details;
+
+    public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, int productStatus, int ID, String size, String Color, int Price, String image, String Details) {
+        this.productId = productId;
+        this.productName = productName;
+        this.categoryId = categoryId;
+        this.quantity = quantity;
+        this.soldQuantity = soldQuantity;
+        this.date = date;
+        this.description = description;
+        this.productStatus = productStatus;
+        this.ID = ID;
+        this.size = size;
+        this.Color = Color;
+        this.Price = Price;
+        this.image = image;
+        this.Details = Details;
+    }
+
+    
+
+    public String getDetails() {
+        return Details;
+    }
+
+    public void setDetails(String Details) {
+        this.Details = Details;
+    }
 
     public ProductDetail() {
     }
+    
 
     public ProductDetail(int productId, String productName, int categoryId, int quantity, int soldQuantity, Date date, String description, int productStatus, int ID, String size, String Color, int Price, String image) {
         this.productId = productId;
@@ -48,7 +77,7 @@ public class ProductDetail {
         this.Price = Price;
         this.image = image;
     }
-
+    
     public ProductDetail(int ID,Product Product, String size, String color, int price, String image) {
         this.ID = ID;
         this.product = Product;

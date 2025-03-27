@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import model.DAOProducts;
 import model.DAOWishlist;
 
@@ -73,36 +74,38 @@ public class AddToWishlistServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    int productId = Integer.parseInt(request.getParameter("productId"));
 
-        HttpSession session = request.getSession();
-        Accounts accounts = (Accounts) session.getAttribute("acc");
+    HttpSession session = request.getSession();
+    Accounts accounts = (Accounts) session.getAttribute("acc");
 
-        if (accounts == null) {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        }
-
-        DAOProducts dAOProducts = new DAOProducts();
-        Product product = dAOProducts.getProductById(productId);
-
-        if (product == null) {
-            response.getWriter().write("Product not found.");
-            return;
-        }
-
-        Wishlist wishlist = new Wishlist(accounts, product);
-        DAOWishlist daoWishlist = new DAOWishlist();
-        boolean success = daoWishlist.addToWishlist(wishlist);
-
-        if (success) {
-            response.getWriter().write("Product added to wishlist successfully!");
-        } else {
-            response.getWriter().write("Error adding product to wishlist.");
-        }
-        response.sendRedirect(request.getContextPath() + "/getwishlist");
+    if (accounts == null) {
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
+
+    DAOProducts dAOProducts = new DAOProducts();
+    Product product = dAOProducts.getProductById(productId);
+
+    if (product == null) {
+        response.getWriter().write("Product not found.");
+        return;
+    }
+
+    Wishlist wishlist = new Wishlist(accounts, product);
+    DAOWishlist daoWishlist = new DAOWishlist();
+    boolean success = daoWishlist.addToWishlist(wishlist);
+
+    if (success) {
+        // Cập nhật lại session wishlist
+        List<Wishlist> wishlistItems = daoWishlist.getWishlistByAccount(accounts.getAccountID());
+        session.setAttribute("wishlistItems", wishlistItems);
+    }
+
+    response.sendRedirect(request.getContextPath() + "/getwishlist");
+}
+
 
     /**
      * Returns a short description of the servlet.

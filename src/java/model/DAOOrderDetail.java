@@ -70,18 +70,38 @@ public class DAOOrderDetail extends DBConnection{
         return ord;
     }
     
+    // Hàm getTotalCost để tính tổng giá nhập hoặc chi phí khác dựa trên truy vấn SQL
+    public int getTotalCost(String sql) {
+        int totalCost = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalCost = rs.getInt(1); // Lấy giá trị đầu tiên từ kết quả (TotalImportCost)
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOOrderDetail.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DAOOrderDetail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return totalCost;
+    }
+    
     public static void main(String[] args) {
         DAOOrderDetail dao = new DAOOrderDetail();
-        List<Map<String, Object>> productSales = new ArrayList<>();
-        String sql = "SELECT TOP (5) od.ProductID, p.ProductName, SUM(od.Quantity) AS TotalSold " +
-                         "FROM OrderDetail od " +
-                         "JOIN Products p ON od.ProductID = p.ProductID " +
-                         "JOIN Orders o ON od.OrderID = o.OrderID " +
-                         "WHERE o.OrderDate BETWEEN '2025-01-01' AND '2025-02-01' " +
-                         "GROUP BY od.ProductID, p.ProductName " +
-                         "ORDER BY TotalSold DESC";
+        String importCostSql = "SELECT SUM(od.Quantity * p.ImportPrice) AS TotalImportCost " +
+                      "FROM [SWP].[dbo].[OrderDetail] od " +
+                      "JOIN [SWP].[dbo].[ProductDetail] p ON od.ProductID = p.ProductID " +
+                      "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID ";
         
-        
-        System.out.println(productSales);
+        int total = dao.getTotalCost(importCostSql);
+        System.out.println(total);
     }
 }

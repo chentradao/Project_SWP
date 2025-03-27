@@ -8,7 +8,6 @@
     List<Category> categories = categoryRepository.getAllCategories();
 %>
 
-
 <header class="header">
     <div class="header_inner d-flex flex-row align-items-center justify-content-start">
         <div class="logo"><a href="${pageContext.request.contextPath}/ProductListServlet">Estée Lauder</a></div>
@@ -24,8 +23,8 @@
         </nav>
         <div class="header_content ml-auto">
             <div class="search header_search">
-                <form action="#">
-                    <input type="search" class="search_input" required="required">
+                <form action="${pageContext.request.contextPath}/search.jsp" method="GET" id="searchForm">
+                    <input type="search" name="keyword" class="search_input" placeholder="Tìm kiếm sản phẩm..." required="required" onclick="redirectToSearch()">
                     <button type="submit" id="search_button" class="search_button"><img src="images/magnifying-glass.svg" alt=""></button>
                 </form>
             </div>
@@ -36,18 +35,20 @@
                         <img src="images/shopping-bag.svg" alt="">
                         <div class="cart_num_container">
                             <div class="cart_num_inner">
-                                <div class="cart_num">${sessionScope.cartQuantiry!= null ? sessionScope.cartQuantiry : 0}</div>
+                                <div class="cart_num">0</div>
                             </div>
                         </div>
                     </div>
                 </a>
                 <!-- Star -->
-                <a href="wishlist.jsp">
+                <a href="${pageContext.request.contextPath}/getwishlist">
                     <div class="star">
                         <img src="images/star.svg" alt="">
                         <div class="star_num_container">
                             <div class="star_num_inner">
-                                <div class="star_num">0</div>
+                                <div class="star_num">
+                                    <c:out value="${wishlistItems != null ? wishlistItems.size() : 0}"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -64,22 +65,20 @@
                             <c:otherwise>
                                 <a href="profile">
                                     <div class="avatar">
-                                    <img src="images/avatar.svg" />
+                                        <img src="images/avatar.svg" />
                                     </div>
                                 </a>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                        
                         <a href="login.jsp">
                             <div class="avatar">
-                            <img src="images/avatar.svg"/>
+                                <img src="images/avatar.svg"/>
                             </div>
                         </a>
                     </c:otherwise>
                 </c:choose>
-
             </div>
         </div>
 
@@ -91,5 +90,8 @@
     </div>
 </header>
 
-
-
+<script>
+    function redirectToSearch() {
+        document.getElementById("searchForm").submit();
+    }
+</script>

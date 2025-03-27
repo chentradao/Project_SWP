@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 
-@WebServlet(name = "RevenueServlet", urlPatterns = {"/admin"})
+@WebServlet(name = "AdminController", urlPatterns = {"/admin"})
 public class AdminController extends HttpServlet {
 
     private DAOInventory inventoryDAO;

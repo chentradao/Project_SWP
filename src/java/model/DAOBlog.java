@@ -140,7 +140,7 @@ public class DAOBlog extends DBConnection {
                 int BlogCategoryID = rs.getInt("BlogCategoryID");
                 int BlogAuthor = rs.getInt("BlogAuthor");
                 Date Date = rs.getDate("Date");
-                String Image = rs.getString("Image");
+                String Image = null;
                 int BlogStatus = rs.getInt("BlogStatus");
                 Blog blog = new Blog(BlogID, BlogTitle, BlogDescription, BlogThumbnail, BlogCategoryID, BlogAuthor, Date, Image, BlogStatus);
                 vector.add(blog);
@@ -154,18 +154,12 @@ public class DAOBlog extends DBConnection {
     
     public static void main(String[] args) { 
         DAOBlog dao = new DAOBlog();
-        Blog blog = new Blog(34, 
-            "Updated Title", 
-            "Updated Description", 
-            null, 
-            2, 
-            2, 
-            null, 
-            null, 
-            2);
-        int n = dao.updateBlog(blog);
-        System.out.println(n);
-        Vector<Blog> blogList = dao.getAllBlogs("select * from Blog");
+       
+        int blogCount = 0;
+            String sql = "select * from Blog b where b.BlogAuthor = "+1;
+            
+            Vector<Blog> blogList = dao.getAllBlogs(sql);
+            blogCount=blogList.size();
         System.out.println(blogList.size());
 
     } 

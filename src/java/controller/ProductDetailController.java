@@ -5,8 +5,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import model.DAOProductDetail;
 import entity.ProductDetail;
+import model.DAOProductDetail;
+import entity.ProductResponse;
 
 public class ProductDetailController extends HttpServlet {
 
@@ -21,6 +22,9 @@ public class ProductDetailController extends HttpServlet {
             if (proDetail != null) {
                 // Set the product detail in the request scope
                 request.setAttribute("productDetail", proDetail);
+                var relatedProducts = daoProductDetail.getProductsWithFilter(1, 5, null, null, null, null, null, null, null);
+
+                request.setAttribute("relatedProducts", relatedProducts);
                 // Forward to the JSP page that displays the product details
                 request.getRequestDispatcher("product.jsp").forward(request, response);
             } else {
@@ -37,3 +41,4 @@ public class ProductDetailController extends HttpServlet {
         doGet(request, response);
     }
 }
+

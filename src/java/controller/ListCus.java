@@ -11,25 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Vector;
 import model.DAOAccounts;
 
-/**
- *
- * @author Admin
- */
 @WebServlet(name = "ListCus", urlPatterns = {"/ListCus"})
 public class ListCus extends HttpServlet {
 
-    // Số bản ghi mỗi trang
     private static final int PAGE_SIZE = 4;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -43,11 +29,15 @@ public class ListCus extends HttpServlet {
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "OrderQuality";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "asc";
 
-            // Lấy tổng số bản ghi khách hàng
-            int totalRecords = dao.getCount(search);
+            // Xây dựng câu query đếm tổng số bản ghi
+            String countQuery = "SELECT COUNT(*) FROM Accounts WHERE Role = 'Customer'";
+            if (!search.isEmpty()) {
+                countQuery += " AND (FullName LIKE '%" + search + "%' OR Phone LIKE '%" + search + "%' OR Email LIKE '%" + search + "%')";
+            }
+            int totalRecords = dao.getCount(countQuery);
 
-            // Tính tổng số trang
-            int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
+            // Tính tổng số trang, đảm bảo ít nhất là 1 ngay cả khi không có bản ghi
+            int totalPages = (int) Math.ceil((double) Math.max(totalRecords, 1) / PAGE_SIZE);
 
             // Lấy trang hiện tại từ tham số request, mặc định là 1 nếu không có
             String pageStr = request.getParameter("page");
@@ -57,7 +47,7 @@ public class ListCus extends HttpServlet {
             if (currentPage < 1) {
                 currentPage = 1;
             }
-            if (currentPage > totalPages && totalPages > 0) {
+            if (currentPage > totalPages) {
                 currentPage = totalPages;
             }
 
@@ -65,21 +55,21 @@ public class ListCus extends HttpServlet {
             int offset = (currentPage - 1) * PAGE_SIZE;
 
             // Lấy danh sách khách hàng cho trang hiện tại
-            Vector<Accounts> list = dao.getCustomers(offset, PAGE_SIZE, search, sortBy, sortOrder);
+            Vector<Accounts> list = dao.getCustomers(offset, PAGE_SIZE, search, null, sortBy, sortOrder);
 
             // Đặt các thuộc tính vào session
             request.getSession().setAttribute("data", list);
             request.getSession().setAttribute("totalPages", totalPages);
             request.getSession().setAttribute("currentPage", currentPage);
-            request.getSession().setAttribute("search", search); // Lưu giá trị search để giữ trên JSP
-            request.getSession().setAttribute("sortBy", sortBy); // Lưu giá trị sortBy
-            request.getSession().setAttribute("sortOrder", sortOrder); // Lưu giá trị sortOrder
+            request.getSession().setAttribute("search", search);
+            request.getSession().setAttribute("sortBy", sortBy);
+            request.getSession().setAttribute("sortOrder", sortOrder);
 
             // Chuyển hướng đến JSP
             request.getRequestDispatcher("list_cus.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request: " + e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred: " + e.getMessage());
         }
     }
 

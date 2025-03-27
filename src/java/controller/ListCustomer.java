@@ -1,92 +1,92 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controller;
 
 import entity.Accounts;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Vector;
 import model.DAOAccounts;
 
-/**
- *
- * @author Admin
- */
-@WebServlet(name="ListCustomer", urlPatterns={"/ListCustomer"})
+@WebServlet(name = "ListCustomer", urlPatterns = {"/ListCustomer"})
 public class ListCustomer extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ListCustomer</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ListCustomer at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         DAOAccounts dao = new DAOAccounts();
-        List<Accounts> cus = dao.getAllAccounts("SELECT * FROM Accounts WHERE Role = 'customer'");
+        
+        // Số bản ghi trên mỗi trang
+        int pageSize = 5;
 
-        request.setAttribute("CusData", cus);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("customer_list.jsp");
-        dispatcher.forward(request, response);
-    } 
+        // Lấy số trang hiện tại từ tham số (mặc định là 1 nếu không có tham số)
+        String pageStr = request.getParameter("page");
+        int currentPage = (pageStr == null || pageStr.isEmpty()) ? 1 : Integer.parseInt(pageStr);
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+        // Lấy tham số tìm kiếm và trạng thái
+        String search = request.getParameter("search");
+        if (search == null) {
+            search = "";
+        }
+        String status = request.getParameter("status");
+
+        // Lấy tham số sắp xếp
+        String sortBy = request.getParameter("sortBy");
+        String sortOrder = request.getParameter("sortOrder");
+        if (sortBy == null || sortBy.isEmpty()) {
+            sortBy = "AccountID"; // Mặc định sắp xếp theo AccountID
+        }
+        if (sortOrder == null || sortOrder.isEmpty()) {
+            sortOrder = "asc"; // Mặc định sắp xếp tăng dần
+        }
+
+        // Tính toán vị trí bắt đầu của bản ghi
+        int start = (currentPage - 1) * pageSize;
+
+        // Xây dựng câu query cơ bản
+        String baseQuery = "SELECT * FROM Accounts WHERE Role = 'Customer'";
+        if (!search.isEmpty()) {
+            baseQuery += " AND (FullName LIKE '%" + search + "%' OR Phone LIKE '%" + search + "%' OR Email LIKE '%" + search + "%')";
+        }
+        if (status != null && !status.isEmpty()) {
+            baseQuery += " AND AccountStatus = " + status;
+        }
+        // Thêm sắp xếp
+        baseQuery += " ORDER BY " + sortBy + " " + sortOrder;
+
+        // Lấy tổng số bản ghi
+        List<Accounts> allCustomers = dao.getAllAccounts1(baseQuery); // Giả sử DAO có method này tương tự ListStaff
+        int totalRecords = allCustomers.size();
+
+        // Tính tổng số trang
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+        // Lấy danh sách bản ghi cho trang hiện tại
+        Vector<Accounts> customersForPage = dao.getCustomers(start, pageSize, search, status, sortBy, sortOrder);
+
+        // Truyền dữ liệu sang JSP
+        request.setAttribute("CusData", customersForPage);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("sortBy", sortBy);
+        request.setAttribute("sortOrder", sortOrder);
+        request.setAttribute("search", search); // Giữ giá trị search trên giao diện
+        request.setAttribute("status", status); // Giữ giá trị status trên giao diện
+
+        request.getRequestDispatcher("customer_list.jsp").forward(request, response);
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response); // Chuyển hướng POST về GET để xử lý tìm kiếm
+    }
+
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Customer List Servlet with Pagination";
+    }
 }

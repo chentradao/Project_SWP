@@ -48,7 +48,7 @@
         <div class="super_container">
             <%@include file="header.jsp" %>
 
-            <div class="main-content">
+            <div class="main-content mt-5">
                 <h1>Danh sách Voucher</h1>
 
                 <div class="button-container mb-3">
@@ -64,6 +64,7 @@
                                 <th>ID</th>
                                 <th>Tên Voucher</th>
                                 <th>Giảm giá (%)</th>
+                                <th>Giảm giá tối đa</th>
                                 <th>Số lượng</th>
                                 <th>Ngày bắt đầu</th>
                                 <th>Ngày kết thúc</th>
@@ -74,9 +75,10 @@
                         <tbody>
                             <% for (Voucher voucher : (List<Voucher>) request.getAttribute("vouchers")) { %>
                             <tr>
-                                <td><%= voucher.getId() %></td>
-                                <td><%= voucher.getName() %></td>
+                                <td><%= voucher.getVoucherID() %></td>
+                                <td><%= voucher.getVoucherName() %></td>
                                 <td><%= voucher.getDiscount() %>%</td>
+                                 <td><%= voucher.getMaxDiscount() %></td>
                                 <td><%= voucher.getQuantity() %></td>
                                 <td>
                                     <%= voucher.getStartDate() != null ? 
@@ -90,11 +92,11 @@
                                     <%= voucher.getStatus() == 1 ? "Hoạt động" : "Không hoạt động" %>
                                 </td>
                                 <td>
-                                    <a href="VoucherController?action=edit&id=<%= voucher.getId() %>" 
+                                    <a href="VoucherController?action=edit&id=<%= voucher.getVoucherID() %>" 
                                        class="btn btn-sm btn-warning">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a href="VoucherController?action=delete&id=<%= voucher.getId() %>" 
+                                    <a href="VoucherController?action=delete&id=<%= voucher.getVoucherID() %>" 
                                        class="btn btn-sm btn-danger"
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
                                         <i class="fa fa-trash"></i>

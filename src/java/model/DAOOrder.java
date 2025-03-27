@@ -27,31 +27,7 @@ import java.util.Map;
  * @author nguye
  */
 public class DAOOrder extends DBConnection {
-    public Vector<Order> getOrderBy(String sql) {
-        Vector<Order> vector = new Vector<>();
-        try {
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-
-            while (rs.next()) {
-                int CustomerID = rs.getInt("CustomerID"),
-                        TotalCost = rs.getInt("TotalCost"),
-                        OrderStatus = rs.getInt("OrderStatus");
-                String CustomerName = rs.getString("CustomerName"),
-                        ShipAddress = rs.getString("ShipAddress"),
-                        Phone = rs.getString("Phone");
-                int Discount =rs.getInt("Discount");
-                Date OrderDate = rs.getDate("OrderDate"),
-                        ShippedDate = rs.getDate("ShippedDate");
-                Order order = new Order(CustomerID, CustomerName, OrderDate, ShippedDate, OrderStatus, TotalCost, sql, Phone, ShipAddress, Discount,Phone, Phone, Phone, CustomerID);
-                vector.add(order);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return vector;
-    }
+    
     public int getRevunue(String sql){
         int revenue = 0;
         try {
@@ -84,7 +60,7 @@ public class DAOOrder extends DBConnection {
 
     // Xây dựng SQL query với điều kiện lọc
     StringBuilder sql = new StringBuilder(
-        "SELECT o.OrderID, p.ProductName, od.Quantity, od.UnitPrice, o.OrderStatus " +
+        "SELECT o.OrderID,o.orderCode, p.ProductName, od.Quantity, od.UnitPrice, o.OrderStatus,o.ShipAddress " +
         "FROM OrderDetail od " +
         "JOIN Orders o ON od.OrderID = o.OrderID " +
         "JOIN Products p ON od.ProductID = p.ProductID " +
@@ -120,8 +96,10 @@ public class DAOOrder extends DBConnection {
                 // Lưu thông tin đơn hàng vào danh sách
                 Map<String, Object> row = new HashMap<>();
                 row.put("OrderID", orderId);
+                row.put("orderCode", rs.getString("orderCode"));
                 row.put("ProductName", rs.getString("ProductName"));
                 row.put("Quantity", quantity);
+                row.put("ShipAddress", rs.getString("ShipAddress"));
                 row.put("Price", price);
                 row.put("OrderStatus", rs.getInt("OrderStatus"));
 
@@ -311,6 +289,7 @@ public class DAOOrder extends DBConnection {
             while (rs.next()) {
                 int OrderID = rs.getInt("OrderID");
                 int CustomerID = rs.getInt("CustomerID");
+                String OrderCode = rs.getString("OrderCode");
                 String CustomerName = rs.getString("CustomerName");
                 Date OrderDate = rs.getDate("OrderDate");
                 Date ShippedDate = rs.getDate("ShippedDate");
@@ -324,7 +303,7 @@ public class DAOOrder extends DBConnection {
                 String Note = rs.getString("Note");
                 String PaymentMethod = rs.getString("PaymentMethod");
                 int OrderStatus = rs.getInt("OrderStatus");
-                Order or = new Order(OrderID, CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus);
+                Order or = new Order(OrderID,OrderCode, CustomerID, CustomerName, OrderDate, ShippedDate, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, CancelNotification, Note, PaymentMethod, OrderStatus);
                 vector.add(or);
             }
         } catch (SQLException ex) {
@@ -346,7 +325,6 @@ public class DAOOrder extends DBConnection {
                     rs.getInt("OrderStatus"),
                     rs.getString("CustomerName"),
                     rs.getString("ShipAddress"),
-                    rs.getString("ShipCity"),
                     rs.getString("Phone"),
                     rs.getDate("OrderDate"),
                     rs.getDate("ShippedDate"));
@@ -384,12 +362,11 @@ public class DAOOrder extends DBConnection {
     }
     public static void main(String[] args) {
         DAOOrder dao = new DAOOrder();
-        int n = 0;
-//        n = dao.insertOrder(new Order(null, "hank", null, null, 0, 0, "hanh", "0123", "hà nội", 1, null, null, "COD", 1));
-        n = dao.deleteOrder(8);
-        if(n >0){
-            System.out.println("inserted");
-        }
+        Vector<Order> vectorOrder = dao.getOrders("select * from Orders where OrderCode IS NOT NULL");
+                for(Order order : vectorOrder){
+                    System.out.println(order.getOrderCode());
+                    }
+                }
     }
-}
+
 
