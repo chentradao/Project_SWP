@@ -26,8 +26,23 @@
         <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
         <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/main_styles.css">
+        <link rel="stylesheet" type="text/css" href="styles/orderHistory.css">
         <link rel="stylesheet" type="text/css" href="styles/responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <style>
+            .popup_clear{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    display: none;
+    justify-content: center;
+    padding-left: 5%;
+    align-items: center;
+    text-align: center;
+    z-index: 100;
+}
+        </style>
     </head>
     <body class="bg-gray-50 min-h-screen">
         <%
@@ -55,8 +70,7 @@
 
         <!-- Home -->
         <!-- Main Content -->
-        <div class="">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mt-20">
                 <!-- Table Header -->
                 <div class="p-5 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800">Danh sách Flash Sale</h2>
@@ -182,16 +196,16 @@
                                 <td class="px-4 py-3 text-gray-800"><%=formatter.format(flashSale.getQuantity())%></td>
                                 <td class="px-4 py-3 text-gray-800">
                                     <% if (flashSale.getStatus() == 1) { %>
-                                    <span class="text-green-800">Hoạt động</span>
+                                    <span class="text-green-800">Đang Diễn Ra</span>
                                     <% } else if(flashSale.getStatus() == 2) { %>
                                     <span class="text-red-800">Sắp Diễn Ra</span>
                                     <% }  else if(flashSale.getStatus() == 0) { %>
-                                    <span class="text-red-800">Không Hoạt Động</span>
+                                    <span class="text-red-800">Đã Diễn Ra</span>
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-3 w-[60px]">
                                     <div class="flex justify-center space-x-2">
-                                        <a href="FlashSaleURL?action=edit&id=<%=flashSale.getSaleID()%>" 
+                                        <a href="FlashSaleURL?service=updateFlash&fid=<%=flashSale.getSaleID()%>" 
                                            class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-full p-1 transition duration-300"
                                            title="Cập nhật Flash Sale">
                                             <i class="fas fa-edit"></i>
@@ -213,7 +227,7 @@
                 <!-- Popup xóa Flash Sale -->
                 <div class="popup_clear" style="display: none;">
                     <form action="FlashSaleURL" method="post">
-                        <input type="hidden" name="service" value="deleteFlashSale" />
+                        <input type="hidden" name="service" value="deleteFlash" />
                         <div class="popup_content">
                             <h3 class="text-red-600">Bạn muốn xóa Flash Sale này?</h3>
                             <input type="hidden" name="saleID" id="popupSaleID">
@@ -276,7 +290,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- JavaScript -->
         <script>
@@ -319,5 +332,11 @@
             document.getElementById("sortQuantityHeader").addEventListener("click", () => handleSort("quantity"));
             document.getElementById("sortStatusHeader").addEventListener("click", () => handleSort("Status"));
         </script>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="styles/bootstrap4/popper.js"></script>
+        <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
     </body>
 </html>

@@ -21,6 +21,9 @@ public class FlashSale {
     private int Status;
     private ProductDetail productDetail;
 
+    public FlashSale() {
+    }
+
     public FlashSale(int ProductID, Date StartTime, Date EndTime, int Discount, int Quantity, int TimeFrame, int Status) {
         this.ProductID = ProductID;
         this.StartTime = StartTime;

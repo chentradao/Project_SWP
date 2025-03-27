@@ -145,8 +145,8 @@
                     for (ProductDetail product : pro) {
                         String productName = product.getProductName() != null ? product.getProductName().replace("'", "\\'") : "Unknown";
                         String image = product.getImage() != null ? product.getImage().replace("'", "\\'") : "P_images/default.png";
-                        String color = product.getColor() != null ? product.getColor().replace("'", "\\'") : "N/A";
-                        String size = product.getSize() != null ? product.getSize().replace("'", "\\'") : "N/A";
+                        String color = product.getColor() != null ? product.getColor().replace("'", "\\'") : "";
+                        String size = product.getSize() != null ? product.getSize().replace("'", "\\'") : "";
                         String id = String.valueOf(product.getID());
             %>
                 {

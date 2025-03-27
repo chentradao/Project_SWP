@@ -42,6 +42,63 @@ public class FlashSaleController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
 
+            if (service.equals("updateFlash")) {
+                String submit = request.getParameter("submit");
+                if (submit == null) {
+                    int fid = Integer.parseInt(request.getParameter("fid"));
+                    FlashSale fls = dao.findFSByID(fid);
+                    ProductDetail pro = da.getProDetailbyID(fls.getProductID());
+                    fls.setProductDetail(pro);
+                    request.setAttribute("flash", fls);
+                    request.getRequestDispatcher("/jsp/UpdateFlashSale.jsp").forward(request, response);
+                } else {
+                    int SaleID = Integer.parseInt(request.getParameter("SaleID"));
+                    int ProductID = Integer.parseInt(request.getParameter("productID"));
+                    String date = request.getParameter("date");
+                    String startTime = null, endTime = null;
+                    int timeFrame = 0;
+                    if (request.getParameter("timeFrame") != null) {
+                        timeFrame = Integer.parseInt(request.getParameter("timeFrame"));
+                    }
+                    if (timeFrame == 1) {
+                        startTime = date + " 10:00:00";
+                        endTime = date + " 13:00:00";
+                    }
+                    if (timeFrame == 2) {
+                        startTime = date + " 13:00:00";
+                        endTime = date + " 16:00:00";
+                    }
+                    if (timeFrame == 3) {
+                        startTime = date + " 16:00:00";
+                        endTime = date + " 19:00:00";
+                    }
+                    if (timeFrame == 4) {
+                        startTime = date + " 19:00:00";
+                        endTime = date + " 22:00:00";
+                    }
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date startDate = null, endDate = null;
+                    try {
+                        startDate = dateFormat.parse(startTime);
+                        endDate = dateFormat.parse(endTime);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(FlashSaleController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    int TimeFrame = Integer.parseInt(request.getParameter("timeFrame"));
+                    int Discount = Integer.parseInt(request.getParameter("discount"));
+                    int Quality = Integer.parseInt(request.getParameter("flashQuantity"));
+                    FlashSale flash = new FlashSale(SaleID, ProductID, startDate, endDate, Discount, Quality, TimeFrame, 2);
+                    int n = dao.updateFlashSale(flash);
+                    response.sendRedirect("FlashSaleURL?service=flashSaleList");
+                }
+            }
+            
+            if(service.equals("deleteFlash")){
+                int saleID = Integer.parseInt(request.getParameter("saleID"));
+                int n = dao.DeleteFlashSale(saleID);
+                response.sendRedirect("FlashSaleURL?service=flashSaleList");
+            }
+
             if (service.equals("createFlash")) {
                 String submit = request.getParameter("submit");
                 if (submit == null) {
@@ -73,10 +130,10 @@ public class FlashSaleController extends HttpServlet {
                         endTime = date + " 22:00:00";
                     }
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Date startDate =null, endDate = null;
+                    Date startDate = null, endDate = null;
                     try {
-                         startDate = dateFormat.parse(startTime);
-                         endDate = dateFormat.parse(endTime);
+                        startDate = dateFormat.parse(startTime);
+                        endDate = dateFormat.parse(endTime);
                     } catch (ParseException ex) {
                         Logger.getLogger(FlashSaleController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -135,7 +192,7 @@ public class FlashSaleController extends HttpServlet {
                 // Lấy dữ liệu theo trang
                 Vector<FlashSale> vector = dao.getFlashSale("SELECT * FROM FlashSale "
                         + orderByClause + " OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY");
-                for(FlashSale flash : vector){
+                for (FlashSale flash : vector) {
                     ProductDetail pro = da.getProDetailbyID(flash.getProductID());
                     flash.setProductDetail(pro);
                 }

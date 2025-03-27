@@ -65,6 +65,18 @@ public class DAOFlashSale extends DBConnection {
         }
         return n;
     }
+    
+    public int DeleteFlashSale(int fid){
+        int n = 0;
+        String sql = "Delete From FlashSale Where SaleID = "+fid;
+        try {
+            Statement state = conn.createStatement();
+            n = state.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOFlashSale.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
 
     public FlashSale findFSByID(int fid) {
         FlashSale fs = null;
