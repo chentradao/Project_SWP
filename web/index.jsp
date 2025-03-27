@@ -84,8 +84,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="section_title_container text-center">
-                                <div class="section_subtitle">only the best</div>
-                                <div class="section_title">promo prices</div>
+                                <div class="section_subtitle">BÁN CHẠY NHẤT</div>
+                                <div class="section_title">GIÁ KHUYẾN MÃI</div>
                             </div>
                         </div>
                     </div>
@@ -95,26 +95,26 @@
                         <div class="col-lg-4 promo_col">
                             <div class="promo_item">
                                 <div class="promo_image">
-                                    <img src="images/promo_1.jpg" alt="">
+                                    <img src="images/lipstick.jpg" alt="">
                                     <div class="promo_content promo_content_1">
-                                        <div class="promo_title">-30% off</div>
-                                        <div class="promo_subtitle">on all bags</div>
+                                        <div class="promo_title">Giảm 30%</div>
+                                        <div class="promo_subtitle">Cho son môi</div>
                                     </div>
                                 </div>
-                                <div class="promo_link"><a href="#">Shop Now</a></div>
+                                <div class="promo_link"><a href="categories.jsp">Mua ngay</a></div>
                             </div>
                         </div>
                         <!-- Promo Item -->
                         <div class="col-lg-4 promo_col">
                             <div class="promo_item">
                                 <div class="promo_image">
-                                    <img src="images/promo_2.jpg" alt="">
+                                    <img src="images/serum.jpg" alt="">
                                     <div class="promo_content promo_content_2">
-                                        <div class="promo_title">-30% off</div>
-                                        <div class="promo_subtitle">coats & jackets</div>
+                                        <div class="promo_title">Giảm 30%</div>
+                                        <div class="promo_subtitle">Cho Serum</div>
                                     </div>
                                 </div>
-                                <div class="promo_link"><a href="product.html">Shop Now</a></div>
+                                <div class="promo_link"><a href="categories.jsp">Mua ngay</a></div>
                             </div>
                         </div>
 
@@ -122,13 +122,13 @@
                         <div class="col-lg-4 promo_col">
                             <div class="promo_item">
                                 <div class="promo_image">
-                                    <img src="images/promo_3.jpg" alt="">
+                                    <img src="images/perfume.jpg" alt="">
                                     <div class="promo_content promo_content_3">
                                         <div class="promo_title">-25% off</div>
-                                        <div class="promo_subtitle">on Sandals</div>
+                                        <div class="promo_subtitle">Cho nước hoa</div>
                                     </div>
                                 </div>
-                                <div class="promo_link"><a href="product.html">Shop Now</a></div>
+                                <div class="promo_link"><a href="product.html">Mua ngay</a></div>
                             </div>
                         </div>
 
@@ -143,8 +143,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="section_title_container text-center">
-                                <div class="section_subtitle">only the best</div>
-                                <div class="section_title">new arrivals</div>
+                                <div class="section_subtitle">CHỈ CÓ NHỮNG GÌ TỐT NHẤT</div>
+                                <div class="section_title">Mặt hàng mới nhất</div>
                             </div>
                         </div>
                     </div>
@@ -171,9 +171,13 @@
                                                 <fmt:formatNumber value="${product.productPrice}" pattern="#,##0" /> VND
 
                                             </div>
-                                            <div class="product_details" >
-                                                <span>Size: ${product.productSize}</span> |
-                                                <span>Màu sắc: ${product.productColor}</span>
+                                            <div class="product_details">
+                                                <c:if test="${not empty product.productSize}">
+                                                    <span>Size: ${product.productSize}</span>
+                                                </c:if>
+                                                <c:if test="${not empty product.productColor}">
+                                                    <span>Màu sắc: ${product.productColor}</span>
+                                                </c:if>
                                             </div>
                                         </div>
                                         <div class="product_options">
@@ -182,7 +186,12 @@
                                                     <img src="images/shopping-bag-white.svg" alt="">
                                                 </div>
                                             </a>
-                                            <div class="product_fav product_option">+</div>
+                                            <form action="${pageContext.request.contextPath}/addToWishlist" method="post">
+                                                <input type="hidden" name="productId" value="${product.productId}" />
+                                                <button type="submit" class="product_fav product_option" style="border: none; background: none; cursor: pointer;">
+                                                    +
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -196,24 +205,24 @@
 
             <div class="extra clearfix">
                 <div class="extra_promo extra_promo_1">
-                    <div class="extra_promo_image" style="background-image:url(images/extra_1.jpg)"></div>
+                    <div class="extra_promo_image" style="background-image:url(images/serum2.jpg)"></div>
                     <div class="extra_1_content d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="extra_1_price">30%<span>off</span></div>
-                        <div class="extra_1_title">On all shoes</div>
-                        <div class="extra_1_text">*Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra.</div>
-                        <div class="button extra_1_button"><a href="checkout.html">check out</a></div>
+                        <div class="extra_1_price">30%<span>Giảm sâu</span></div>
+                        <div class="extra_1_title">Dành cho dòng serum mới nhất</div>
+                        <div class="extra_1_text">Chăm sóc làn da hoàn hảo mỗi ngày. Hãy trải nghiệm sự thay đổi ngay từ lần đầu sử dụng!</div>
+                        <div class="button extra_1_button"><a href="card.jsp">Mua ngay</a></div>
                     </div>
                 </div>
                 <div class="extra_promo extra_promo_2">
-                    <div class="extra_promo_image" style="background-image:url(images/extra_2.jpg)"></div>
+                    <div class="extra_promo_image" style="background-image:url(images/GraceElizabeth.jpg)"></div>
                     <div class="extra_2_content d-flex flex-column align-items-center justify-content-center text-center">
                         <div class="extra_2_title">
                             <div class="extra_2_center">&</div>
-                            <div class="extra_2_top">Mix</div>
-                            <div class="extra_2_bottom">Match</div>
+                            <div class="extra_2_top">Grace</div>
+                            <div class="extra_2_bottom">Superme+</div>
                         </div>
-                        <div class="extra_2_text">*Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra.</div>
-                        <div class="button extra_2_button"><a href="checkout.html">check out</a></div>
+                        <div class="extra_2_text">Làm đẹp cùng GraceElizabeth</div>
+                        <div class="button extra_2_button"><a href="card.jsp">Mua ngay</a></div>
                     </div>
                 </div>
             </div>
@@ -232,116 +241,48 @@
                                     <li><a href="#">#wishgirl</a></li>
                                 </ul>
                             </div>
-                            <div class="gallery_text text-center">*Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra.</div>
-                            <div class="button gallery_button"><a href="#">submit</a></div>
-                        </div>
-                    </div>
-                </div>	
-                <div class="gallery_slider_container">
-
-                    <!-- Gallery Slider -->
-                    <div class="owl-carousel owl-theme gallery_slider">
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_1.jpg">
-                                <img src="images/gallery_1.jpg" alt="">
-                            </a>
-                        </div>
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_2.jpg">
-                                <img src="images/gallery_2.jpg" alt="">
-                            </a>
-                        </div>
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_3.jpg">
-                                <img src="images/gallery_3.jpg" alt="">
-                            </a>
-                        </div>
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_4.jpg">
-                                <img src="images/gallery_4.jpg" alt="">
-                            </a>
-                        </div>
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_5.jpg">
-                                <img src="images/gallery_5.jpg" alt="">
-                            </a>
-                        </div>
-
-                        <!-- Gallery Item -->
-                        <div class="owl-item gallery_item">
-                            <a class="colorbox" href="images/gallery_6.jpg">
-                                <img src="images/gallery_6.jpg" alt="">
-                            </a>
-                        </div>
-
-                    </div>
-                </div>	
-            </div>
-
-            <!-- Testimonials -->
-
-            <div class="testimonials">
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="section_title_container text-center">
-                                <div class="section_subtitle">only the best</div>
-                                <div class="section_title">testimonials</div>
+                            <div class="gallery_text text-center">Sản phẩm yêu thích của bạn – Hãy khám phá ngay!</div>
+                            <div class="button gallery_button">
+                                <a href="${pageContext.request.contextPath}/getwishlist">Xem tất cả</a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row test_slider_container">
-                        <div class="col">
-
-                            <!-- Testimonials Slider -->
-                            <div class="owl-carousel owl-theme test_slider text-center">
-
-                                <!-- Testimonial Item -->
-                                <div class="owl-item">
-                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
-                                    <div class="test_content">
-                                        <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
-                                        <div class="test_name">Christinne Smith</div>
-                                        <div class="test_title">client</div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimonial Item -->
-                                <div class="owl-item">
-                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
-                                    <div class="test_content">
-                                        <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
-                                        <div class="test_name">Christinne Smith</div>
-                                        <div class="test_title">client</div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimonial Item -->
-                                <div class="owl-item">
-                                    <div class="test_text">âInteger ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestibulum ultrices nulla. Aliquam egestas tempor leo.â</div>
-                                    <div class="test_content">
-                                        <div class="test_image"><img src="images/testimonials.jpg" alt=""></div>
-                                        <div class="test_name">Christinne Smith</div>
-                                        <div class="test_title">client</div>
-                                    </div>
-                                </div>
-
-                            </div>
-
                         </div>
                     </div>
                 </div>
+                <div class="gallery_slider_container">
+                    <!-- Gallery Slider -->
+                    <div class="owl-carousel owl-theme gallery_slider">
+                        <c:choose>
+                            <c:when test="${empty wishlistItems}">
+                                <!-- Hiển thị thông báo khi wishlist trống -->
+                                <div class="owl-item gallery_item">
+                                    <div class="text-center" style="padding: 20px;">
+                                        <p>Danh sách yêu thích của bạn đang trống. Thêm sản phẩm ngay!</p>
+                                        <a href="${pageContext.request.contextPath}/ProductListServlet" class="button">Khám phá sản phẩm</a>
+                                    </div>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- Lặp qua các sản phẩm trong wishlist và chỉ hiển thị ảnh -->
+                                <c:forEach var="wishlistItem" items="${wishlistItems}">
+                                    <div class="owl-item gallery_item">
+                                        <a class="colorbox" href="${wishlistItem.product.productDetail.image}">
+                                            <img src="${wishlistItem.product.productDetail.image}" 
+                                                 alt="${wishlistItem.product.productName}" 
+                                                 onerror="this.src='images/default-product.jpg'" />
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>  
             </div>
+
+
+
+            <!-- Testimonials -->
+
+
 
             <!-- Newsletter -->
 
@@ -352,8 +293,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="section_title_container text-center">
-                                    <div class="section_subtitle">only the best</div>
-                                    <div class="section_title">ÄÄng kÃ½ Äá» ÄÆ°á»£c giáº£m giÃ¡ 20%</div>
+                                    <div class="section_subtitle">Đăng kí ngay</div>
+                                    <div class="section_title">Đăng kí để nhận mã giảm giá 20%</div>
                                 </div>
                             </div>
                         </div>
@@ -361,11 +302,11 @@
                             <div class="col-lg-10 offset-lg-1">
                                 <div class="newsletter_form_container">
                                     <form action="#">
-                                        <input type="email" class="newsletter_input" required="required" placeholder="E-mail here">
-                                        <button type="submit" class="newsletter_button">subscribe</button>
+                                        <input type="email" class="newsletter_input" required="required" placeholder="Để lại email của bạn">
+                                        <button type="submit" class="newsletter_button">Đăng kí</button>
                                     </form>
                                 </div>
-                                <div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
+                                <div class="newsletter_text">Chúng tôi luôn hướng đến sự hoàn hảo. Mọi chi tiết đều quan trọng, từ bố cục cho đến trải nghiệm người dùng. Đừng bỏ lỡ cơ hội – đăng ký ngay để nhận mã giảm giá!</div>
                             </div>
                         </div>
                     </div>
@@ -378,14 +319,14 @@
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <div class="footer_logo"><a href="#">Wish</a></div>
+                            <div class="footer_logo"><a href="ProductListServlet">Estée Lauder</a></div>
                             <nav class="footer_nav">
                                 <ul>
-                                    <li><a href="index.html">home</a></li>
-                                    <li><a href="categories.html">clothes</a></li>
-                                    <li><a href="categories.html">accessories</a></li>
-                                    <li><a href="categories.html">lingerie</a></li>
-                                    <li><a href="contact.html">contact</a></li>
+                                    <li><a href="ProductListServlet">Trang chủ</a></li>
+                                    <li><a href="categories.jsp">Chăm sóc da</a></li>
+                                    <li><a href="categories.jsp">Trang điểm</a></li>
+                                    <li><a href="categories.jsp">Nước hoa</a></li>
+                                    <li><a href="contact.html">Chăm sóc mắt</a></li>
                                 </ul>
                             </nav>
                             <div class="footer_social">
@@ -406,6 +347,7 @@
             </footer>
         </div>
         <style>
+            
             .product-container {
                 margin-top: 20px;
                 display: flex;
@@ -468,6 +410,31 @@
                 justify-content: center;
                 margin-bottom: 10px;
             }
+
+            /* Đảm bảo các ảnh trong gallery có kích thước đồng đều */
+            /* Đảm bảo các ảnh trong gallery có kích thước đồng đều */
+            .gallery_slider .owl-item {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 10px; /* Giảm khoảng cách giữa các ảnh */
+            }
+
+            /* Đảm bảo các hình ảnh không bị méo và có kích thước đồng đều */
+            .gallery_item img {
+                width: 100%;
+                height: 200px; /* Đặt chiều cao cố định cho ảnh */
+                object-fit: cover; /* Đảm bảo ảnh không bị méo và luôn đầy đủ */
+                border-radius: 8px; /* Thêm bo góc nếu muốn */
+            }
+
+            /* Giảm khoảng cách giữa các ảnh trong carousel */
+            .owl-carousel .owl-item {
+                margin-right: 10px;  /* Giảm khoảng cách giữa các item */
+            }
+
+
+
         </style>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>

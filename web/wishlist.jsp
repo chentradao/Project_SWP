@@ -13,7 +13,6 @@
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        
     </head>
     <style>
         .cart_bar {
@@ -35,23 +34,65 @@
             border-bottom: 1px solid #ddd;
         }
 
+        .product_buy {
+            background: #f0f0f0; /* Màu nền xám nhạt để làm nổi biểu tượng */
+            padding: 5px;
+            border-radius: 5px; /* Bo góc cho đẹp */
+        }
+
+        .product_buy img {
+            display: block;
+            width: 24px;
+            height: 24px;
+        }
+
+        .sort_filter select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        /* CSS cho phân trang */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
     <body>
-
         <div class="super_container">
-
             <!-- Header -->
-
             <header class="header">
                 <div class="header_inner d-flex flex-row align-items-center justify-content-start">
                     <div class="logo"><a href="ProductListServlet">Estée Lauder</a></div>
                     <nav class="main_nav">
                         <ul>
                             <li><a href="ProductListServlet">Home</a></li>
-                            <li><a href="categories.html">Chăm sóc da</a></li>
-                            <li><a href="categories.html">Trang điểm</a></li>
-                            <li><a href="categories.html">Nước Hoa</a></li>
-                            <li><a href="contact.html">Chăm sóc mắt</a></li>
+                            <li><a href="categories.jsp">Chăm sóc da</a></li>
+                            <li><a href="categories.jsp">Trang điểm</a></li>
+                            <li><a href="categories.jsp">Nước Hoa</a></li>
+                            <li><a href="categories.jsp">Chăm sóc mắt</a></li>
                         </ul>
                     </nav>
                     <div class="header_content ml-auto">
@@ -92,16 +133,14 @@
                             </a>
                         </div>
                     </div>
-
                     <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
                 </div>
             </header>   
 
             <!-- Menu -->
-
             <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
                 <div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
-                <div class="logo menu_mm"><a href="homepage.jsp">Estée lauder</a></div>
+                <div class="logo menu_mm"><a href="homepage.jsp">Estée Lauder</a></div>
                 <div class="search">
                     <form action="product.html">
                         <input type="search" class="search_input menu_mm" required="required">
@@ -111,16 +150,15 @@
                 <nav class="menu_nav">
                     <ul class="menu_mm">
                         <li class="menu_mm"><a href="ProductListServlet">Home</a></li>
-                        <li class="menu_mm"><a href="categories.html">Chăm sóc da</a></li>
-                        <li class="menu_mm"><a href="categories.html">Trang điểm</a></li>
-                        <li class="menu_mm"><a href="#">Nuoc hoa</a></li>
-                        <li class="menu_mm"><a href="#">Cham soc mat</a></li>
+                        <li class="menu_mm"><a href="categories.jsp">Chăm sóc da</a></li>
+                        <li class="menu_mm"><a href="categories.jsp">Trang điểm</a></li>
+                        <li class="menu_mm"><a href="categories.jsp">Nước hoa</a></li>
+                        <li class="menu_mm"><a href="categories.jsp">Chăm sóc mắt</a></li>
                     </ul>
                 </nav>
             </div>
 
             <!-- Home -->
-
             <div class="home">
                 <div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/cart.jpg" data-speed="0.8"></div>
                 <div class="container">
@@ -132,7 +170,7 @@
                                     <div class="breadcrumbs">
                                         <ul>
                                             <li><a href="${pageContext.request.contextPath}/ProductListServlet">Home</a></li>
-                                            <li>yêu thích</li>
+                                            <li>Yêu thích</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -143,12 +181,23 @@
             </div>
 
             <!-- Cart -->
-
             <div class="cart_container">
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <div class="cart_title">Sản phẩm yêu thích  </div>
+                            <div class="cart_title">Sản phẩm yêu thích</div>
+                            <!-- Dropdown để sắp xếp theo giá -->
+                            <div class="sort_filter" style="margin-bottom: 20px; text-align: right;">
+                                <form action="${pageContext.request.contextPath}/getwishlist" method="GET">
+                                    <input type="hidden" name="page" value="${currentPage}">
+                                    <label for="sort_price">Sắp xếp theo giá: </label>
+                                    <select id="sort_price" name="sort" onchange="this.form.submit()">
+                                        <option value="default" ${sortOption == 'default' ? 'selected' : ''}>Mặc định</option>
+                                        <option value="asc" ${sortOption == 'asc' ? 'selected' : ''}>Tăng dần</option>
+                                        <option value="desc" ${sortOption == 'desc' ? 'selected' : ''}>Giảm dần</option>
+                                    </select>
+                                </form>
+                            </div>
                         </div>
                     </div>
 
@@ -167,51 +216,52 @@
                     <div class="row">
                         <div class="col">
                             <div class="cart_products">
-                                <ul>
+                                <ul id="product_list">
                                     <c:forEach var="wishlistItem" items="${wishlistItems}">
-                                        <!-- M?i s?n ph?m -->
                                         <li class="cart_product d-flex flex-row align-items-center justify-content-between">
-                                            <!-- C?t Image -->
+                                            <!-- Cột Image -->
                                             <div class="cart_product_image" style="width: 100px;">
                                                 <img src="${wishlistItem.product.productDetail.image}" 
                                                      alt="${wishlistItem.product.productDetail.image}" 
                                                      style="width: 100px; height: 100px;">
                                             </div>
-
-                                            <!-- C?t Product Name -->
+                                            <!-- Cột Product Name -->
                                             <div class="cart_product_name" style="width: 200px;">
                                                 <a href="product-detail.jsp?productId=${wishlistItem.product.productId}">
                                                     ${wishlistItem.product.productName}
                                                 </a>
                                             </div>
-
-                                            <!-- Cart Description -->
+                                            <!-- Cột Description -->
                                             <div class="cart_product_description" style="width: 300px;">
                                                 ${wishlistItem.product.description}
                                             </div>
-
-                                            <!-- Cart Description -->
+                                            <!-- Cột Price -->
                                             <div class="cart_product_description" style="width: 300px;">
                                                 ${wishlistItem.product.productDetail.price}
                                             </div>
-
-                                            <!-- Cart Action -->
-                                            <div class="cart_product_button" style="width: 100px;">
+                                            <!-- Cột Action -->
+                                            <div class="cart_product_button" style="width: 100px; display: flex; justify-content: space-between;">
+                                                <!-- Nút Xóa khỏi Wishlist -->
                                                 <form action="DeleteFromWishlistServlet" method="POST">
                                                     <input type="hidden" name="productId" value="${wishlistItem.product.productId}">
-                                                    <button class="cart_product_remove">
-                                                        <img src="images/trash.png" alt="Remove">
+                                                    <button class="cart_product_remove" style="border: none; background: none; cursor: pointer;">
+                                                        <img src="images/trash.png" alt="Remove" style="width: 20px;">
                                                     </button>
                                                 </form>
+                                                <!-- Nút Thêm vào Cart -->
+                                                <a href="${pageContext.request.contextPath}/CartURL?service=add2cart&id=${wishlistItem.product.productId}">
+                                                    <div class="product_buy product_option">
+                                                        <img src="images/shopping-bag-white.svg" alt="Add to Cart">
+                                                    </div>
+                                                </a>
                                             </div>
-
                                         </li>
                                     </c:forEach>
                                 </ul>
                             </div>
                             <c:if test="${empty wishlistItems}">
-                                <div class="py-12 mt-5 flex flex-col items-center justify-center text-center">
-                                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                                <div class="py-12 mt-5 flex flex-col items-center justify-content-center text-center">
+                                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-content-center mb-4">
                                         <i class="fas fa-star text-yellow-500 text-xl"></i>
                                     </div>
                                     <h3 class="text-lg font-medium text-gray-700 mb-2">Danh sách yêu thích trống</h3>
@@ -222,13 +272,38 @@
                                 </div>
                             </c:if>
 
+                            <!-- Phân trang -->
+                            <c:if test="${not empty wishlistItems}">
+                                <div class="pagination">
+                                    <!-- Nút Trang trước -->
+                                    <c:if test="${currentPage > 1}">
+                                        <a href="${pageContext.request.contextPath}/getwishlist?page=${currentPage - 1}&sort=${sortOption}">&laquo; Trang trước</a>
+                                    </c:if>
+                                    <c:if test="${currentPage <= 1}">
+                                        <a href="#" class="disabled">&laquo; Trang trước</a>
+                                    </c:if>
+
+                                    <!-- Các số trang -->
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <a href="${pageContext.request.contextPath}/getwishlist?page=${i}&sort=${sortOption}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                                    </c:forEach>
+
+                                    <!-- Nút Trang sau -->
+                                    <c:if test="${currentPage < totalPages}">
+                                        <a href="${pageContext.request.contextPath}/getwishlist?page=${currentPage + 1}&sort=${sortOption}">Trang sau &raquo;</a>
+                                    </c:if>
+                                    <c:if test="${currentPage >= totalPages}">
+                                        <a href="#" class="disabled">Trang sau &raquo;</a>
+                                    </c:if>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
+        <!-- Footer -->
         <footer class="footer">
             <div class="container">
                 <div class="row">
@@ -252,16 +327,15 @@
                                 <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                             </ul>
                         </div>
-                        <div class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
+                        <div class="copyright">
+                            Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </footer>
 
-
-
+        <!-- Scripts -->
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>

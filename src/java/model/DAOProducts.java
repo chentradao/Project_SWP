@@ -17,9 +17,9 @@ public class DAOProducts extends DBConnection {
 
     public Product getProductById(int productId) {
         String sql = "SELECT * FROM Products WHERE ProductID = ?";
-        try ( PreparedStatement st = conn.prepareStatement(sql)) {
+        try (PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, productId);
-            try ( ResultSet rs = st.executeQuery()) {
+            try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     return new Product(
                             rs.getInt("ProductID"),
@@ -44,8 +44,49 @@ public class DAOProducts extends DBConnection {
                 + "FROM Products p "
                 + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID";
 
-        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
-            try ( ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product product = new Product(
+                            rs.getInt("ProductID"),
+                            rs.getString("ProductName"),
+                            rs.getInt("CategoryID"),
+                            rs.getString("Description"),
+                            rs.getString("ProductStatus")
+                    );
+                    ProductDetail productDetail = new ProductDetail(
+                            rs.getInt("ID"),
+                            product,
+                            rs.getString("Size"),
+                            rs.getString("Color"),
+                            rs.getInt("Price"),
+                            rs.getString("Image")
+                    );
+                    productDetailList.add(productDetail);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error while fetching product details", e);
+        }
+        return productDetailList;
+    }
+
+    // Thêm phương thức tìm kiếm sản phẩm theo từ khóa
+    public List<ProductDetail> searchProductsByKeyword(String keyword) {
+        List<ProductDetail> productDetailList = new ArrayList<>();
+        String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, p.Description, p.ProductStatus, "
+                + "pd.ID, pd.Size, pd.Color, pd.Quantity, pd.SoldQuantity, pd.DateCreate, pd.Price, pd.Image, pd.ProductStatus "
+                + "FROM Products p "
+                + "JOIN ProductDetail pd ON p.ProductID = pd.ProductID "
+                + "WHERE p.ProductName LIKE ? OR p.Description LIKE ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Thêm ký tự % để tìm kiếm gần đúng
+            String searchPattern = "%" + keyword + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Product product = new Product(
                             rs.getInt("ProductID"),
@@ -70,9 +111,8 @@ public class DAOProducts extends DBConnection {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error while fetching product details", e);
+            LOGGER.log(Level.SEVERE, "Error while searching products with keyword: " + keyword, e);
         }
         return productDetailList;
     }
-
 }
