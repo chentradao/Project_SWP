@@ -172,6 +172,7 @@
         </style>
     </head>
     <body>
+        <%@ include file="/AminHeader.jsp" %>
         <div class="container">
 
             <div style="margin-bottom: 20px;">

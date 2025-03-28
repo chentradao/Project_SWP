@@ -242,7 +242,7 @@ public class DAOInventory extends DBConnection {
                 + "FROM [SWP].[dbo].[OrderDetail] od "
                 + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID "
                 + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
-                + "WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ?";
+                + "WHERE o.OrderStatus = 3 AND o.OrderDate BETWEEN ? AND ?";
 
         // Chuẩn hóa ngày
         startDate = validateDate(startDate, "2025-01-01");
@@ -346,7 +346,7 @@ public class DAOInventory extends DBConnection {
                 + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
                 + "JOIN [SWP].[dbo].[Products] p ON pd.ProductID = p.ProductID "
                 + "JOIN [SWP].[dbo].[Categories] c ON p.CategoryID = c.CategoryID "
-                + "WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ? "
+                + "WHERE o.OrderStatus = 3 AND o.OrderDate BETWEEN ? AND ? "
                 + "GROUP BY c.CategoryName";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -58,6 +58,31 @@
                 display: inline-block; /* Đảm bảo button không chiếm toàn bộ dòng */
                 margin: 0 auto; /* Căn giữa */
             }
+            .main_nav
+{
+    padding-left: 60px;
+    -webkit-transform: translateY(4px);
+    -moz-transform: translateY(4px);
+    -ms-transform: translateY(4px);
+    -o-transform: translateY(4px);
+    transform: translateY(4px);
+}
+.main_nav ul li
+{
+    display: inline-block;
+    margin-right: 30px;
+}
+            .shopping
+{
+    display: inline-block;
+    margin-left: 100px;
+    padding-right: 100px;
+    -webkit-transform: translateY(-2px);
+    -moz-transform: translateY(-2px);
+    -ms-transform: translateY(-2px);
+    -o-transform: translateY(-2px);
+    transform: translateY(-2px);
+}
         </style>
     </head>
     <body>

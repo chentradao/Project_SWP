@@ -63,10 +63,9 @@
         %>
 
         <!-- Header -->
-        <%@ include file="/header.jsp" %>
+        <%@ include file="/AminHeader.jsp" %>
 
         <!-- Menu -->
-        <%@ include file="/menu.jsp" %>
 
         <!-- Home -->
         <!-- Main Content -->

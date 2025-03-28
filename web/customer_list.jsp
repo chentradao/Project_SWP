@@ -102,27 +102,7 @@
     </head>
     <body>
         <!-- Header -->
-        <header class="header_inner d-flex flex-row align-items-center justify-content-between">
-            <div class="logo">
-                <a href="index.jsp" class="logo">Estée Lauder</a>
-            </div>
-            <nav class="main_nav flex-grow-1 text-center">
-                <ul class="navbar-nav d-flex flex-row justify-content-start" style="font-size: 18px; font-weight: bold;">
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Doanh thu</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quảng cáo</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Tài khoản</a></li>
-                </ul>
-            </nav>
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${sessionScope.acc.fullName}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
-                </div>
-            </div>
-        </header>
+        <%@ include file="/AminHeader.jsp" %>
 
         <!-- Nội dung chính -->
         <div class="container-fluid p-3">

@@ -38,17 +38,17 @@ public class RevenueServlet extends HttpServlet {
             }
 
             // Lấy dữ liệu cho biểu đồ tròn danh sách đơn hàng
-            Vector<Order> completed = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 1 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            Vector<Order> waiting = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            Vector<Order> shipping = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 3 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            Vector<Order> cancelled = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 4 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            Vector<Order> completed = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 3 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            Vector<Order> waiting = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 1 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            Vector<Order> shipping = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            Vector<Order> cancelled = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 7 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
             Vector<Order> returned = daoOrder.getOrders("SELECT * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 5 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
 
             // Lấy dữ liệu cho doanh thu
-            Vector<Order> latestOrders = daoOrder.getOrders("SELECT TOP (5) * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 2 ORDER BY [OrderDate] DESC");
-            int EarnedRevenue = daoOrder.getRevunue("SELECT SUM([TotalCost]) AS [TotalSum] FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 1 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            int UpcomingRevenue = daoOrder.getRevunue("SELECT SUM([TotalCost]) AS [TotalSum] FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] != 1 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            int OrderCount = daoOrder.getNumberOrder("SELECT COUNT(*) AS OrderCount FROM [SWP].[dbo].[Orders] WHERE OrderStatus = 1 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            Vector<Order> latestOrders = daoOrder.getOrders("SELECT TOP (5) * FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 3 ORDER BY [OrderDate] DESC");
+            int EarnedRevenue = daoOrder.getRevunue("SELECT SUM([TotalCost]) AS [TotalSum] FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] = 3 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            int UpcomingRevenue = daoOrder.getRevunue("SELECT SUM([TotalCost]) AS [TotalSum] FROM [SWP].[dbo].[Orders] WHERE [OrderStatus] != 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            int OrderCount = daoOrder.getNumberOrder("SELECT COUNT(*) AS OrderCount FROM [SWP].[dbo].[Orders] WHERE OrderStatus = 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
 
             // Tính doanh thu thực tế (Real Revenue) - Bỏ TotalReturnValue
             // 1. Tổng giá nhập từ OrderDetail và Products
@@ -56,13 +56,13 @@ public class RevenueServlet extends HttpServlet {
                                   "FROM [SWP].[dbo].[OrderDetail] od " +
                                   "JOIN [SWP].[dbo].[ProductDetail] p ON od.ProductID = p.ProductID " +
                                   "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID " +
-                                  "WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN '" + start_date + "' AND '" + end_date + "'";
+                                  "WHERE o.OrderStatus = 3 AND o.OrderDate BETWEEN '" + start_date + "' AND '" + end_date + "'";
             int totalImportCost = daoOrderDetail.getTotalCost(importCostSql);
 
             // 2. Tổng tiền ship từ Orders
             String shippingFeeSql = "SELECT SUM(ISNULL(ShippingFee, 0)) AS TotalShippingFee " +
                                    "FROM [SWP].[dbo].[Orders] " +
-                                   "WHERE OrderStatus = 1 AND OrderDate BETWEEN '" + start_date + "' AND '" + end_date + "'";
+                                   "WHERE OrderStatus = 3 AND OrderDate BETWEEN '" + start_date + "' AND '" + end_date + "'";
             int totalShippingFee = daoOrder.getRevunue(shippingFeeSql);
 
             // 3. Doanh thu thực tế = EarnedRevenue - TotalImportCost - TotalShippingFee
