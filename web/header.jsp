@@ -7,7 +7,16 @@
     CategoryRepository categoryRepository = new CategoryRepository();
     List<Category> categories = categoryRepository.getAllCategories();
 %>
-
+<style>
+     /* Hiển thị dropdown khi hover vào li có class 'dropdown' */
+ .nav-item.dropdown:hover .dropdown-menu {
+     display: block;
+ }
+ .dropdown-menu {
+     display: none;
+ }
+ 
+ </style>
 <header class="header">
     <div class="header_inner d-flex flex-row align-items-center justify-content-start">
         <div class="logo"><a href="${pageContext.request.contextPath}/ProductListServlet">Estée Lauder</a></div>
@@ -16,9 +25,20 @@
                 <li><a href="${pageContext.request.contextPath}/ProductListServlet">Trang chủ</a></li>
                 <li><a href="ShoppingFlashSaleURL?service=flashSale">Flash Sale</a></li>
                     <% for (Category category : categories) { %>
-                <li><a href="categories.jsp?category=<%= category.getCategoryId() %>">
+                <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" href="product-list?categoryId=<%= category.getCategoryId() %>" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
                         <%= category.getCategoryName() %>
-                    </a></li>
+                    </a>
+                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                         <% 
+                             // Lấy danh mục con dưới 1 cấp của danh mục này
+                             List<Category> subCategories = categoryRepository.getAllCategoriesByParentCategory(String.valueOf(category.getCategoryId()));
+                             for (Category subCategory : subCategories) { 
+                         %>
+                         <a class="dropdown-item" href="product-list?categoryId=<%= subCategory.getCategoryId() %>"><%= subCategory.getCategoryName() %></a>
+                         <% } %>
+                     </div>
+                 </li>
                     <% } %>
             </ul>
         </nav>
