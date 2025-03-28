@@ -1,6 +1,7 @@
 package controller;
 
 import entity.Accounts;
+import entity.Order;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,7 +9,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Vector;
 import model.DAOAccounts;
+import model.DAOOrder;
 
 @WebServlet(name = "ListStaff", urlPatterns = {"/ListStaff"})
 public class ListStaff extends HttpServlet {
@@ -17,6 +20,7 @@ public class ListStaff extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOAccounts dao = new DAOAccounts();
+        DAOOrder da = new DAOOrder();
 
         // Số bản ghi trên mỗi trang
         int pageSize = 5;
@@ -63,6 +67,14 @@ public class ListStaff extends HttpServlet {
         // Lấy danh sách bản ghi cho trang hiện tại
         List<Accounts> staffForPage = dao.getAccountsByPage(start, pageSize, baseQuery);
 
+        for (Accounts acc : staffForPage) {
+        int count = 0;
+        Vector<Order> listOrder = da.getOrderByStaffID(acc.getAccountID());
+        for (Order ord : listOrder) {
+            count++;
+        }
+        acc.setCountOrder(count);
+    }
 
         // Truyền dữ liệu sang JSP
         request.setAttribute("staffData", staffForPage);

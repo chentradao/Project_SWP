@@ -23,7 +23,6 @@ public class ListCustomer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOAccounts dao = new DAOAccounts();
-        DAOOrder daoOrder = new DAOOrder();
         
         int pageSize = 5;
         String pageStr = request.getParameter("page");
@@ -61,24 +60,6 @@ public class ListCustomer extends HttpServlet {
 
         Vector<Accounts> customersForPage = dao.getCustomers(start, pageSize, search, status, sortBy, sortOrder);
 
-        // Lấy ngày đặt hàng gần nhất cho từng customer
-        Map<Integer, String> lastOrderDates = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày
-        for (Accounts customer : customersForPage) {
-            String sql = "SELECT TOP 1 * FROM Orders WHERE CustomerID = " + customer.getAccountID() +
-                        " ORDER BY OrderDate DESC";
-            Vector<Order> orders = daoOrder.getOrders(sql);
-            if (!orders.isEmpty()) {
-                Order latestOrder = orders.get(0);
-                String formattedDate = latestOrder.getOrderDate() != null 
-                    ? sdf.format(latestOrder.getOrderDate()) 
-                    : "Chưa xác định";
-                lastOrderDates.put(customer.getAccountID(), formattedDate);
-            } else {
-                lastOrderDates.put(customer.getAccountID(), "Chưa có đơn hàng");
-            }
-        }
-
         // Truyền dữ liệu sang JSP
         request.setAttribute("CusData", customersForPage);
         request.setAttribute("currentPage", currentPage);
@@ -87,7 +68,6 @@ public class ListCustomer extends HttpServlet {
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("search", search);
         request.setAttribute("status", status);
-        request.setAttribute("lastOrderDates", lastOrderDates);
 
         request.getRequestDispatcher("customer_list.jsp").forward(request, response);
     }

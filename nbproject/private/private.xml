@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Administrator/Desktop/clone4/Project_SWP/web/contact.jsp</file>
-            <file>file:/C:/Users/Administrator/Desktop/clone4/Project_SWP/src/java/controller/ContactController.java</file>
+            <file>file:/D:/Project_SWP/src/java/entity/Order.java</file>
+            <file>file:/D:/Project_SWP/web/staff_list.jsp</file>
+            <file>file:/D:/Project_SWP/src/java/controller/ListCustomer.java</file>
+            <file>file:/D:/Project_SWP/src/java/entity/Accounts.java</file>
+            <file>file:/D:/Project_SWP/src/java/controller/ListStaff.java</file>
+            <file>file:/D:/Project_SWP/src/java/model/DAOOrder.java</file>
+            <file>file:/D:/Project_SWP/src/java/model/DAOAccounts.java</file>
         </group>
     </open-files>
 </project-private>

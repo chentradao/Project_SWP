@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -215,36 +216,43 @@
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
                                                 <td>${e.createDate}</td>
-                                                <td>${lastOrderDates[e.accountID]}</td>
-                                                <td>${e.orderQuality}</td>
-                                                <td>${e.totalSpending}</td>
-                                                <td>${e.role}</td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${e.accountStatus == 1}">Đang hoạt động</c:when>
-                                                        <c:when test="${e.accountStatus == 0}">Dừng hoạt động</c:when>
-                                                        <c:otherwise>${e.accountStatus}</c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>
-                                                    <div class="action-buttons">
-                                                        <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListCustomer" 
-                                                           class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
-                                                           onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
-                                                            ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="userDetail?username=${e.userName}" class="btn btn-sm btn-primary">Xem</a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        <c:if test="${empty CusData}">
-                                            <tr>
-                                                <td colspan="11" class="text-center">Không có dữ liệu để hiển thị</td>
-                                            </tr>
-                                        </c:if>
+                                                        <c:when test="${e.lastOrderDate != null}">
+                                                <fmt:formatDate value="${e.lastOrderDate}" pattern="yyyy-MM-dd" />
+                                            </c:when>
+                                            <c:otherwise>Chưa có đơn hàng</c:otherwise>
+                                        </c:choose>
+                                        </td>
+                                        <td>${e.orderQuality}</td>
+                                        <td>${e.totalSpending}</td>
+                                        <td>${e.role}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${e.accountStatus == 1}">Đang hoạt động</c:when>
+                                                <c:when test="${e.accountStatus == 0}">Dừng hoạt động</c:when>
+                                                <c:otherwise>${e.accountStatus}</c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="changeStatus?username=${e.userName}&status=${e.accountStatus}&returnTo=ListCustomer" 
+                                                   class="btn btn-sm ${e.accountStatus == 1 ? 'btn-warning' : 'btn-success'}"
+                                                   onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái?')">
+                                                    ${e.accountStatus == 1 ? 'Tắt' : 'Bật'}
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="userDetail?username=${e.userName}" class="btn btn-sm btn-primary">Xem</a>
+                                        </td>
+                                        </tr>
+                                    </c:forEach>
+                                    <c:if test="${empty CusData}">
+                                        <tr>
+                                            <td colspan="11" class="text-center">Không có dữ liệu để hiển thị</td>
+                                        </tr>
+                                    </c:if>
                                     </tbody>
                                 </table>
                             </div>

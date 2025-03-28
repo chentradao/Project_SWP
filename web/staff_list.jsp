@@ -144,6 +144,7 @@
                                                     <i class="fa ${param.sortBy == 'createDate' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
                                                 </a>
                                             </th>
+                                            <th>Đơn đã duyệt</th>
                                             <th>Role</th>
                                             <th>Trạng thái</th>
                                             <th>Hoạt động</th>
@@ -157,6 +158,7 @@
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
                                                 <td>${e.createDate}</td>
+                                                <td>${e.countOrder}</td>
                                                 <td>${e.role}</td>
                                                 <td>
                                                     <c:choose>
