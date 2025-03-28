@@ -28,6 +28,37 @@ import java.util.Map;
  */
 public class DAOOrder extends DBConnection {
     
+    public Order getLatestOrder() {
+        Order order = null;
+        String sql = "SELECT TOP 1 * FROM Orders ORDER BY OrderDate DESC, OrderID DESC";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                order = new Order(
+                        rs.getInt("OrderID"),
+                        rs.getInt("CustomerID"),
+                        rs.getString("CustomerName"),
+                        rs.getDate("OrderDate"),
+                        rs.getDate("ShippedDate"),
+                        rs.getInt("ShippingFee"),
+                        rs.getInt("TotalCost"),
+                        rs.getString("Email"),
+                        rs.getString("Phone"),
+                        rs.getString("ShipAddress"),
+                        rs.getInt("Discount"),
+                        rs.getString("CancelNotification"),
+                        rs.getString("Note"),
+                        rs.getString("PaymentMethod"),
+                        rs.getInt("OrderStatus")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+    
     public int getRevunue(String sql){
         int revenue = 0;
         try {

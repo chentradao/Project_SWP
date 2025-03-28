@@ -54,15 +54,15 @@
                 vertical-align: middle;
                 padding: 12px 8px;
             }
-            /* Giới hạn chiều rộng cột Ngày tạo */
-            .table td:nth-child(4) {
+            /* Giới hạn chiều rộng cột Ngày tạo và Ngày đặt hàng gần nhất */
+            .table td:nth-child(4), .table td:nth-child(5) {
                 max-width: 200px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-            /* Hiển thị đầy đủ nội dung khi hover vào cột Ngày tạo */
-            .table td:nth-child(4):hover {
+            /* Hiển thị đầy đủ nội dung khi hover */
+            .table td:nth-child(4):hover, .table td:nth-child(5):hover {
                 white-space: normal;
                 overflow: visible;
                 background-color: #f8f9fa;
@@ -102,7 +102,29 @@
     </head>
     <body>
         <!-- Header -->
-        <%@ include file="/AminHeader.jsp" %>
+        <header class="header_inner d-flex flex-row align-items-center justify-content-between">
+            <div class="logo">
+                <a href="index.jsp" class="logo">Estée Lauder</a>
+            </div>
+            <nav class="main_nav flex-grow-1 text-center">
+                <ul class="navbar-nav d-flex flex-row justify-content-start" style="font-size: 18px; font-weight: bold;">
+                    <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="revenue">Doanh thu</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="orderManagement.jsp">Quản lý Đơn hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="inventory">Kho hàng</a></li>
+                    <li class="nav-item"><a href="FlashSaleURL?service=flashSaleList">Quản lý FlashSale</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Quản lý Tài khoản</a></li>
+                </ul>
+            </nav>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${sessionScope.acc.fullName}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
+                </div>
+            </div>
+        </header>
 
         <!-- Nội dung chính -->
         <div class="container-fluid p-3">
@@ -163,6 +185,12 @@
                                                 </a>
                                             </th>
                                             <th>
+                                                Ngày đặt hàng gần nhất 
+                                                <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=lastOrderDate&sortOrder=${param.sortBy == 'lastOrderDate' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                    <i class="fa ${param.sortBy == 'lastOrderDate' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
+                                                </a>
+                                            </th>
+                                            <th>
                                                 Tổng đơn hàng 
                                                 <a href="?page=${currentPage}&search=${param.search}&status=${param.status}&sortBy=orderQuality&sortOrder=${param.sortBy == 'orderQuality' && param.sortOrder == 'asc' ? 'desc' : 'asc'}">
                                                     <i class="fa ${param.sortBy == 'orderQuality' && param.sortOrder == 'asc' ? 'fa-sort-up' : 'fa-sort-down'}"></i>
@@ -187,6 +215,7 @@
                                                 <td>${e.phone}</td>
                                                 <td>${e.email}</td>
                                                 <td>${e.createDate}</td>
+                                                <td>${lastOrderDates[e.accountID]}</td>
                                                 <td>${e.orderQuality}</td>
                                                 <td>${e.totalSpending}</td>
                                                 <td>${e.role}</td>
@@ -213,14 +242,13 @@
                                         </c:forEach>
                                         <c:if test="${empty CusData}">
                                             <tr>
-                                                <td colspan="10" class="text-center">Không có dữ liệu để hiển thị</td>
+                                                <td colspan="11" class="text-center">Không có dữ liệu để hiển thị</td>
                                             </tr>
                                         </c:if>
                                     </tbody>
                                 </table>
                             </div>
 
-                            
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                 <ul class="pagination">
                                     <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
