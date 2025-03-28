@@ -91,7 +91,7 @@
             <div class="<%= isActive ? "bg-red-500" : "bg-gray-700" %> text-white px-6 py-2 rounded cursor-pointer"
                  onclick="selectTimeFrame('<%= timeFrameValue %>')">
                 <%= timeFrame %><br>
-                <%= isActive ? "Đang Diễn Ra" : "Tomorrow" %>
+                <%= isActive ? "Đang Diễn Ra" : "Chưa Diễn Ra" %>
             </div>
             <% } %>
         </div>
@@ -108,6 +108,7 @@
                             int discountedPrice = originalPrice - (originalPrice * discount)/100;
             %>
             <div class="bg-white p-4 rounded-lg shadow flex flex-col h-full">
+                <a href="ProductDetail?productId=<%=flash.getProductID()%>">
                 <!-- Hình ảnh -->
                 <div class="w-full h-56 bg-gray-100 flex items-center justify-center rounded-lg overflow-hidden">
                     <img src="<%= pro.getImage() != null ? pro.getImage() : "https://via.placeholder.com/150" %>" 
@@ -128,17 +129,22 @@
                         <% } %>
                     </div>
                 </div>
-
+                </a>
                 <!-- Giá và Nút Mua -->
                 <div class="mt-auto">
                     <p class="text-red-500 flex items-center gap-2">
                         <span class="line-through text-gray-500 text-sm"><%= formatter.format(originalPrice) %>₫</span>
                         <span class="text-lg font-bold"><%= formatter.format(discountedPrice) %>₫</span>
                     </p>
+                    <%if(flash.getStatus() == 1){%>
                     <button type="button" onclick="window.location.href = 'ShoppingFlashSaleURL?service=BuyNow&fid=<%=flash.getSaleID()%>'" class="mt-2 w-full bg-red-500 text-white py-1 rounded">Mua Ngay</button>
+                <%}else{%>
+                <button class="mt-2 w-full bg-red-500 text-white py-1 rounded cursor-not-allowed" disabled title="Chưa Diễn Ra">
+                            Mua Ngay
+                        </button>
+                <%}%>
                 </div>
             </div>
-
             <%
                     }
                 }
@@ -154,8 +160,6 @@
                     <i class="fas fa-plus mr-1"></i> Xem Thêm Sản Phẩm Khác
                 </a>
             </div>
-
-
             <% } %>
         </div>
 
