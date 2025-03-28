@@ -186,12 +186,9 @@
                                                     <img src="images/shopping-bag-white.svg" alt="">
                                                 </div>
                                             </a>
-                                            <form action="${pageContext.request.contextPath}/addToWishlist" method="post">
-                                                <input type="hidden" name="productId" value="${product.productId}" />
-                                                <button type="submit" class="product_fav product_option" style="border: none; background: none; cursor: pointer;">
-                                                    +
-                                                </button>
-                                            </form>
+                                            <button type="submit" onclick="window.location.href = 'addToWishlist?productId=${product.productId}'" class="product_fav product_option" style="border: none; background: none; cursor: pointer;">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -286,7 +283,32 @@
 
             <!-- Newsletter -->
 
-            
+            <div class="newsletter">
+                <div class="newsletter_content">
+                    <div class="newsletter_image" style="background-image:url(images/newsletter.jpg)"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="section_title_container text-center">
+                                    <div class="section_subtitle">Đăng kí ngay</div>
+                                    <div class="section_title">Đăng kí để nhận mã giảm giá 20%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row newsletter_container">
+                            <div class="col-lg-10 offset-lg-1">
+                                <div class="newsletter_form_container">
+                                    <form action="#">
+                                        <input type="email" class="newsletter_input" required="required" placeholder="Để lại email của bạn">
+                                        <button type="submit" class="newsletter_button">Đăng kí</button>
+                                    </form>
+                                </div>
+                                <div class="newsletter_text">Chúng tôi luôn hướng đến sự hoàn hảo. Mọi chi tiết đều quan trọng, từ bố cục cho đến trải nghiệm người dùng. Đừng bỏ lỡ cơ hội – đăng ký ngay để nhận mã giảm giá!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Footer -->
 
@@ -322,7 +344,7 @@
             </footer>
         </div>
         <style>
-            
+
             .product-container {
                 margin-top: 20px;
                 display: flex;
@@ -410,7 +432,7 @@
 
 
 
-        </style>
+        </style>    
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>

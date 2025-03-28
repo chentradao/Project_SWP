@@ -70,6 +70,12 @@
                                 <div class="review_form_title">Liên hệ với chúng tôi</div>
                                 <div class="review_form_content">
                                     <form action="viewUserFeedback.jsp" id="review_form" class="review_form">
+                                        <div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
+									<input type="text" class="review_form_input" placeholder="Name" required="required">
+									<input type="email" class="review_form_input" placeholder="E-mail" required="required">
+									<input type="text" class="review_form_input" placeholder="Subject">
+								</div>
+                                        <textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
                                         <button type="submit" class="review_form_button">Gửi phản hồi về dịch vụ</button>
                                     </form>
                                 </div>
