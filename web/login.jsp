@@ -67,16 +67,16 @@
                         <div class="form-group">
                             <label for="UserName">Tên đăng nhập:</label>
                             <div class="form-holder">
-                                <i class="zmdi zmdi-account-o"></i>
-                                <input type="text" class="form-control" id="UserName" name="UserName" value="${UserName}" required>
+                                
+                                <input style="margin-left: 5px" type="text" class="form-control" id="UserName" name="UserName" value="${UserName}" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="Password">Mật khẩu:</label>
                             <div class="form-holder">
-                                <i class="zmdi zmdi-lock-outline"></i>
-                                <input type="password" class="form-control" id="Password" name="Password" value="${Password}" placeholder="********" required>
+                                
+                                <input style="margin-left: 41px" type="password" class="form-control" id="Password" name="Password" value="${Password}" placeholder="********" required>
                             </div>
                         </div>
 
@@ -89,7 +89,10 @@
                         <div class="text-center container" style="margin-top: 15px;">
                             Chưa có tài khoản? <a href="signup.jsp" class="link-to-help">Đăng ký</a>
                         </div>
-                        <a href="forgotPassword.jsp">Quên mật khẩu?</a>
+                        <div class="text-center container" style="margin-top: 15px;">
+                            <a  href="forgotPassword.jsp">Quên mật khẩu?</a>
+                        </div>
+                        
                     </form>
                 </div>
             </div>

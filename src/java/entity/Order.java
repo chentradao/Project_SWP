@@ -15,7 +15,7 @@ import java.util.Vector;
 public class Order {
     private int OrderID;
     private Integer CustomerID;
-    private Integer StaffID;
+    private int StaffID;
     private String CustomerName;
     private Date OrderDate;
     private Date ShippedDate;
@@ -32,7 +32,7 @@ public class Order {
     private Vector<OrderDetail> orderDetail;
     private String orderCode;
 
-    public Order(int OrderID, Integer CustomerID, Integer StaffID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus, Vector<OrderDetail> orderDetail, String orderCode) {
+    public Order(int OrderID, Integer CustomerID, int StaffID, String CustomerName, Date OrderDate, Date ShippedDate, int ShippingFee, int TotalCost, String Email, String Phone, String ShipAddress, int Discount, String CancelNotification, String Note, String PaymentMethod, int OrderStatus, Vector<OrderDetail> orderDetail, String orderCode) {
         this.OrderID = OrderID;
         this.CustomerID = CustomerID;
         this.StaffID = StaffID;
@@ -52,8 +52,8 @@ public class Order {
         this.orderDetail = orderDetail;
         this.orderCode = orderCode;
     }
-    
-    
+
+
     public Order(int OrderID, String orderCode,int CustomerID, int TotalCost, int OrderStatus, String CustomerName, String ShipAddress, String Phone, Date OrderDate, Date ShippedDate) {
         this.OrderID = OrderID;
         this.orderCode = orderCode;
@@ -256,6 +256,14 @@ public Order(Integer OrderID,String OrderCode, int CustomerID, String CustomerNa
 
     public void setNote(String Note) {
         this.Note = Note;
+    }
+
+    public int getStaffID() {
+        return StaffID;
+    }
+
+    public void setStaffID(int StaffID) {
+        this.StaffID = StaffID;
     }
       
 }

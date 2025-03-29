@@ -158,7 +158,12 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="profile">Thông tin tài khoản</a>
-                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
+                    <c:choose>
+                            <c:when test="${not empty sessionScope.acc}">
+                                <a id="dropdown-item" class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
+                            </c:when>
+                        </c:choose>
+                   
                 </div>
             </div>
         </header>

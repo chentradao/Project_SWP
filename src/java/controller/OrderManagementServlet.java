@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.Accounts;
 import entity.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -20,14 +22,14 @@ import model.DAOOrder;
 
 @WebServlet(name = "OrderManagementServlet", urlPatterns = {"/OrderManagementServlet"})
 public class OrderManagementServlet extends HttpServlet {
-    
+
     private DAOOrder dao = new DAOOrder();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action"); // Đổi từ "action" thành "service" để đồng bộ với JSP
-        
+
         if ("order".equals(action)) {
             // Lấy tham số sắp xếp từ request
             String sortBy = request.getParameter("sortBy");
@@ -52,14 +54,14 @@ public class OrderManagementServlet extends HttpServlet {
             // Gửi danh sách đơn hàng tới JSP
             request.setAttribute("vectorOrder", vectorOrder);
             request.getRequestDispatcher("orderManagement.jsp").forward(request, response);
-        } else if ("confirm".equals(action)) {
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            dao.updateStatus(orderId, 3); // 3 = Đã giao thành công (dựa trên JSP trước)
-            response.sendRedirect("manager"); // Chuyển hướng thay vì forward để tránh gửi lại dữ liệu
         } else if ("cancel".equals(action)) {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            dao.updateStatus(orderId, 4); // 4 = Đã hủy
-            response.sendRedirect("manager"); // Chuyển hướng thay vì forward
+            Order o = dao.getOrderByOrderID(orderId);            
+            HttpSession session = request.getSession();
+            Accounts acc = (Accounts) session.getAttribute("acc");
+            dao.changeStatus(orderId, -1);
+            dao.changeStaffID(orderId, acc.getAccountID());
+            response.sendRedirect("manager");
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid service parameter");
         }

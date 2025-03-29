@@ -92,8 +92,8 @@ public class FlashSaleController extends HttpServlet {
                     response.sendRedirect("FlashSaleURL?service=flashSaleList");
                 }
             }
-            
-            if(service.equals("deleteFlash")){
+
+            if (service.equals("deleteFlash")) {
                 int saleID = Integer.parseInt(request.getParameter("saleID"));
                 int n = dao.DeleteFlashSale(saleID);
                 response.sendRedirect("FlashSaleURL?service=flashSaleList");
@@ -188,6 +188,8 @@ public class FlashSaleController extends HttpServlet {
                             break;
                     }
                 }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String today = sdf.format(new Date());
 
                 // Lấy dữ liệu theo trang
                 Vector<FlashSale> vector = dao.getFlashSale("SELECT * FROM FlashSale "
@@ -195,6 +197,9 @@ public class FlashSaleController extends HttpServlet {
                 for (FlashSale flash : vector) {
                     ProductDetail pro = da.getProDetailbyID(flash.getProductID());
                     flash.setProductDetail(pro);
+                    if (sdf.format(flash.getStartTime()).equals(today)) {
+                        dao.updateStatusByTime(flash);
+                    }
                 }
                 // Truyền dữ liệu cho JSP
                 request.setAttribute("vector", vector);

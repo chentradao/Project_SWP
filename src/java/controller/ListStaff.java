@@ -58,7 +58,7 @@ public class ListStaff extends HttpServlet {
         baseQuery += " ORDER BY " + sortBy + " " + sortOrder;
 
         // Lấy tổng số bản ghi
-        List<Accounts> allStaff = dao.getAllAccounts1(baseQuery);
+        List<Accounts> allStaff = dao.getAllAccounts(baseQuery);
         int totalRecords = allStaff.size();
 
         // Tính tổng số trang
@@ -67,14 +67,10 @@ public class ListStaff extends HttpServlet {
         // Lấy danh sách bản ghi cho trang hiện tại
         List<Accounts> staffForPage = dao.getAccountsByPage(start, pageSize, baseQuery);
 
-        for (Accounts acc : staffForPage) {
-        int count = 0;
-        Vector<Order> listOrder = da.getOrderByStaffID(acc.getAccountID());
-        for (Order ord : listOrder) {
-            count++;
+        for (Accounts acc : allStaff) {
+            Vector<Order> listOrder = da.getOrderByStaffID(acc.getAccountID());
+            acc.setCountOrder(listOrder.size());
         }
-        acc.setCountOrder(count);
-    }
 
         // Truyền dữ liệu sang JSP
         request.setAttribute("staffData", staffForPage);

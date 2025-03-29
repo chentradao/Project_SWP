@@ -28,6 +28,16 @@ import java.util.Map;
  */
 public class DAOOrder extends DBConnection {
 
+    public void changeStaffID(int oid, int StafID) {
+        String sql = "update Orders set StaffID=" + StafID + " where OrderID=" + oid;
+        try {
+            Statement state = conn.createStatement();
+            state.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public Vector<Order> getOrderByStaffID(int StaffID) {
         Vector<Order> orders = new Vector<>();
 
@@ -37,6 +47,7 @@ public class DAOOrder extends DBConnection {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, StaffID);
 
+            
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -435,9 +446,8 @@ public class DAOOrder extends DBConnection {
 
     public static void main(String[] args) {
         DAOOrder dao = new DAOOrder();
-        Vector<Order> vectorOrder = dao.getOrders("select * from Orders where OrderCode IS NOT NULL");
-        for (Order order : vectorOrder) {
-            System.out.println(order.getOrderCode());
-        }
+        Vector<Order> vectorOrder = dao.getOrderByStaffID(5);
+       
+            System.out.println(vectorOrder.size());   
     }
 }

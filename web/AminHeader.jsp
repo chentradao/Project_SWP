@@ -49,6 +49,7 @@
             <li class="nav-item"><a class="nav-link text-dark" href="staff/products">Kho hàng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="slider">Quảng Cáo</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="FlashSaleURL?service=flashSaleList">Quản lý FlashSale</a></li>
+            <li><a href="Blog?service=listAllBlogs">Bài đăng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Quản lý Tài khoản</a></li>
         </ul>
     </nav>

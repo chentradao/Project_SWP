@@ -103,29 +103,7 @@
     </head>
     <body>
         <!-- Header -->
-        <header class="header_inner d-flex flex-row align-items-center justify-content-between">
-            <div class="logo">
-                <a href="index.jsp" class="logo">Estée Lauder</a>
-            </div>
-            <nav class="main_nav flex-grow-1 text-center">
-                <ul class="navbar-nav d-flex flex-row justify-content-start" style="font-size: 18px; font-weight: bold;">
-                    <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="revenue">Doanh thu</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="orderManagement.jsp">Quản lý Đơn hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="inventory">Kho hàng</a></li>
-                    <li class="nav-item"><a href="FlashSaleURL?service=flashSaleList">Quản lý FlashSale</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Quản lý Tài khoản</a></li>
-                </ul>
-            </nav>
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${sessionScope.acc.fullName}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
-                </div>
-            </div>
-        </header>
+         <%@ include file="/AminHeader.jsp" %>
 
         <!-- Nội dung chính -->
         <div class="container-fluid p-3">

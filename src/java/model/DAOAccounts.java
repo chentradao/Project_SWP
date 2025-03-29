@@ -81,28 +81,6 @@ public boolean deleteAccount(String username) {
     return list;
 }
 
-public List<Accounts> getAllAccounts1(String query) {
-    List<Accounts> list = new ArrayList<>();
-    try {
-        PreparedStatement ps = conn.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Accounts acc = new Accounts();
-            acc.setUserName(rs.getString("userName"));
-            acc.setFullName(rs.getString("fullName"));
-            acc.setPhone(rs.getString("phone"));
-            acc.setEmail(rs.getString("email"));
-            acc.setAddress(rs.getString("address"));
-            acc.setCreateDate(rs.getDate("CreateDate"));
-            acc.setRole(rs.getString("role"));
-            acc.setAccountStatus(rs.getInt("accountStatus"));
-            list.add(acc);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return list;
-}
     
     // Phương thức mới để lấy dữ liệu theo trang
     public List<Accounts> getAccountsByPage(int start, int pageSize) {

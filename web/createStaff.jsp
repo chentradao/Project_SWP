@@ -3,6 +3,14 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Wish shop project">
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+        <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Create Staff</title>
         <link rel="stylesheet" type="text/css" href="./assets/css/adminpage.css">
@@ -19,8 +27,8 @@
             }
             .input_type {
                 width: 100%;
-                padding: 8px;
-                margin: 5px 0;
+                padding: 5px;
+                margin: 2px 0;
             }
             button[type="submit"] {
                 padding: 10px 20px;
@@ -32,90 +40,111 @@
             button[type="submit"]:hover {
                 background-color: #45a049;
             }
+            .form-container {
+                width: 500px;
+                margin: 50px auto; /* Căn giữa theo chiều ngang */
+                padding: 20px;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                text-align: center; /* Căn giữa nội dung trong form */
+            }
+
+            form table {
+                width: 100%;
+            }
+
+            form table td {
+                padding: 10px;
+            }
+
         </style>
     </head>
     <body>
-        <form action="createStaff" method="post" onsubmit="return validateForm()">
-            <h2>Tạo nhân viên</h2>
-            <!-- Hiển thị thông báo -->
-            <c:if test="${not empty message}">
-                <div class="${message.contains('thành công') ? 'success-message' : 'error-message'}">
-                    ${message}
-                </div>
-            </c:if>
-            <table>
-                <tr>
-                    <td><label for="UserName">Tên đăng nhập</label></td>
-                    <td>
-                        <input class="input_type" type="text" id="UserName" name="UserName" value="${UserName}" required>
-                        <div class="error-message">${messU}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="Password">Mật khẩu</label></td>
-                    <td>
-                        <input class="input_type" id="Password" type="password" name="Password" value="${Password}" required minlength="6">
-                        <div class="error-message">${messP}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="ConfirmPassword">Nhập lại mật khẩu</label></td>
-                    <td>
-                        <input class="input_type" id="ConfirmPassword" type="password" name="ConfirmPassword" value="${ConfirmPassword}" required>
-                        <div id="confirmPasswordError" class="error-message" style="display:none">Mật khẩu nhập lại không khớp</div>
-                        <div class="error-message">${messConfirmP}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="FullName">Họ tên</label></td>
-                    <td>
-                        <input class="input_type" id="FullName" type="text" name="FullName" value="${FullName}" required>
-                        <div class="error-message">${messFuName}</div>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td><label>Giới tính</label></td>
-                    <td>
-                        <input type="radio" id="Gender" name="Gender" value="M" ${Gender == 'M' ? 'checked' : ''} required>
-                        <label for="male">Nam</label>
-                        <input type="radio" id="Gender" name="Gender" value="F" ${Gender == 'F' ? 'checked' : ''} required>
-                        <label for="female">Nữ</label>
-                        <div class="error-message">${messGender}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="email">Email</label></td>
-                    <td>
-                        <input class="input_type" id="email" type="email" name="Email" value="${Email}" required oninput="checkEmail()">
-                        <div id="emailError" class="error-message" style="display:none">Invalid email format</div>
-                        <div class="error-message">${messEmail}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="mobile">Số điện thoại</label></td>
-                    <td>
-                        <input class="input_type" id="mobile" type="tel" name="Phone" value="${Phone}" required oninput="checkPhoneNumber()">
-                        <div id="phoneError" class="error-message" style="display:none">Invalid Vietnamese phone number format (e.g., 0912345678)</div>
-                        <div class="error-message">${messPhone}</div>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td colspan="2">
-                        <input type="hidden" name="Role" value="staff">
-                        <input type="hidden" name="AccountStatus" value="1">
-                        <div class="button-container" style="display: flex; justify-content: space-between;">
-                            <button type="submit">Tạo tài khoản</button>
-                            <button type="button" onclick="goBack()" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; cursor: pointer;">
-                                Quay lại
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
 
+        <%@ include file="/AminHeader.jsp" %>
+        <div class="form-container">
+            <form action="createStaff" method="post" onsubmit="return validateForm()">
+                <h2>Tạo nhân viên</h2>
+                <!-- Hiển thị thông báo -->
+                <c:if test="${not empty message}">
+                    <div class="${message.contains('thành công') ? 'success-message' : 'error-message'}">
+                        ${message}
+                    </div>
+                </c:if>
+                <table>
+                    <tr>
+                        <td><label for="UserName">Tên đăng nhập</label></td>
+                        <td>
+                            <input class="input_type" type="text" id="UserName" name="UserName" value="${UserName}" required>
+                            <div class="error-message">${messU}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="Password">Mật khẩu</label></td>
+                        <td>
+                            <input class="input_type" id="Password" type="password" name="Password" value="${Password}" required minlength="6">
+                            <div class="error-message">${messP}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="ConfirmPassword">Nhập lại mật khẩu</label></td>
+                        <td>
+                            <input class="input_type" id="ConfirmPassword" type="password" name="ConfirmPassword" value="${ConfirmPassword}" required>
+                            <div id="confirmPasswordError" class="error-message" style="display:none">Mật khẩu nhập lại không khớp</div>
+                            <div class="error-message">${messConfirmP}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="FullName">Họ tên</label></td>
+                        <td>
+                            <input class="input_type" id="FullName" type="text" name="FullName" value="${FullName}" required>
+                            <div class="error-message">${messFuName}</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label>Giới tính</label></td>
+                        <td>
+                            <input type="radio" id="Gender" name="Gender" value="M" ${Gender == 'M' ? 'checked' : ''} required>
+                            <label for="male">Nam</label>
+                            <input type="radio" id="Gender" name="Gender" value="F" ${Gender == 'F' ? 'checked' : ''} required>
+                            <label for="female">Nữ</label>
+                            <div class="error-message">${messGender}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="email">Email</label></td>
+                        <td>
+                            <input class="input_type" id="email" type="email" name="Email" value="${Email}" required oninput="checkEmail()">
+                            <div id="emailError" class="error-message" style="display:none">Invalid email format</div>
+                            <div class="error-message">${messEmail}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="mobile">Số điện thoại</label></td>
+                        <td>
+                            <input class="input_type" id="mobile" type="tel" name="Phone" value="${Phone}" required oninput="checkPhoneNumber()">
+                            <div id="phoneError" class="error-message" style="display:none">Invalid Vietnamese phone number format (e.g., 0912345678)</div>
+                            <div class="error-message">${messPhone}</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <input type="hidden" name="Role" value="staff">
+                            <input type="hidden" name="AccountStatus" value="1">
+                            <div class="button-container" style="display: flex; justify-content: space-between;">
+                                <button type="submit">Tạo tài khoản</button>
+                                <button type="button" onclick="goBack()" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; cursor: pointer;">
+                                    Quay lại
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
         <script>
             function goBack() {
                 window.location.href = 'ListUser';

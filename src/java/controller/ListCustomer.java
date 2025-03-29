@@ -54,7 +54,7 @@ public class ListCustomer extends HttpServlet {
         }
         baseQuery += " ORDER BY " + sortBy + " " + sortOrder;
 
-        List<Accounts> allCustomers = dao.getAllAccounts1(baseQuery);
+        List<Accounts> allCustomers = dao.getAllAccounts(baseQuery);
         int totalRecords = allCustomers.size();
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
