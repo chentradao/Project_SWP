@@ -5,13 +5,13 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="entity.Accounts" %>
+<%@page import="entity.Accounts,jakarta.servlet.http.HttpSession" %>
 <!DOCTYPE html>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .header_inner {
-            height: 80px;
+            height: 150px;
             padding: 0 20px;
             background: #f8f9fa;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -38,21 +38,44 @@
         }
     </style>
 <header class="header_inner d-flex align-items-center justify-content-between">
-    <div class="logo">
-        <a href="admin">Estée Lauder</a>
-    </div>
-    <nav class="main_nav flex-grow-1 text-center">
+    
+    <%
+         session = request.getSession();
+        Accounts acc = (Accounts) session.getAttribute("acc");
+        if (acc == null) {
+            response.sendRedirect("login.jsp");
+        }
+        if (acc.getRole().equals("staff")) { %>
+        <div class="logo">
+        <a href="manager">Estée Lauder</a>
+        </div>
+            <nav class="main_nav flex-grow-1 text-center">
         <ul class="navbar-nav d-flex flex-row justify-content-center">
-            <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="revenue">Doanh thu</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="orderManagement.jsp">Quản lý Đơn hàng</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Đơn hàng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="staff/products">Kho hàng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="slider">Quảng Cáo</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="FlashSaleURL?service=flashSaleList">Quản lý FlashSale</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="FlashSaleURL?service=flashSaleList">FlashSale</a></li>
             <li><a href="Blog?service=listAllBlogs">Bài đăng</a></li>
-            <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Quản lý Tài khoản</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Tài khoản</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="feedbacks">Phản hồi khách hàng</a></li>
         </ul>
     </nav>
+        <%} else { %>
+            <div class="logo">
+        <a href="admin">Estée Lauder</a>
+        </div>
+            <nav class="main_nav flex-grow-1 text-center">
+        <ul class="navbar-nav d-flex flex-row justify-content-center">
+            <li class="nav-item"><a class="nav-link text-dark" href="revenue">Doanh thu</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="staff/products">Kho hàng</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="slider">Quảng Cáo</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="FlashSaleURL?service=flashSaleList">FlashSale</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="ListUser">Tài khoản</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="feedbacks">Phản hồi khách hàng</a></li>
+        </ul>
+    </nav>
+        <%}%>
+    
     <div class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             ${sessionScope.acc.fullName}

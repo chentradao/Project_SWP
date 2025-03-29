@@ -37,8 +37,9 @@
                          <a class="dropdown-item" href="product-list?categoryId=<%= subCategory.getCategoryId() %>"><%= subCategory.getCategoryName() %></a>
                          <% } %>
                      </div>
-                 </li>
+                 </li>                 
                     <% } %>
+                    <li><a href="Blog?service=listAllBlogs">Bài đăng</a></li>
             </ul>
         </nav>
         <div class="header_content ml-auto">

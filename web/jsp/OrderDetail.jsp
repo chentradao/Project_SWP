@@ -186,8 +186,9 @@
                                 Mua Lại
                             </button>
                             <button
-                                class="order_button_2">
-                                Đánh Giá
+                                class="order_button_2"
+                                onclick="window.open('https://zalo.me/0926310999', '_blank')">
+                                Liên hệ với người bán 
                             </button>
                             <%}else if(order.getOrderStatus() == -1 || order.getOrderStatus() == 7){%>
                             <button

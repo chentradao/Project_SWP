@@ -137,73 +137,101 @@ public class DAOOrder extends DBConnection {
         return OrderCount;
     }
 
-    public List<Map<String, Object>> getOrderDetails(String[] statusFilters, String startDate, String endDate) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        Map<Integer, Double> orderTotalMap = new HashMap<>();
+    public List<Map<String, Object>> getOrderDetails(String statusFilter, String startDate, String endDate, String sortBy, String sortOrder, String paymentMethod) {
+    List<Map<String, Object>> list = new ArrayList<>();
+    Map<Integer, Double> orderTotalMap = new HashMap<>();
 
-        // Xây dựng SQL query với điều kiện lọc
-        StringBuilder sql = new StringBuilder(
-                "SELECT o.OrderID,o.orderCode, p.ProductName, od.Quantity, od.UnitPrice, o.OrderStatus,o.ShipAddress "
-                + "FROM OrderDetail od "
-                + "JOIN Orders o ON od.OrderID = o.OrderID "
-                + "JOIN Products p ON od.ProductID = p.ProductID "
-                + "WHERE o.OrderDate BETWEEN ? AND ?"
-        );
+    // Xây dựng SQL query với điều kiện lọc
+    StringBuilder sql = new StringBuilder(
+        "SELECT *," +        
+        "SUM(od.Quantity) OVER (PARTITION BY o.OrderID) AS TotalQuantity " +
+        "FROM OrderDetail od " +
+        "JOIN Orders o ON od.OrderID = o.OrderID " +
+        "JOIN ProductDetail pd ON od.ProductID = pd.ID " +
+        "JOIN Products p ON pd.ProductID = p.ProductID " +
+        "JOIN ( " +
+        "    SELECT ProductID, SUM(Quantity) AS TotalStock " +
+        "    FROM ProductDetail " +
+        "    GROUP BY ProductID " +
+        ") s ON s.ProductID = p.ProductID " +
+        "WHERE o.OrderDate BETWEEN ? AND ?"
+    );
 
-        // Thêm điều kiện lọc theo trạng thái nếu có
-        if (statusFilters != null && statusFilters.length > 0) {
-            sql.append(" AND o.OrderStatus IN (");
-            sql.append(String.join(",", Collections.nCopies(statusFilters.length, "?")));
-            sql.append(")");
-        }
-
-        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            // Đặt giá trị cho startDate và endDate
-            ps.setString(1, startDate);
-            ps.setString(2, endDate);
-
-            // Đặt giá trị cho OrderStatus nếu có
-            if (statusFilters != null) {
-                for (int i = 0; i < statusFilters.length; i++) {
-                    ps.setInt(i + 3, Integer.parseInt(statusFilters[i]));  // Vị trí bắt đầu từ 3
-                }
-            }
-
-            // Chạy query
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int orderId = rs.getInt("OrderID");
-                    double price = rs.getDouble("UnitPrice");
-                    int quantity = rs.getInt("Quantity");
-
-                    // Lưu thông tin đơn hàng vào danh sách
-                    Map<String, Object> row = new HashMap<>();
-                    row.put("OrderID", orderId);
-                    row.put("orderCode", rs.getString("orderCode"));
-                    row.put("ProductName", rs.getString("ProductName"));
-                    row.put("Quantity", quantity);
-                    row.put("ShipAddress", rs.getString("ShipAddress"));
-                    row.put("Price", price);
-                    row.put("OrderStatus", rs.getInt("OrderStatus"));
-
-                    list.add(row);
-
-                    // Tính tổng tiền cho từng OrderID
-                    orderTotalMap.put(orderId, orderTotalMap.getOrDefault(orderId, 0.0) + (price * quantity));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Gán tổng tiền vào danh sách (tránh mất đơn hàng cuối cùng)
-        for (Map<String, Object> order : list) {
-            int orderId = (int) order.get("OrderID");
-            order.put("TotalAmount", orderTotalMap.get(orderId));
-        }
-
-        return list;
+    // Thêm điều kiện lọc theo trạng thái nếu có
+    if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+        sql.append(" AND o.OrderStatus IN (").append(statusFilter).append(")");
     }
+
+    // Thêm điều kiện lọc theo phương thức thanh toán nếu có
+    if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+        sql.append(" AND o.PaymentMethod = ?");
+    }
+
+    // Thêm phần ORDER BY
+    if (sortBy != null && !sortBy.trim().isEmpty()) {
+        if (sortBy.equalsIgnoreCase("Quantity")) {
+            sql.append(" ORDER BY TotalQuantity ");
+        } else {
+            sql.append(" ORDER BY ").append(sortBy);
+        }
+
+        if (sortOrder != null && (sortOrder.equalsIgnoreCase("ASC") || sortOrder.equalsIgnoreCase("DESC"))) {
+            sql.append(" ").append(sortOrder);
+        } else {
+            sql.append(" ASC");
+        }
+    }
+
+    try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        int paramIndex = 1;
+        
+        // Đặt giá trị cho startDate và endDate
+        ps.setString(paramIndex++, startDate);
+        ps.setString(paramIndex++, endDate);
+
+        // Đặt giá trị cho PaymentMethod nếu có
+        if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+            ps.setString(paramIndex++, paymentMethod);
+        }
+
+        // Chạy query
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int orderId = rs.getInt("OrderID");
+                double price = rs.getDouble("UnitPrice");
+                int quantity = rs.getInt("Quantity");
+                
+                // Lưu thông tin đơn hàng vào danh sách
+                Map<String, Object> row = new HashMap<>();
+                row.put("OrderID", orderId);
+                row.put("orderCode", rs.getString("orderCode"));
+                row.put("ProductName", rs.getString("ProductName"));
+                row.put("Quantity", quantity);
+                row.put("Stock", rs.getInt("TotalStock"));
+                row.put("UnitPrice", price);
+                row.put("OrderStatus", rs.getInt("OrderStatus"));
+                row.put("ShipAddress", rs.getString("ShipAddress"));
+                row.put("PaymentMethod", rs.getString("PaymentMethod"));
+                row.put("TotalQuantity", rs.getInt("TotalQuantity"));
+                
+                list.add(row);
+
+                // Tính tổng tiền cho từng OrderID
+                orderTotalMap.put(orderId, orderTotalMap.getOrDefault(orderId, 0.0) + (price * quantity));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Gán tổng tiền vào danh sách
+    for (Map<String, Object> order : list) {
+        int orderId = (int) order.get("OrderID");
+        order.put("TotalAmount", orderTotalMap.get(orderId));
+    }
+
+    return list;
+}
 
     public void updateStatus(int orderId, int status) throws SQLException {
         try {

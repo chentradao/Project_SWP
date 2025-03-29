@@ -73,33 +73,29 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion toggled" id="accordionSidebar" style="font-family: Arial, sans-serif; font-weight: normal;">
-            <li class="nav-item">
-                <form action="revenue" method="post" class="p-3">
-                    <label for="start-date">Ngày bắt đầu:</label>
-                    <input type="date" id="start-date" name="start-date" value="${start_date}">
-                    <label for="end-date">Ngày kết thúc:</label>
-                    <input type="date" id="end-date" name="end-date" value="${end_date}">
-                    <button type="submit" class="btn btn-primary mt-3 w-100">Lọc</button>
+        <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
+                <form action="revenue" id="filter" method="get">
+                    <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
+
+                    <!-- Filter Type -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Ngày bắt đầu</label>
+                        <input type="date" value="startDate">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Ngày kết thúc</label>
+                        <input type="date" value="endDate">
+                    </div>
+
+                    <!-- Filter Button -->
+                    <button type="submit">Lọc</button>
                 </form>
-            </li>        
-            <hr class="sidebar-divider d-none d-md-block">
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
             </div>
-        </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Nút kéo sidebar ra -->
-        <button id="sidebarToggleTop" class="btn"><i class="fas fa-bars"></i></button>
-
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column toggled">
             <!-- Main Content -->
             <div id="content">               
                 <div class="container-fluid">
-                    <h1 class="h3 mb-2 text-gray-800">Thống kê doanh thu (${start_date} - ${end_date})</h1>
                     <!-- Content Row -->
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">

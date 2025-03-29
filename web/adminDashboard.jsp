@@ -5,9 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page isELIgnored="false" %>
 <%@ page import="java.util.Map" %>
-<%
-    Map<String, Integer> productSales = (Map<String, Integer>) request.getAttribute("productSales");
-%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
         <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
@@ -27,314 +25,246 @@
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <style>
-            .sidebar {
-                transition: all 0.3s ease-in-out;
-            }
-            .sidebar.toggled {
-                width: 0 !important;
-                overflow: hidden;
-            }
-            #content-wrapper.toggled {
-                margin-left: 0 !important;
-            }
-            @media (min-width: 768px) {
-                .sidebar {
-                    width: 250px !important;
-                }
-                #content-wrapper {
-                    margin-left: 250px;
-                    transition: all 0.3s ease-in-out;
-                    padding-top: 0;
-                    min-height: calc(100vh - 120px);
-                }
-            }
-            #sidebarToggleTop {
-                position: fixed;
-                left: 10px;
-                top: 150px;
-                z-index: 1000;
-                display: none;
-                background-color: #4e73df;
-                color: white;
-                border: none;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            #sidebarToggleTop:hover {
-                background-color: #375ab5;
-            }
-            .sidebar.toggled ~ #sidebarToggleTop {
-                display: block;
-            }
-            #sidebarToggle {
-                background-color: rgba(255, 255, 255, 0.2);
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
-                border-radius: 50%;
-                transition: all 0.3s ease;
-            }
-            #sidebarToggle:hover {
-                background-color: rgba(255, 255, 255, 0.3);
-            }
-            .filter-section {
-                padding: 15px;
-                border-radius: 5px;
-                margin-bottom: 20px;
-                color: #fff;
-            }
-
-            .filter-section .btn-primary {
-                background-color: #4e73df;
-                border-color: #4e73df;
-            }
-            .filter-section .btn-primary:hover {
-                background-color: #375ab5;
-                border-color: #375ab5;
-            }
-            .card {
-                margin-bottom: 20px;
-                border: none;
-                border-radius: 10px;
-                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-            }
-            .card-body {
-                padding: 1.5rem;
-            }
-            .chart-container {
-                position: relative;
-                height: 400px;
-                margin-bottom: 20px;
-            }
-            .table th, .table td {
-                vertical-align: middle;
-            }
-            .header_inner {
-                position: relative;
-                height: 120px;
-                padding: 0 64px;
-                background-color: #fff;
-                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-            }
-        </style>
+        
     </head>
 
     <body id="page-top">
-        <%@ include file="/AminHeader.jsp" %>
+         <%@ include file="AminHeader.jsp" %>
 
         <div id="wrapper">
-            <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar" style="font-family: Arial, sans-serif; font-weight: normal;">
-                <li class="nav-item">
-                    <form action="admin" method="post" class="filter-section">
-                        <label for="filter-type">Loại lọc:</label>
-                        <select id="filter-type" name="filter-type">
-                            <option value="day">Theo ngày</option>
-                            <option value="month">Theo tháng</option>
-                            <option value="year">Theo năm</option>
+
+            <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
+                <form action="admin" id="filter" method="get">
+                    <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
+
+                    <!-- Filter Type -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Loại bộ lọc</label>
+                        <select id="filterType" name="filterType" class="mt-1 w-full border rounded-lg p-2" onchange="toggleFilters()">
+                            <option value="day" ${filterType == 'day' ? 'selected' : ''}>Theo ngày</option>
+                            <option value="month" ${filterType == 'month' ? 'selected' : ''}>Theo tháng</option>
+                            <option value="year" ${filterType == 'year' ? 'selected' : ''}>Theo năm</option>
                         </select>
-                        <label for="start-date">Ngày bắt đầu:</label>
-                        <input type="date" id="start-date" name="start-date" value="${start_date}">
-                        <label for="end-date">Ngày kết thúc:</label>
-                        <input type="date" id="end-date" name="end-date" value="${end_date}">
-                        <button type="submit" class="btn btn-primary mt-3 w-100">Lọc</button>
-                    </form>
-                </li>
-                <hr class="sidebar-divider d-none d-md-block">
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-                </div>
-            </ul>
+                    </div>
 
-            <button id="sidebarToggleTop" class="btn"><i class="fas fa-bars"></i></button>
+                    <!-- Filter by Month -->
+                    <div class="mb-4" id="monthFilterDiv">
+                        <label class="block text-sm font-medium text-gray-700">Tháng</label>
+                        <select id="filterMonth" name="month" class="mt-1 w-full border rounded-lg p-2">
+                            <option value="" ${empty month ? 'selected' : ''}>Chọn tháng</option>
+                            <option value="1" ${month == '1' ? 'selected' : ''}>Tháng 1</option>
+                            <option value="2" ${month == '2' ? 'selected' : ''}>Tháng 2</option>
+                            <option value="3" ${month == '3' ? 'selected' : ''}>Tháng 3</option>
+                            <option value="4" ${month == '4' ? 'selected' : ''}>Tháng 4</option>
+                            <option value="5" ${month == '5' ? 'selected' : ''}>Tháng 5</option>
+                            <option value="6" ${month == '6' ? 'selected' : ''}>Tháng 6</option>
+                            <option value="7" ${month == '7' ? 'selected' : ''}>Tháng 7</option>
+                            <option value="8" ${month == '8' ? 'selected' : ''}>Tháng 8</option>
+                            <option value="9" ${month == '9' ? 'selected' : ''}>Tháng 9</option>
+                            <option value="10" ${month == '10' ? 'selected' : ''}>Tháng 10</option>
+                            <option value="11" ${month == '11' ? 'selected' : ''}>Tháng 11</option>
+                            <option value="12" ${month == '12' ? 'selected' : ''}>Tháng 12</option>
+                        </select>
+                    </div>
 
-            <div id="content-wrapper" class="d-flex flex-column">
-                <div id="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-xl-4 col-md-6 mb-4">
-                                <div class="card border-left-primary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Tổng doanh thu
-                                                </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                    <c:out value="${not empty totalRevenue ? totalRevenue : 0}"/> VND
-                                                </div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6 mb-4">
-                                <div class="card border-left-success shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                    Số lượng bán
-                                                </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                    <c:out value="${not empty totalSold ? totalSold : 0}"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6 mb-4">
-                                <div class="card border-left-info shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                    Tồn kho còn lại
-                                                </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                    <c:out value="${not empty totalStock ? totalStock : 0}"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-warehouse fa-2x text-gray-300"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Filter by Year -->
+                    <div class="mb-4" id="yearFilterDiv">
+                        <label class="block text-sm font-medium text-gray-700">Năm</label>
+                        <select id="filterYear" name="year" class="mt-1 w-full border rounded-lg p-2">
+                            <option value="" ${empty year ? 'selected' : ''}>Chọn năm</option>
+                            <!-- Giả sử danh sách năm từ 2020 đến 2025, bạn có thể điều chỉnh -->
+                            <option value="2020" ${year == '2020' ? 'selected' : ''}>2020</option>
+                            <option value="2021" ${year == '2021' ? 'selected' : ''}>2021</option>
+                            <option value="2022" ${year == '2022' ? 'selected' : ''}>2022</option>
+                            <option value="2023" ${year == '2023' ? 'selected' : ''}>2023</option>
+                            <option value="2024" ${year == '2024' ? 'selected' : ''}>2024</option>
+                            <option value="2025" ${year == '2025' ? 'selected' : ''}>2025</option>
+                        </select>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Biểu đồ Doanh thu</h6>
-                                        <form action="admin" method="post" class="filter-form">                                    
-                                            <select id="filter-type" name="filter-type" onchange="this.form.submit()">
-                                                <option value="year" ${filterType == 'year' ? 'selected' : ''}>Theo năm</option>
-                                                <option value="month" ${filterType == 'month' ? 'selected' : ''}>Theo tháng</option>
-                                            </select>                                    
-                                        </form>
+                    <!-- Filter Button -->
+                    <button type="submit">Lọc</button>
+                </form>
+            </div>
+                <div id="content-wrapper" class="d-flex flex-column">
+                    <div id="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card border-left-primary shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        Tổng doanh thu
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        <c:out value="${not empty totalRevenue ? totalRevenue : 0}"/> VND
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="chart-container">
-                                            <canvas id="revenueChart"></canvas>
+                                </div>
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card border-left-success shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                        Số lượng bán
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        <c:out value="${not empty totalSold ? totalSold : 0}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="card border-left-info shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                        Tồn kho còn lại
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        <c:out value="${not empty totalStock ? totalStock : 0}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-warehouse fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo Danh mục</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="chart-container">
-                                            <canvas id="categoryRevenueChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Số Khách hàng Đăng ký mới</h6>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="m-0 font-weight-bold text-primary">Biểu đồ Doanh thu</h6>                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="revenueChart"></canvas>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="chart-container">
-                                            <canvas id="newCustomerChart"></canvas>
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo Danh mục</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="categoryRevenueChart"></canvas>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Tồn kho</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="chart-container">
-                                            <canvas id="inventoryChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Top Sản phẩm Bán chạy</h6>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Số Khách hàng Đăng ký mới</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="newCustomerChart"></canvas>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tên sản phẩm</th>
-                                                        <th>Kích thước</th>
-                                                        <th>Màu sắc</th>
-                                                        <th>Số lượng bán</th>
-                                                        <th>Doanh thu</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach var="item" items="${topSellingProducts}" varStatus="loop">
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Tồn kho</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="inventoryChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Top Sản phẩm Bán chạy</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
                                                         <tr>
-                                                            <td>${item.productName}</td>
-                                                            <td>${item.size}</td>
-                                                            <td>${item.color}</td>
-                                                            <td>${item.soldQuantity}</td>
-                                                            <td><c:out value="${item.soldQuantity * item.price}"/> VND</td>
+                                                            <th>Tên sản phẩm</th>
+                                                            <th>Kích thước</th>
+                                                            <th>Màu sắc</th>
+                                                            <th>Số lượng bán</th>
+                                                            <th>Doanh thu</th>
                                                         </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach var="item" items="${topSellingProducts}" varStatus="loop">
+                                                            <tr>
+                                                                <td>${item.productName}</td>
+                                                                <td>${item.size}</td>
+                                                                <td>${item.color}</td>
+                                                                <td>${item.soldQuantity}</td>
+                                                                <td><c:out value="${item.soldQuantity * item.price}"/> VND</td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Sản phẩm Sắp hết hàng</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="lowStockTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tên sản phẩm</th>
-                                                        <th>Kích thước</th>
-                                                        <th>Màu sắc</th>
-                                                        <th>Số lượng tồn</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach var="item" items="${lowStockProducts}" varStatus="loop">
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Sản phẩm Sắp hết hàng</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="lowStockTable" width="100%" cellspacing="0">
+                                                    <thead>
                                                         <tr>
-                                                            <td>${item.productName}</td>
-                                                            <td>${item.size}</td>
-                                                            <td>${item.color}</td>
-                                                            <td>${item.quantity}</td>
+                                                            <th>Tên sản phẩm</th>
+                                                            <th>Kích thước</th>
+                                                            <th>Màu sắc</th>
+                                                            <th>Số lượng tồn</th>
                                                         </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach var="item" items="${lowStockProducts}" varStatus="loop">
+                                                            <tr>
+                                                                <td>${item.productName}</td>
+                                                                <td>${item.size}</td>
+                                                                <td>${item.color}</td>
+                                                                <td>${item.quantity}</td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -343,7 +273,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
@@ -353,129 +282,114 @@
         <script src="js/cart_custom.js"></script>
 
         <script>
-                $(document).ready(function () {
-                const $sidebar = $("#accordionSidebar");
-                const $contentWrapper = $("#content-wrapper");
-                const $toggleBtn = $("#sidebarToggle");
-                const $toggleBtnTop = $("#sidebarToggleTop");
+                                               
 
-                function toggleSidebar() {
-                $sidebar.toggleClass("toggled");
-                $contentWrapper.toggleClass("toggled");
-                $toggleBtnTop.toggle($sidebar.hasClass("toggled"));
-                }
+                                                    // Biểu đồ Doanh thu
+                                                    const revenueLabels = '${revenueLabels}' ? JSON.parse('${revenueLabels}') : [];
+                                                    const revenueData = '${revenueData}' ? JSON.parse('${revenueData}') : [];
+                                                    const revenueChart = new Chart(document.getElementById('revenueChart'), {
+                                                        type: 'bar',
+                                                        data: {
+                                                            labels: revenueLabels,
+                                                            datasets: [{
+                                                                    label: 'Doanh thu (VND)',
+                                                                    data: revenueData,
+                                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                                    borderWidth: 1
+                                                                }]
+                                                        },
+                                                        options: {
+                                                            responsive: true,
+                                                            maintainAspectRatio: false,
+                                                            scales: {
+                                                                y: {beginAtZero: true, ticks: {callback: value => value.toLocaleString('vi-VN') + ' VND'}},
+                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                                            }
+                                                        }
+                                                    });
 
-                $toggleBtn.add($toggleBtnTop).on("click", function (e) {
-                e.preventDefault();
-                toggleSidebar();
-                });
+                                                    // Biểu đồ Doanh thu theo Danh mục
+                                                    const categoryLabels = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categories : [];
+                                                    const categoryData = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categoryRevenue : [];
+                                                    const categoryRevenueChart = new Chart(document.getElementById('categoryRevenueChart'), {
+                                                        type: 'pie',
+                                                        data: {
+                                                            labels: categoryLabels,
+                                                            datasets: [{
+                                                                    label: 'Doanh thu (VND)',
+                                                                    data: categoryData,
+                                                                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                                                                    borderColor: '#fff',
+                                                                    borderWidth: 1
+                                                                }]
+                                                        },
+                                                        options: {
+                                                            responsive: true,
+                                                            maintainAspectRatio: false,
+                                                            plugins: {
+                                                                tooltip: {callbacks: {label: context => `${context.label}: ${context.parsed.toLocaleString('vi-VN')} VND`}}
+                                                            }
+                                                        }
+                                                    });
 
-                // Biểu đồ Doanh thu
-                const revenueLabels = '${revenueLabels}' ? JSON.parse('${revenueLabels}') : [];
-                const revenueData = '${revenueData}' ? JSON.parse('${revenueData}') : [];
-                const revenueChart = new Chart(document.getElementById('revenueChart'), {
-                type: 'bar',
-                data: {
-                labels: revenueLabels,
-                datasets: [{
-                label: 'Doanh thu (VND)',
-                data: revenueData,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-                }]
-                },
-                options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                y: {beginAtZero: true, ticks: {callback: value => value.toLocaleString('vi-VN') + ' VND'}},
-                x: {ticks: {maxRotation: 45, minRotation: 45}}
-                }
-                }
-                });
+                                                    // Biểu đồ Số khách hàng mới
+                                                    const newCustomerLabels = '${newCustomerData}' ? JSON.parse('${newCustomerData}').timeLabels : [];
+                                                    const newCustomerData = '${newCustomerData}' ? JSON.parse('${newCustomerData}').newCustomers : [];
+                                                    const newCustomerChart = new Chart(document.getElementById('newCustomerChart'), {
+                                                        type: 'bar',
+                                                        data: {
+                                                            labels: newCustomerLabels,
+                                                            datasets: [{
+                                                                    label: 'Khách hàng mới',
+                                                                    data: newCustomerData,
+                                                                    backgroundColor: 'rgba(28, 200, 138, 0.2)',
+                                                                    borderColor: '#1cc88a',
+                                                                    borderWidth: 2,
+                                                                    fill: true
+                                                                }]
+                                                        },
+                                                        options: {
+                                                            responsive: true,
+                                                            maintainAspectRatio: false,
+                                                            scales: {
+                                                                y: {beginAtZero: true},
+                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                                            }
+                                                        }
+                                                    });
 
-                // Biểu đồ Doanh thu theo Danh mục
-                const categoryLabels = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categories : [];
-                const categoryData = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categoryRevenue : [];
-                const categoryRevenueChart = new Chart(document.getElementById('categoryRevenueChart'), {
-                type: 'pie',
-                 data: {
-                 labels: categoryLabels,
-                datasets: [{
-                 label: 'Doanh thu (VND)',
-                 data: categoryData,
-                 backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
-                borderColor: '#fff',
-                 borderWidth: 1
-            }]
-               },
-               options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                plugins: {
-                tooltip: {callbacks: {label: context => `${context.label}: ${context.parsed.toLocaleString('vi-VN')} VND`}}
-                }
-                }
-                });
+                                                    // Biểu đồ Tồn kho
+                                                    const inventoryLabels = '${inventoryData}' ? JSON.parse('${inventoryData}').productNames : [];
+                                                    const inventoryData = '${inventoryData}' ? JSON.parse('${inventoryData}').stockQuantities : [];
+                                                    const inventoryChart = new Chart(document.getElementById('inventoryChart'), {
+                                                        type: 'bar',
+                                                        data: {
+                                                            labels: inventoryLabels,
+                                                            datasets: [{
+                                                                    label: 'Số lượng tồn',
+                                                                    data: inventoryData,
+                                                                    backgroundColor: 'rgba(246, 194, 62, 0.2)',
+                                                                    borderColor: '#f6c23e',
+                                                                    borderWidth: 1
+                                                                }]
+                                                        },
+                                                        options: {
+                                                            responsive: true,
+                                                            maintainAspectRatio: false,
+                                                            scales: {
+                                                                y: {beginAtZero: true},
+                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                                            }
+                                                        }
+                                                    });
 
-                // Biểu đồ Số khách hàng mới
-                const newCustomerLabels = '${newCustomerData}' ? JSON.parse('${newCustomerData}').timeLabels : [];
-                const newCustomerData = '${newCustomerData}' ? JSON.parse('${newCustomerData}').newCustomers : [];
-                const newCustomerChart = new Chart(document.getElementById('newCustomerChart'), {
-                type: 'bar',
-                data: {
-                labels: newCustomerLabels,
-                datasets: [{
-                label: 'Khách hàng mới',
-                data: newCustomerData,
-                backgroundColor: 'rgba(28, 200, 138, 0.2)',
-                borderColor: '#1cc88a',
-                borderWidth: 2,
-                fill: true
-                }]
-                },
-                options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                y: {beginAtZero: true},
-                x: {ticks: {maxRotation: 45, minRotation: 45}}
-                }
-                }
-                });
+                                                    $(".filter-form select").on("change", function () {
+                                                        $(this).closest("form").submit();
+                                                    });
 
-                // Biểu đồ Tồn kho
-                const inventoryLabels = '${inventoryData}' ? JSON.parse('${inventoryData}').productNames : [];
-                const inventoryData = '${inventoryData}' ? JSON.parse('${inventoryData}').stockQuantities : [];
-                const inventoryChart = new Chart(document.getElementById('inventoryChart'), {
-                type: 'bar',
-                data: {
-                labels: inventoryLabels,
-                datasets: [{
-                label: 'Số lượng tồn',
-                data: inventoryData,
-                backgroundColor: 'rgba(246, 194, 62, 0.2)',
-                borderColor: '#f6c23e',
-                borderWidth: 1
-                }]
-                },
-                 options: {
-                 responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                 y: {beginAtZero: true},
-                 x: {ticks: {maxRotation: 45, minRotation: 45}}
-                }
-                }
-                  });
-
-                 $(".filter-form select").on("change", function () {
-                 $(this).closest("form").submit();
-                });
-
-                $("#content").css("opacity", 1);
-                 });
+                                                    $("#content").css("opacity", 1);
+                                                });
         </script>
     </body>
 </html>

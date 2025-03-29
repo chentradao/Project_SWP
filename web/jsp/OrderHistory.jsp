@@ -137,11 +137,7 @@
                         <p class="total">Tổng <%=order.getOrderDetail().size()%> mặt hàng: <%=formatter.format(order.getTotalCost())%>đ</p>
                         <div class="flex space-x-2">
                             <%if(order.getOrderStatus() == 1 || order.getOrderStatus() == 0 ){%>
-                            <button
-                                class="order_button_2"
-                                onclick="window.open('https://zalo.me/0926310999', '_blank')">
-                                Liên hệ với người bán 
-                            </button>
+                            
                             <button type="button"
                                     class="order_button_2"
                                     data-orderid="<%=order.getOrderID()%>"
@@ -163,8 +159,9 @@
                                 Mua Lại
                             </button>
                             <button
-                                class="order_button_2">
-                                Đánh Giá
+                                class="order_button_2"
+                                onclick="window.open('https://zalo.me/0926310999', '_blank')">
+                                Liên hệ với người bán 
                             </button>
                             <%}else if(order.getOrderStatus() == -1 || order.getOrderStatus() == 7){%>
                             <button

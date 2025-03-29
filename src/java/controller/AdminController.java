@@ -30,7 +30,9 @@ public class AdminController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Lấy thông tin lọc từ form
-        String filterType = request.getParameter("filter-type");
+        String filterType = request.getParameter("filterType");
+        String month = request.getParameter("month");
+        String year = request.getParameter("year");
         if (filterType == null || filterType.isEmpty()) {
             filterType = "month"; // Mặc định lọc theo tháng
         }
@@ -45,12 +47,12 @@ public class AdminController extends HttpServlet {
 
         // Lấy dữ liệu từ DAOInventory
         RevenueSummary summary = inventoryDAO.getRevenueSummary(startDate, endDate);
-        Map<String, Object> chartData = inventoryDAO.getRevenueChartData(filterType, startDate, endDate);
+        Map<String, Object> chartData = inventoryDAO.getRevenueChartData(filterType, month, year, startDate, endDate);
         List<InventoryItem> topSellingProducts = inventoryDAO.getTopSellingProducts(5, startDate, endDate);
         
         // Dữ liệu mới
         Map<String, Object> categoryRevenueData = inventoryDAO.getCategoryRevenueData(startDate, endDate);
-        List<InventoryItem> lowStockProducts = inventoryDAO.getLowStockProducts(5); // Ngưỡng < 5
+        List<InventoryItem> lowStockProducts = inventoryDAO.getLowStockProducts(10); // Ngưỡng < 10
         Map<String, Object> newCustomerData = inventoryDAO.getNewCustomerData(filterType, startDate, endDate);
         Map<String, Object> inventoryData = inventoryDAO.getInventoryData();
 
@@ -87,5 +89,5 @@ public class AdminController extends HttpServlet {
         processRequest(request, response);
     }
 
-    
+   
 }

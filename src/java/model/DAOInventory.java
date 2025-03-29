@@ -79,7 +79,7 @@ public class DAOInventory extends DBConnection {
         return inventoryList;
     }
 
-    // Lấy số lượng sản phẩm có tồn kho thấp (giả định ngưỡng < 10)
+
     public int getLowStockCount() {
         int count = 0;
         String sql = "SELECT COUNT(*) AS count FROM ProductDetail WHERE Quantity < 10";
@@ -97,25 +97,8 @@ public class DAOInventory extends DBConnection {
         return count;
     }
 
-    // Lấy số lượng sản phẩm có tồn kho đủ (giả định >= 10)
-    public int getNormalStockCount() {
-        int count = 0;
-        String sql = "SELECT COUNT(*) AS count FROM ProductDetail WHERE Quantity >= 10";
 
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            if (rs.next()) {
-                count = rs.getInt("count");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
-
-    // Cập nhật số lượng (ví dụ khi sửa)
+    // Cập nhật số lượng 
     public void updateQuantity(int productDetailId, int quantity) {
         String sql = "UPDATE ProductDetail SET Quantity = ? WHERE ID = ?";
 
@@ -144,80 +127,109 @@ public class DAOInventory extends DBConnection {
         }
     }
 
-    public Map<String, Object> getRevenueChartData(String filterType, String startDate, String endDate) {
-        Logger logger = Logger.getLogger(DAOInventory.class.getName());
-        Map<String, Object> chartData = new HashMap<>();
-        List<String> labels = new ArrayList<>();
-        List<Double> data = new ArrayList<>();
+    public Map<String, Object> getRevenueChartData(String filterType, String month, String year, String startDate, String endDate) {
+    Logger logger = Logger.getLogger(DAOInventory.class.getName());
+    Map<String, Object> chartData = new HashMap<>();
+    List<String> labels = new ArrayList<>();
+    List<Double> data = new ArrayList<>();
+    startDate = validateDate(startDate, "2025-01-01");
+    endDate = validateDate(endDate, LocalDate.now().toString());
+    filterType = (filterType == null || filterType.trim().isEmpty()) ? "month" : filterType.toLowerCase();
+    String sql = buildChartQuery(filterType, month, year);
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        int paramIndex = 1;
+        pstmt.setString(paramIndex++, startDate);
+        pstmt.setString(paramIndex++, endDate);
 
-        // Chuẩn hóa đầu vào
-        startDate = validateDate(startDate, "2025-01-01");
-        endDate = validateDate(endDate, LocalDate.now().toString());
-        filterType = (filterType == null || filterType.trim().isEmpty()) ? "month" : filterType.toLowerCase();
-
-        logger.info("Fetching revenue chart data - Filter: " + filterType + ", Start: " + startDate + ", End: " + endDate);
-
-        String sql = buildChartQuery(filterType);
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            if (conn == null) {
-                logger.severe("Database connection is null!");
-                throw new SQLException("Database connection is null");
+        if ("day".equals(filterType)) {
+            if (month != null && !month.isEmpty()) {
+                pstmt.setString(paramIndex++, month);
             }
-
-            pstmt.setString(1, startDate);
-            pstmt.setString(2, endDate);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    labels.add(rs.getString("dateLabel"));
-                    double revenue = rs.getDouble("revenue");
-                    data.add(rs.wasNull() ? 0.0 : revenue); // Xử lý NULL
-                    logger.info("Data point - Label: " + rs.getString("dateLabel") + ", Revenue: " + revenue);
-                }
+            if (year != null && !year.isEmpty()) {
+                pstmt.setString(paramIndex++, year);
             }
-            chartData.put("labels", labels);
-            chartData.put("data", data);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error fetching revenue chart data: " + e.getMessage(), e);
+        } else if ("month".equals(filterType)) {
+            if (month != null && !month.isEmpty()) {
+                pstmt.setString(paramIndex++, month);
+            }
+            if (year != null && !year.isEmpty()) {
+                pstmt.setString(paramIndex++, year);
+            }
+        } else if ("year".equals(filterType)) {
+            if (year != null && !year.isEmpty()) {
+                pstmt.setString(paramIndex++, year);
+            }
         }
 
-        logger.info("Returning chart data - Labels: " + labels + ", Data: " + data);
-        return chartData;
-    }
-
-    private String buildChartQuery(String filterType) {
-        String baseSql = "SELECT ";
-        String whereClause = " WHERE o.OrderStatus = 1 AND o.OrderDate BETWEEN ? AND ? ";
-        String groupBy = " GROUP BY ";
-        String orderBy = " ORDER BY ";
-        String fromClause = " FROM [SWP].[dbo].[OrderDetail] od "
-                + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID ";
-
-        switch (filterType) {
-            case "year":
-                baseSql += "YEAR(o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
-                groupBy += "YEAR(o.OrderDate)";
-                orderBy += "YEAR(o.OrderDate)";
-                break;
-            case "quarter":
-                baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' Q' + DATENAME(quarter, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
-                groupBy += "YEAR(o.OrderDate), DATENAME(quarter, o.OrderDate)";
-                orderBy += "YEAR(o.OrderDate), DATEPART(quarter, o.OrderDate)";
-                break;
-            case "day":
-                baseSql += "CAST(o.OrderDate AS DATE) AS dateLabel, SUM(o.TotalCost) AS revenue ";
-                groupBy += "CAST(o.OrderDate AS DATE)";
-                orderBy += "CAST(o.OrderDate AS DATE)";
-                break;
-            case "month":
-            default:
-                baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' ' + DATENAME(month, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
-                groupBy += "YEAR(o.OrderDate), DATENAME(month, o.OrderDate), MONTH(o.OrderDate)";
-                orderBy += "YEAR(o.OrderDate), MONTH(o.OrderDate)";
-                break;
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                labels.add(rs.getString("dateLabel"));
+                double revenue = rs.getDouble("revenue");
+                data.add(rs.wasNull() ? 0.0 : revenue);
+            }
         }
-
-        return baseSql + fromClause + whereClause + groupBy + orderBy;
+        chartData.put("labels", labels);
+        chartData.put("data", data);
+    } catch (SQLException e) {
+        logger.log(Level.SEVERE, "Error fetching revenue chart data: " + e.getMessage(), e);
     }
+
+    return chartData;
+}
+
+
+    private String buildChartQuery(String filterType, String month, String year) {
+    String baseSql = "SELECT ";
+    String whereClause = " WHERE o.OrderStatus = 5 AND o.OrderDate BETWEEN ? AND ? ";
+    String groupBy = " GROUP BY ";
+    String orderBy = " ORDER BY ";
+    String fromClause = " FROM [SWP].[dbo].[OrderDetail] od "
+            + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID ";
+
+    switch (filterType) {
+        case "year":
+            baseSql += "YEAR(o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+            groupBy += "YEAR(o.OrderDate)";
+            orderBy += "YEAR(o.OrderDate)";
+            break;
+
+        case "day":
+            baseSql += "CAST(o.OrderDate AS DATE) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+            groupBy += "CAST(o.OrderDate AS DATE)";
+            orderBy += "CAST(o.OrderDate AS DATE)";
+
+            if (month != null && !month.isEmpty()) {
+                whereClause += " AND MONTH(o.OrderDate) = ? ";
+            }
+            if (year != null && !year.isEmpty()) {
+                whereClause += " AND YEAR(o.OrderDate) = ? ";
+            }
+            break;
+
+        case "month":
+            baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' ' + DATENAME(month, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+            groupBy += "YEAR(o.OrderDate), DATENAME(month, o.OrderDate), MONTH(o.OrderDate)";
+            orderBy += "YEAR(o.OrderDate), MONTH(o.OrderDate)";
+
+            if (month != null && !month.isEmpty()) {
+                whereClause += " AND MONTH(o.OrderDate) = ? ";
+            }
+            if (year != null && !year.isEmpty()) {
+                whereClause += " AND YEAR(o.OrderDate) = ? ";
+            }
+            break;
+
+        default:
+            baseSql += "CAST(YEAR(o.OrderDate) AS VARCHAR) + ' ' + DATENAME(month, o.OrderDate) AS dateLabel, SUM(o.TotalCost) AS revenue ";
+            groupBy += "YEAR(o.OrderDate), DATENAME(month, o.OrderDate), MONTH(o.OrderDate)";
+            orderBy += "YEAR(o.OrderDate), MONTH(o.OrderDate)";
+            break;
+    }
+
+    return baseSql + fromClause + whereClause + groupBy + orderBy;
+}
+
 
     private String validateDate(String date, String defaultDate) {
         if (date == null || date.trim().isEmpty()) {
@@ -242,9 +254,8 @@ public class DAOInventory extends DBConnection {
                 + "FROM [SWP].[dbo].[OrderDetail] od "
                 + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID "
                 + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
-                + "WHERE o.OrderStatus = 3 AND o.OrderDate BETWEEN ? AND ?";
+                + "WHERE o.OrderStatus = 5 AND o.OrderDate BETWEEN ? AND ?";
 
-        // Chuẩn hóa ngày
         startDate = validateDate(startDate, "2025-01-01");
         endDate = validateDate(endDate, LocalDate.now().toString());
 
@@ -291,7 +302,7 @@ public class DAOInventory extends DBConnection {
         return summary;
     }
 
-    // Lấy top sản phẩm bán chạy (giữ nguyên)
+    // Lấy top sản phẩm bán chạy 
     public List<InventoryItem> getTopSellingProducts(int limit, String startDate, String endDate) {
         List<InventoryItem> topSellingList = new ArrayList<>();
         String sql = "SELECT TOP (?) pd.ID AS productDetailId, pd.ProductID, p.ProductName, pd.Size, pd.Color, pd.SoldQuantity, pd.Price "
@@ -333,20 +344,18 @@ public class DAOInventory extends DBConnection {
         List<String> categories = new ArrayList<>();
         List<Double> categoryRevenue = new ArrayList<>();
 
-        // Chuẩn hóa ngày
         startDate = validateDate(startDate, "2025-01-01");
         endDate = validateDate(endDate, LocalDate.now().toString());
 
         logger.info("Fetching category revenue data - Start: " + startDate + ", End: " + endDate);
 
-        // Đồng bộ với Orders thay vì ProductDetail
         String sql = "SELECT c.CategoryName, SUM(o.TotalCost) AS CategoryRevenue "
                 + "FROM [SWP].[dbo].[OrderDetail] od "
                 + "JOIN [SWP].[dbo].[Orders] o ON od.OrderID = o.OrderID "
                 + "JOIN [SWP].[dbo].[ProductDetail] pd ON od.ProductID = pd.ProductID "
                 + "JOIN [SWP].[dbo].[Products] p ON pd.ProductID = p.ProductID "
                 + "JOIN [SWP].[dbo].[Categories] c ON p.CategoryID = c.CategoryID "
-                + "WHERE o.OrderStatus = 3 AND o.OrderDate BETWEEN ? AND ? "
+                + "WHERE o.OrderStatus = 5 AND o.OrderDate BETWEEN ? AND ? "
                 + "GROUP BY c.CategoryName";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -485,86 +494,5 @@ public class DAOInventory extends DBConnection {
         return inventoryData;
     }
 
-    public static void main(String[] args) {
-        // Khởi tạo DAOInventory
-        DAOInventory dao = new DAOInventory();
-
-        // 1. Kiểm tra getAllInventory
-        System.out.println("=== Kiểm tra getAllInventory ===");
-        List<InventoryItem> allInventory = dao.getAllInventory();
-        for (InventoryItem item : allInventory) {
-            System.out.println("Product: " + item.getProductName() + ", Quantity: " + item.getQuantity() + ", Sold: " + item.getSoldQuantity());
-        }
-
-        // 2. Kiểm tra getInventoryByDateRange
-        System.out.println("\n=== Kiểm tra getInventoryByDateRange ===");
-        String startDate = "2025-01-01";
-        String endDate = "2025-03-27";
-        List<InventoryItem> inventoryByDate = dao.getInventoryByDateRange(startDate, endDate);
-        for (InventoryItem item : inventoryByDate) {
-            System.out.println("Product: " + item.getProductName() + ", Quantity: " + item.getQuantity());
-        }
-
-        // 3. Kiểm tra getLowStockCount
-        System.out.println("\n=== Kiểm tra getLowStockCount ===");
-        int lowStockCount = dao.getLowStockCount();
-        System.out.println("Số sản phẩm tồn kho thấp (< 10): " + lowStockCount);
-
-        // 4. Kiểm tra getNormalStockCount
-        System.out.println("\n=== Kiểm tra getNormalStockCount ===");
-        int normalStockCount = dao.getNormalStockCount();
-        System.out.println("Số sản phẩm tồn kho đủ (>= 10): " + normalStockCount);
-
-        // 5. Kiểm tra updateQuantity (giả định productDetailId = 1)
-        System.out.println("\n=== Kiểm tra updateQuantity ===");
-        int productDetailId = 1; // Thay bằng ID thực tế trong DB
-        int newQuantity = 15;
-        dao.updateQuantity(productDetailId, newQuantity);
-        System.out.println("Đã cập nhật Quantity cho productDetailId = " + productDetailId + " thành " + newQuantity);
-
-        // 7. Kiểm tra getRevenueChartData
-        System.out.println("\n=== Kiểm tra getRevenueChartData (month) ===");
-        Map<String, Object> chartData = dao.getRevenueChartData("month", startDate, endDate);
-        System.out.println("Labels: " + chartData.get("labels"));
-        System.out.println("Data: " + chartData.get("data"));
-
-        // 8. Kiểm tra getRevenueSummary
-        System.out.println("\n=== Kiểm tra getRevenueSummary ===");
-        RevenueSummary summary = dao.getRevenueSummary(startDate, endDate);
-        System.out.println("Total Revenue: " + summary.getTotalRevenue());
-        System.out.println("Total Sold: " + summary.getTotalSold());
-        System.out.println("Total Stock: " + summary.getTotalStock());
-
-        // 9. Kiểm tra getTopSellingProducts
-        System.out.println("\n=== Kiểm tra getTopSellingProducts ===");
-        List<InventoryItem> topSelling = dao.getTopSellingProducts(5, startDate, endDate);
-        for (InventoryItem item : topSelling) {
-            System.out.println("Product: " + item.getProductName() + ", Sold: " + item.getSoldQuantity());
-        }
-
-        // 10. Kiểm tra getCategoryRevenueData
-        System.out.println("\n=== Kiểm tra getCategoryRevenueData ===");
-        Map<String, Object> categoryData = dao.getCategoryRevenueData(startDate, endDate);
-        System.out.println("Categories: " + categoryData.get("categories"));
-        System.out.println("Category Revenue: " + categoryData.get("categoryRevenue"));
-
-        // 11. Kiểm tra getLowStockProducts
-        System.out.println("\n=== Kiểm tra getLowStockProducts ===");
-        List<InventoryItem> lowStock = dao.getLowStockProducts(5); // Ngưỡng < 5
-        for (InventoryItem item : lowStock) {
-            System.out.println("Product: " + item.getProductName() + ", Quantity: " + item.getQuantity());
-        }
-
-        // 12. Kiểm tra getNewCustomerData
-        System.out.println("\n=== Kiểm tra getNewCustomerData (month) ===");
-        Map<String, Object> customerData = dao.getNewCustomerData("month", startDate, endDate);
-        System.out.println("Time Labels: " + customerData.get("timeLabels"));
-        System.out.println("New Customers: " + customerData.get("newCustomers"));
-
-        // 13. Kiểm tra getInventoryData
-        System.out.println("\n=== Kiểm tra getInventoryData ===");
-        Map<String, Object> inventoryData = dao.getInventoryData();
-        System.out.println("Product Names: " + inventoryData.get("productNames"));
-        System.out.println("Stock Quantities: " + inventoryData.get("stockQuantities"));
-    }
+   
 }

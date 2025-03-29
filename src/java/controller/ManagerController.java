@@ -28,63 +28,54 @@ public class ManagerController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             DAOOrder dao = new DAOOrder();
-            String start_date = request.getParameter("start-date");
-            String end_date = request.getParameter("end-date");
-            String timeFilter = request.getParameter("time-filter"); // Lấy giá trị bộ lọc nhanh
-            String[] statusFilters = request.getParameterValues("status"); // Lấy danh sách status từ checkbox
+            String startDate = request.getParameter("startDate");
+            String endDate = request.getParameter("endDate");
+            String statusFilters = request.getParameter("statusFilters");
+            String paymentMethod = request.getParameter("paymentMethod");
+            String sortBy = request.getParameter("sortBy");
+            String sortOrder = request.getParameter("sortOrder");
 
             // Định dạng ngày
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             // Xử lý bộ lọc nhanh
             LocalDate now = LocalDate.now();
-            if (timeFilter != null) {
-                switch (timeFilter) {
-                    case "all":
-                        start_date = "2025-01-01";
-                        end_date = now.format(formatter);
-                        break;
-                    case "today":
-                        start_date = now.format(formatter);
-                        end_date = now.format(formatter);
-                        break;
-                    case "week":
-                        start_date = now.minusDays(now.getDayOfWeek().getValue() - 1).format(formatter); // Đầu tuần
-                        end_date = now.format(formatter);
-                        break;
-                    case "month":
-                        start_date = now.withDayOfMonth(1).format(formatter); // Đầu tháng
-                        end_date = now.format(formatter);
-                        break;
-                }
-            }
 
-            if (end_date == null) {
-                end_date = java.sql.Date.valueOf(LocalDate.now()).toString();
+            if (endDate == null) {
+                endDate = java.sql.Date.valueOf(LocalDate.now()).toString();
             }
-            if (start_date == null) {
-                start_date = "2025-01-01";
+            if (startDate == null) {
+                startDate = "2025-01-01";
             }
             
-            Vector<Order> waiting = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], " +
-        "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], " +
-        "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] " +
-        "FROM [SWP].[dbo].[Orders] "
-                    + " WHERE [OrderStatus] = 2 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
+            if(sortBy == null){
+                sortBy = "orderCode";
+            }
             
-            Vector<Order> cancelled = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], " +
-        "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], " +
-        "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] " +
-        "FROM [SWP].[dbo].[Orders] "
-                    + " WHERE [OrderStatus] = 4 AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            
-            int OrderCount = dao.getNumberOrder("SELECT COUNT(*) AS OrderCount FROM [SWP].[dbo].[Orders] WHERE OrderStatus = 1  AND [OrderDate] BETWEEN '" + start_date + "' AND '" + end_date + "'");
-            List<Map<String, Object>> orderList = dao.getOrderDetails(statusFilters, start_date, end_date);
+            if(sortOrder == null){
+                sortOrder = "desc";
+            }
+            Vector<Order> waiting = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], "
+                    + "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], "
+                    + "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] "
+                    + "FROM [SWP].[dbo].[Orders] "
+                    + " WHERE [OrderStatus] = 1 AND [OrderDate] BETWEEN '" + startDate + "' AND '" + endDate + "'");
+
+            Vector<Order> cancelled = dao.getOrders("SELECT TOP (1000) [OrderID], [OrderCode], [CustomerID], [CustomerName], [OrderDate], "
+                    + "[ShippedDate], [ShippingFee], [TotalCost], [Email], [Phone], [ShipAddress], "
+                    + "[Discount], [Note], [CancelNotification], [PaymentMethod], [OrderStatus] "
+                    + "FROM [SWP].[dbo].[Orders] "
+                    + " WHERE [OrderStatus] = -1 AND [OrderDate] BETWEEN '" + startDate + "' AND '" + endDate + "'");
 
 
-        request.setAttribute("orderList", orderList);
-            request.setAttribute("start_date", start_date);
-            request.setAttribute("end_date", end_date);
+            int OrderCount = dao.getNumberOrder("SELECT COUNT(*) AS OrderCount FROM [SWP].[dbo].[Orders] WHERE [OrderDate] BETWEEN '" + startDate + "' AND '" + endDate + "'");
+            List<Map<String, Object>> orderList = dao.getOrderDetails(statusFilters, startDate, endDate, sortBy, sortOrder, paymentMethod);
+
+            request.setAttribute("status", statusFilters);
+            request.setAttribute("paymentMethod", paymentMethod);
+            request.setAttribute("orderList", orderList);
+            request.setAttribute("startDate", startDate);
+            request.setAttribute("endDate", endDate);
             request.setAttribute("waiting", waiting);
             request.setAttribute("cancelled", cancelled);
             request.setAttribute("OrderCount", OrderCount);

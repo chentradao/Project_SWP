@@ -35,7 +35,7 @@
             /* Main content */
             .main-content {
                 flex: 1;
-                padding: 100px;
+                padding: 180px;
                 background-color: #f9f9f9;
                 display: flex;
                 flex-direction: column;
@@ -74,46 +74,17 @@
                 margin-right: 15px;
             }
 
-            
-           
+
+
         </style>
     </head>
     <body>
+
         <div class="super_container">
-
-            <<header class="header">
-                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo"><a href="index.jsp">Estée Lauder</a></div>
-                    <nav class="main_nav">
-                        <ul>
-                            <li><a href="manager">Quản lý đơn hàng</a></li>
-                            <li><a href="index.jsp">Quản lý kho hàng</a></li>
-                            <li><a href="index.jsp">Quản lý nhân viên</a></li>
-                            <li><a href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
-                        </ul>
-                    </nav>
-                    <div class="header_content ml-auto">
-
-
-                    </div>
-                    <div class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Tên tài khoản
-                        </a>
-                        <div id="collapsePages" class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="collapse-item" href="manager.html">Thông tin tài khoản</a>
-                            <a class="collapse-item" href="blank.html">Đăng xuất</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-
+            <%@ include file="header.jsp" %>
             <!-- Main Content -->
             <div class="main-content">
-               
 
-                
                 <h1>Danh sách bài viết</h1>
 
                 <!-- Nút thêm bài viết & xuất Excel -->
@@ -170,14 +141,15 @@
                     %>
                 </div>
             </div>
-            <script src="js/jquery-3.2.1.min.js"></script>
-            <script src="styles/bootstrap4/popper.js"></script>
-            <script src="styles/bootstrap4/bootstrap.min.js"></script>
-            <script src="plugins/easing/easing.js"></script>
-            <script src="plugins/parallax-js-master/parallax.min.js"></script>
-            <script src="js/cart_custom.js"></script>
-            
-           
+        </div>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="styles/bootstrap4/popper.js"></script>
+        <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
+
+
 
     </body>
 </html>

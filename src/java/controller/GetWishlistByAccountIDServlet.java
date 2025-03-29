@@ -28,50 +28,56 @@ public class GetWishlistByAccountIDServlet extends HttpServlet {
         DAOWishlist daoWishlist = new DAOWishlist();
         List<Wishlist> wishlistItems = daoWishlist.getWishlistByAccount(account.getAccountID());
 
-        // Số sản phẩm trên mỗi trang
         int itemsPerPage = 5;
-        // Lấy trang hiện tại từ tham số (mặc định là trang 1)
         String pageStr = request.getParameter("page");
-        int currentPage = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
+        int currentPage = 1;
 
-        // Tính tổng số sản phẩm và tổng số trang
+        try {
+            currentPage = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+        }
+
         int totalItems = wishlistItems.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 
-        // Đảm bảo currentPage nằm trong khoảng hợp lệ
-        if (currentPage < 1) {
+        // Xử lý khi danh sách rỗng
+        if (totalItems == 0) {
+            totalPages = 1;
             currentPage = 1;
+            request.setAttribute("wishlistItems", wishlistItems); // empty list
+        } else {
+            // Kiểm tra currentPage hợp lệ
+            if (currentPage < 1) {
+                currentPage = 1;
+            }
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            int startIndex = (currentPage - 1) * itemsPerPage;
+            int endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+            // Kiểm tra lại startIndex không âm
+            startIndex = Math.max(0, startIndex);
+
+            List<Wishlist> paginatedItems = wishlistItems.subList(startIndex, endIndex);
+
+            String sortOption = request.getParameter("sort");
+            if (sortOption != null && !sortOption.equals("default")) {
+                paginatedItems.sort((Wishlist w1, Wishlist w2) -> {
+                    double price1 = w1.getProduct().getProductDetail().getPrice();
+                    double price2 = w2.getProduct().getProductDetail().getPrice();
+                    return sortOption.equals("asc") ? Double.compare(price1, price2) : Double.compare(price2, price1);
+                });
+            }
+
+            request.setAttribute("wishlistItems", paginatedItems);
         }
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
 
-        // Tính chỉ số bắt đầu và kết thúc của danh sách sản phẩm cho trang hiện tại
-        int startIndex = (currentPage - 1) * itemsPerPage;
-        int endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-
-        // Lấy danh sách sản phẩm cho trang hiện tại
-        List<Wishlist> paginatedItems = wishlistItems.subList(startIndex, endIndex);
-
-        // Sắp xếp theo giá nếu có tham số sort
-        String sortOption = request.getParameter("sort");
-        if (sortOption != null && !sortOption.equals("default")) {
-            paginatedItems.sort((Wishlist w1, Wishlist w2) -> {
-                double price1 = w1.getProduct().getProductDetail().getPrice();
-                double price2 = w2.getProduct().getProductDetail().getPrice();
-                if (sortOption.equals("asc")) {
-                    return Double.compare(price1, price2); // Tăng dần
-                } else {
-                    return Double.compare(price2, price1); // Giảm dần
-                }
-            });
-        }
-
-        // Truyền dữ liệu vào JSP
-        request.setAttribute("wishlistItems", paginatedItems);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("sortOption", sortOption != null ? sortOption : "default");
+        request.setAttribute("sortOption", request.getParameter("sort") != null ? request.getParameter("sort") : "default");
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("wishlist.jsp");
         dispatcher.forward(request, response);

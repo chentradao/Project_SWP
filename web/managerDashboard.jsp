@@ -8,7 +8,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+    <head><title>Manager Dashboard</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,120 +18,14 @@
         <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
-        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
-
-        <title>Manager Dashboard</title>
-
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">      
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
         <style>
-            /* CSS cho toggle sidebar */
-            .sidebar.toggled {
-                width: 0 !important;
-                overflow: hidden;
-            }
-            #content-wrapper.toggled {
-                margin-left: 0 !important;
-            }
-            @media (min-width: 768px) {
-                .sidebar {
-                    width: 250px !important;
-                    transition: all 0.3s;
-                }
-                #content-wrapper {
-                    margin-left: 250px;
-                    transition: all 0.3s;
-                }
-            }
-            /* CSS cho nút kéo sidebar ra */
-            #sidebarToggleTop {
-                position: fixed;
-                left: 10px;
-                top: 150px;
-                z-index: 1000;
-                display: none;
-                background-color: #4e73df;
-                color: white;
-                border: none;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            .sidebar.toggled ~ #sidebarToggleTop {
-                display: block;
-            }
-            /* CSS cho chatbox */
-            .chatbox {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: 300px;
-                background-color: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                overflow: hidden;
-                z-index: 1000;
-                transition: all 0.3s ease;
-            }
-            .chatbox-header {
-                background-color: #4e73df;
-                color: white;
-                padding: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                cursor: pointer;
-            }
-            .chatbox-body {
-                padding: 10px;
-                height: 200px;
-                overflow-y: auto;
-                background-color: #f8f9fc;
-            }
-            .chatbox-body .message {
-                margin: 5px 0;
-                padding: 8px;
-                border-radius: 5px;
-                max-width: 80%;
-            }
-            .chatbox-body .message.sent {
-                background-color: #4e73df;
-                color: white;
-                margin-left: auto;
-            }
-            .chatbox-body .message.received {
-                background-color: #e2e8f0;
-                color: black;
-            }
-            .chatbox-footer {
-                padding: 10px;
-                display: flex;
-                border-top: 1px solid #ddd;
-            }
-            .chatbox-footer input {
-                flex-grow: 1;
-                border: none;
-                padding: 5px;
-                outline: none;
-            }
-            .chatbox-footer button {
-                background-color: #4e73df;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            .chatbox.minimized {
-                height: 50px;
-                width: 200px;
-            }
-            .chatbox.minimized .chatbox-body,
-            .chatbox.minimized .chatbox-footer {
-                display: none;
-            }
+
+
         </style>
     </head>
 
@@ -147,7 +41,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý quảng cáo</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Quản lý khách hàng</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý khách hàng</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
                 </ul>
             </nav>
@@ -157,61 +51,63 @@
                     ${sessionScope.acc.fullName}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="profile">Thông tin tài khoản</a>
-                    <c:choose>
-                            <c:when test="${not empty sessionScope.acc}">
-                                <a id="dropdown-item" class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
-                            </c:when>
-                        </c:choose>
-                   
+                    <a class="dropdown-item" href="manager.html">Thông tin tài khoản</a>
+                    <a class="dropdown-item" href="blank.html">Đăng xuất</a>
                 </div>
             </div>
         </header>
 
         <!-- Page Wrapper -->
         <div id="wrapper">
-            <!--start sidebar -->
-            <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion toggled" id="accordionSidebar" style="font-family: Arial, sans-serif; font-weight: normal">
-                <li class="nav-item">
-                    <form action="manager" method="post" class="p-3">
-                        <div class="mt-4 text-white" style="font-size: 16px;">Lọc theo trạng thái</div>
-                        <ul class="list-unstyled" style="font-size: 16px; font-weight: normal;">
-                            <li><input type="checkbox" name="status" value="1"> Đang lấy hàng</li>
-                            <li><input type="checkbox" name="status" value="2"> Đang giao hàng</li>
-                            <li><input type="checkbox" name="status" value="3"> Đã giao hàng thành công</li>
-                            <li><input type="checkbox" name="status" value="4"> Giao hàng thất bại</li>
-                            <li><input type="checkbox" name="status" value="5"> Đang hoàn hàng</li>
-                            <li><input type="checkbox" name="status" value="6"> Đã hoàn hàng thành công</li>
-                            <li><input type="checkbox" name="status" value="7"> Hủy đơn hàng</li>
-                            <li><input type="checkbox" name="status" value="8"> Chờ xác nhận</li>
-                        </ul>
+            <!-- Bộ lọc -->
+            <div class="w-1/5 bg-white rounded-xl shadow-md p-5 h-full mt-20">
+                <form action="manager" id="filter" method="get">
+                    <h3 class="text-lg font-semibold mb-4">Bộ lọc</h3>
 
-                        <div class="mt-4 text-white" style="font-size: 16px;">Lọc theo thời gian</div>
-                        <ul class="list-unstyled" style="font-size: 16px; font-weight: normal;">
-                            <li><input type="radio" name="time-filter" value="all"> Toàn thời gian</li>
-                            <li><input type="radio" name="time-filter" value="today"> Hôm nay</li>
-                            <li><input type="radio" name="time-filter" value="week"> Tuần này</li>
-                            <li><input type="radio" name="time-filter" value="month"> Tháng này</li>
-                        </ul>
+                    <!-- Filter by Status -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
+                        <select id="filterStatus" name="status" class="mt-1 w-full border rounded-lg p-2">
+                            <option value="" ${empty statusFilters ? 'selected' : ''}>Tất cả</option>
+                            <option value="1" ${statusFilters == '1' ? 'selected' : ''}>Chưa tiếp nhận</option>
+                            <option value="2" ${statusFilters == '2' ? 'selected' : ''}>Đã tiếp nhận</option>
+                            <option value="3" ${statusFilters == '3' ? 'selected' : ''}>Đã lấy hàng</option>
+                            <option value="4" ${statusFilters == '4' ? 'selected' : ''}>Đang giao hàng</option>
+                            <option value="5" ${statusFilters == '5' ? 'selected' : ''}>Đã giao hàng</option>
+                            <option value="7" ${statusFilters == '7' ? 'selected' : ''}>Không lấy được hàng</option>
+                            <option value="-1" ${statusFilters == '-1' ? 'selected' : ''}>Đã hủy</option>
+                        </select>
+                    </div>
 
-                        <label for="start-date">Ngày bắt đầu:</label>
-                        <input type="date" id="start-date" name="start-date" value="${start_date}">
-                        <label for="end-date">Ngày kết thúc:</label>
-                        <input type="date" id="end-date" name="end-date" value="${end_date}">
+                    <!-- Filter by Date -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Ngày bắt đầu</label>
+                        <input type="date" name="startDate" id="startDate" value="${not empty startDate ? startDate : ''}" class="mt-1 w-full border rounded-lg p-2">
 
-                        <button type="submit" class="btn btn-primary mt-3 w-100">Lọc</button>
-                    </form>
-                </li>        
+                        <span id="errorMessage" class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class"mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Ngày kết thúc</label>
+                        <input type="date" name="endDate" id="endDate" value="${not empty endDate ? endDate : ''}" class="mt-1 w-full border rounded-lg p-2">
+                        <span id="errorMessage" class="text-red-500 text-sm hidden"></span>
+                    </div>
 
-                <hr class="sidebar-divider d-none d-md-block">
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-                </div>
-            </ul>
-            <!-- End of Sidebar -->
+                    <!-- Filter by Payment Method -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Phương thức thanh toán</label>
+                        <select id="filterPayment" name="paymentMethod" class="mt-1 w-full border rounded-lg p-2">
+                            <option value="" ${empty paymentMethod ? 'selected' : ''}>Tất cả</option>
+                            <option value="COD" ${paymentMethod == 'COD' ? 'selected' : ''}>Thanh toán khi nhận hàng</option>
+                            <option value="VNPAY" ${paymentMethod == 'VNPAY' ? 'selected' : ''}>VNPAY</option>
+                        </select>
+                    </div>
 
-            <!-- Nút kéo sidebar ra -->
-            <button id="sidebarToggleTop" class="btn"><i class="fas fa-bars"></i></button>
+                    <!-- Filter Button -->
+                    <button type="submit">Lọc</button>
+                </form>
+            </div>
+
+
 
             <!-- Content Wrapper -->
             <div id="content-wrapper" class="d-flex flex-column toggled" style="padding: 10px">
@@ -267,90 +163,109 @@
                         <table style="width: 100%; border-collapse: collapse;">
                             <thead>
                                 <tr style="background-color: #f2f2f2;">
-                                    <th style="border: 1px solid black; padding: 8px;">Mã đơn hàng</th>
+                                    <th style="border: 1px solid black; padding: 8px;">
+                                        Mã đơn hàng
+                                        <a href="manager?sortBy=orderCode&sortOrder=asc" class="sort-link">▲</a>
+                                        <a href="manager?sortBy=orderCode&sortOrder=desc" class="sort-link">▼</a>
+                                    </th>
                                     <th style="border: 1px solid black; padding: 8px;">Tên sản phẩm</th>
-                                    <th style="border: 1px solid black; padding: 8px;">Số lượng</th>
+                                    <th style="border: 1px solid black; padding: 8px;">
+                                        Số lượng
+                                        <a href="manager?sortBy=Quantity&sortOrder=asc" class="sort-link">▲</a>
+                                        <a href="manager?sortBy=Quantity&sortOrder=desc" class="sort-link">▼</a>
+                                    </th>
                                     <th style="border: 1px solid black; padding: 8px;">Kho</th>
-                                    <th style="border: 1px solid black; padding: 8px;">Giá sản phẩm</th>
-                                    <th style="border: 1px solid black; padding: 8px;">Địa chỉ </th>                                   
-                                    <th style="border: 1px solid black; padding: 8px;">Tổng tiền</th>
+                                    <th style="border: 1px solid black; padding: 8px;">
+                                        Giá sản phẩm
+                                        <a href="manager?sortBy=UnitPrice&sortOrder=asc" class="sort-link">▲</a>
+                                        <a href="manager?sortBy=UnitPrice&sortOrder=desc" class="sort-link">▼</a>
+                                    </th>
+                                    <th style="border: 1px solid black; padding: 8px;">Địa chỉ</th>
+                                    <th style="border: 1px solid black; padding: 8px;">
+                                        Tổng tiền
+                                        <a href="manager?sortBy=TotalAmount&sortOrder=asc" class="sort-link">▲</a>
+                                        <a href="manager?sortBy=TotalAmount&sortOrder=desc" class="sort-link">▼</a>
+                                    </th>
                                     <th style="border: 1px solid black; padding: 8px;">Tình trạng</th>
+                                    <th style="border: 1px solid black; padding: 8px;">Phương thức thanh toán</th>
                                     <th style="border: 1px solid black; padding: 8px;">Hành động</th>
                                 </tr>
                             </thead>
-                           <tbody>
-    <c:set var="currentOrderID" value="" />
-    <c:set var="pageSize" value="10" />
-    <c:set var="currentPage" value="${param.page != null ? param.page : 1}" />
-    <c:set var="startIndex" value="${(currentPage - 1) * pageSize}" />
-    <c:set var="endIndex" value="${startIndex + pageSize - 1}" />
 
-    <c:forEach var="order" items="${orderList}" varStatus="loop">
-        <c:if test="${loop.index >= startIndex && loop.index <= endIndex}">
-            <c:if test="${currentOrderID != order.OrderID}">
-                <c:set var="currentOrderID" value="${order.OrderID}" />
-                <c:set var="rowspan" value="0" />
-                <!-- Calculate rowspan for this OrderID -->
-                <c:forEach var="innerOrder" items="${orderList}">
-                    <c:if test="${innerOrder.OrderID == currentOrderID}">
-                        <c:set var="rowspan" value="${rowspan + 1}" />
-                    </c:if>
-                </c:forEach>
-            </c:if>
+                            <tbody>
+                                <c:set var="currentOrderID" value="" />
+                                <c:set var="pageSize" value="10" />
+                                <c:set var="currentPage" value="${param.page != null ? param.page : 1}" />
+                                <c:set var="startIndex" value="${(currentPage - 1) * pageSize}" />
+                                <c:set var="endIndex" value="${startIndex + pageSize - 1}" />
 
-            <tr>
-                <!-- Columns displayed only once per OrderID -->
-                <c:if test="${loop.index == startIndex || order.OrderID != orderList[loop.index - 1].OrderID}">
-                    <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.orderCode}</td>
-                </c:if>
+                                <c:forEach var="order" items="${orderList}" varStatus="loop">
+                                    <c:if test="${loop.index >= startIndex && loop.index <= endIndex}">
+                                        <c:if test="${currentOrderID != order.OrderID}">
+                                            <c:set var="currentOrderID" value="${order.OrderID}" />
+                                            <c:set var="rowspan" value="0" />
+                                            <!-- Calculate rowspan for this OrderID -->
+                                            <c:forEach var="innerOrder" items="${orderList}">
+                                                <c:if test="${innerOrder.OrderID == currentOrderID}">
+                                                    <c:set var="rowspan" value="${rowspan + 1}" />
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
 
-                <!-- Columns displayed for every product -->
-                <td style="border: 1px solid black; padding: 8px;">${order.ProductName}</td>
-                <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Quantity}</td>
-                <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Stock}</td>
-                <td style="border: 1px solid black; padding: 8px; text-align: right;">
-                    <fmt:formatNumber type="currency" currencyCode="VND" value="${order.Price}" />
-                </td>
+                                        <tr>
+                                            <!-- Columns displayed only once per OrderID -->
+                                            <c:if test="${loop.index == startIndex || order.OrderID != orderList[loop.index - 1].OrderID}">
+                                                <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.orderCode}</td>
+                                            </c:if>
 
-                <!-- Columns displayed only once per OrderID -->
-                <c:if test="${loop.index == startIndex || order.OrderID != orderList[loop.index - 1].OrderID}">
-                    <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.ShipAddress}</td>
-                    <td style="border: 1px solid black; padding: 8px; text-align: right;" rowspan="${rowspan}">
-                        <fmt:formatNumber type="currency" currencyCode="VND" value="${order.TotalAmount}" />
-                    </td>
-                    <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
-                        <c:choose>
-                            <c:when test="${order.OrderStatus == 1}">Đang lấy hàng</c:when>
-                            <c:when test="${order.OrderStatus == 2}">Đang giao hàng</c:when>
-                            <c:when test="${order.OrderStatus == 3}">Đã giao hàng thành công</c:when>
-                            <c:when test="${order.OrderStatus == 4}">Giao hàng thất bại</c:when>
-                            <c:when test="${order.OrderStatus == 5}">Đang hoàn hàng</c:when>
-                            <c:when test="${order.OrderStatus == 6}">Đã hoàn hàng thành công</c:when>
-                            <c:when test="${order.OrderStatus == 7}">Hủy đơn hàng</c:when>
-                            <c:when test="${order.OrderStatus == 8}">Chờ xác nhận</c:when>
-                            <c:otherwise>Không xác định</c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
-                        <c:if test="${order.OrderStatus == 8}">
-                            <form action="ghtkservlet" method="get" style="display: inline;">
-                                <input type="hidden" name="action" value="register" />
-                                <input type="hidden" name="orderID" value="${order.OrderID}" />
-                                <button type="submit" style="padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Xác nhận</button>
-                            </form>
-                            <form action="OrderManagementServlet" method="post" style="display: inline;">
-                                <input type="hidden" name="orderId" value="${order.OrderID}" />
-                                <input type="hidden" name="action" value="cancel" />
-                                <input type="hidden" name="page" value="${currentPage}" />
-                                <button type="submit" style="padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Hủy đơn</button>
-                            </form>
-                        </c:if>
-                    </td>
-                </c:if>
-            </tr>
-        </c:if>
-    </c:forEach>
-</tbody>
+                                            <!-- Columns displayed for every product -->
+                                            <td style="border: 1px solid black; padding: 8px;">${order.ProductName}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Quantity}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: center;">${order.Stock}</td>
+                                            <td style="border: 1px solid black; padding: 8px; text-align: right;">
+                                                <fmt:formatNumber type="currency" currencyCode="VND" value="${order.UnitPrice}" />
+                                            </td>
+
+                                            <!-- Columns displayed only once per OrderID -->
+                                            <c:if test="${loop.index == startIndex || order.OrderID != orderList[loop.index - 1].OrderID}">
+                                                <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.ShipAddress}</td>
+                                                <td style="border: 1px solid black; padding: 8px; text-align: right;" rowspan="${rowspan}">
+                                                    <fmt:formatNumber type="currency" currencyCode="VND" value="${order.TotalAmount}" />
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
+                                                    <c:choose>
+                                                        <c:when test="${order.OrderStatus == 1}">Đang lấy hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 2}">Đang giao hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 3}">Đã giao hàng thành công</c:when>
+                                                        <c:when test="${order.OrderStatus == 4}">Giao hàng thất bại</c:when>
+                                                        <c:when test="${order.OrderStatus == 5}">Đang hoàn hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 6}">Đã hoàn hàng thành công</c:when>
+                                                        <c:when test="${order.OrderStatus == 7}">Hủy đơn hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 8}">Chờ xác nhận</c:when>
+                                                        <c:otherwise>Không xác định</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.PaymentMethod}</td>
+                                                <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
+                                                    <c:if test="${order.OrderStatus == 1}">
+                                                        <form action="ghtkservlet" method="get" style="display: inline;">
+                                                            <input type="hidden" name="action" value="register" />
+                                                            <input type="hidden" name="orderID" value="${order.OrderID}" />
+                                                            <button type="submit" style="padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Xác nhận</button>
+                                                        </form>
+                                                        <form action="OrderManagementServlet" method="post" style="display: inline;">
+                                                            <input type="hidden" name="orderId" value="${order.OrderID}" />
+                                                            <input type="hidden" name="action" value="cancel" />
+                                                            <input type="hidden" name="page" value="${currentPage}" />
+                                                            <button type="submit" style="padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Hủy đơn</button>
+                                                        </form>
+                                                    </c:if>
+                                                </td>
+                                            </c:if>
+                                        </tr>
+                                    </c:if>
+                                </c:forEach>
+                            </tbody>
                         </table>
 
                         <!-- Phần phân trang -->
@@ -359,8 +274,11 @@
                             <c:set var="currentPage" value="${param.page != null ? param.page : 1}" />
                             <c:set var="totalPages" value="${(orderList.size() + pageSize - 1) / pageSize}" />
 
+                            <c:set var="sortBy" value="${param.sortBy != null ? param.sortBy : 'orderCode'}" />
+                            <c:set var="sortOrder" value="${param.sortOrder != null ? param.sortOrder : 'asc'}" />
+
                             <c:if test="${currentPage > 1}">
-                                <a href="manager?page=${currentPage - 1}" class="btn btn-outline-primary mx-1">Trước</a>
+                                <a href="manager?page=${currentPage - 1}&sortBy=${sortBy}&sortOrder=${sortOrder}" class="btn btn-outline-primary mx-1">Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -369,13 +287,13 @@
                                         <span class="btn btn-primary mx-1">${i}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="manager?page=${i}" class="btn btn-outline-primary mx-1">${i}</a>
+                                        <a href="manager?page=${i}&sortBy=${sortBy}&sortOrder=${sortOrder}" class="btn btn-outline-primary mx-1">${i}</a>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="manager?page=${currentPage + 1}" class="btn btn-outline-primary mx-1">Sau</a>
+                                <a href="manager?page=${currentPage + 1}&sortBy=${sortBy}&sortOrder=${sortOrder}" class="btn btn-outline-primary mx-1">Sau</a>
                             </c:if>
 
                             <span class="ml-3">
@@ -424,8 +342,8 @@
                     toggleChatbox();
                 });
             });
-           
-            
+
+
         </script>
     </body>
 </html>
