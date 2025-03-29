@@ -1,4 +1,4 @@
-package GHTKService;
+package Controller;
 
 import entity.Accounts;
 import entity.Order;
@@ -125,6 +125,7 @@ public class GHTKServlet extends HttpServlet {
                 updateStmt.executeUpdate();
                 System.err.println("Update in orderID=" + orderID);
                 updateStmt.close();
+                
             } else {
                 System.err.println("❌ LỖI: API GHTK trả về thất bại - " + jsonResponse);
             }
@@ -149,7 +150,7 @@ public class GHTKServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 Accounts acc = (Accounts) session.getAttribute("acc");
                 String orderCode = registerOrderGHTK(orderID,acc.getAccountID());
-                response.sendRedirect("managerDashboard.jsp");
+                request.getRequestDispatcher("manager").forward(request, response);
 
             } else if ("status".equals(action)) {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));

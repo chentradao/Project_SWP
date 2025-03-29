@@ -69,7 +69,7 @@
 
         <!-- Home -->
         <!-- Main Content -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden mt-20">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mt-4">
                 <!-- Table Header -->
                 <div class="p-5 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800">Danh sách Flash Sale</h2>

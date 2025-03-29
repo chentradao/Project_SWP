@@ -46,7 +46,7 @@
                         <!-- Home Slider Item -->
                         <c:forEach var="s" items="${slider}">
                             <div class="owl-item">
-                                <a href="product.html">
+                                <a href="#">
                                     <div class="home_slider_background" style="background-image:url('<c:out value='img/${s.imageURL}' />')"></div>
                                     <div class="home_slider_content">
                                         <div class="home_slider_content_inner">
