@@ -282,114 +282,112 @@
         <script src="js/cart_custom.js"></script>
 
         <script>
-                                               
+    // Biểu đồ Doanh thu
+    const revenueLabels = '${revenueLabels}' ? JSON.parse('${revenueLabels}') : [];
+    const revenueData = '${revenueData}' ? JSON.parse('${revenueData}') : [];
+    const revenueChart = new Chart(document.getElementById('revenueChart'), {
+        type: 'bar',
+        data: {
+            labels: revenueLabels,
+            datasets: [{
+                label: 'Doanh thu (VND)',
+                data: revenueData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {beginAtZero: true, ticks: {callback: value => value.toLocaleString('vi-VN') + ' VND'}},
+                x: {ticks: {maxRotation: 45, minRotation: 45}}
+            }
+        }
+    });
 
-                                                    // Biểu đồ Doanh thu
-                                                    const revenueLabels = '${revenueLabels}' ? JSON.parse('${revenueLabels}') : [];
-                                                    const revenueData = '${revenueData}' ? JSON.parse('${revenueData}') : [];
-                                                    const revenueChart = new Chart(document.getElementById('revenueChart'), {
-                                                        type: 'bar',
-                                                        data: {
-                                                            labels: revenueLabels,
-                                                            datasets: [{
-                                                                    label: 'Doanh thu (VND)',
-                                                                    data: revenueData,
-                                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                                                    borderWidth: 1
-                                                                }]
-                                                        },
-                                                        options: {
-                                                            responsive: true,
-                                                            maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: {beginAtZero: true, ticks: {callback: value => value.toLocaleString('vi-VN') + ' VND'}},
-                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
-                                                            }
-                                                        }
-                                                    });
+    // Biểu đồ Doanh thu theo Danh mục
+    const categoryLabels = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categories : [];
+    const categoryData = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categoryRevenue : [];
+    const categoryRevenueChart = new Chart(document.getElementById('categoryRevenueChart'), {
+        type: 'pie',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                label: 'Doanh thu (VND)',
+                data: categoryData,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {callbacks: {label: context => `${context.label}: ${context.parsed.toLocaleString('vi-VN')} VND`}}
+            }
+        }
+    });
 
-                                                    // Biểu đồ Doanh thu theo Danh mục
-                                                    const categoryLabels = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categories : [];
-                                                    const categoryData = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categoryRevenue : [];
-                                                    const categoryRevenueChart = new Chart(document.getElementById('categoryRevenueChart'), {
-                                                        type: 'pie',
-                                                        data: {
-                                                            labels: categoryLabels,
-                                                            datasets: [{
-                                                                    label: 'Doanh thu (VND)',
-                                                                    data: categoryData,
-                                                                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
-                                                                    borderColor: '#fff',
-                                                                    borderWidth: 1
-                                                                }]
-                                                        },
-                                                        options: {
-                                                            responsive: true,
-                                                            maintainAspectRatio: false,
-                                                            plugins: {
-                                                                tooltip: {callbacks: {label: context => `${context.label}: ${context.parsed.toLocaleString('vi-VN')} VND`}}
-                                                            }
-                                                        }
-                                                    });
+    // Biểu đồ Số khách hàng mới
+    const newCustomerLabels = '${newCustomerData}' ? JSON.parse('${newCustomerData}').timeLabels : [];
+    const parsedNewCustomerData = '${newCustomerData}' ? JSON.parse('${newCustomerData}').newCustomers : [];
+    const newCustomerChart = new Chart(document.getElementById('newCustomerChart'), {
+        type: 'bar',
+        data: {
+            labels: newCustomerLabels,
+            datasets: [{
+                label: 'Khách hàng mới',
+                data: parsedNewCustomerData,
+                backgroundColor: 'rgba(28, 200, 138, 0.2)',
+                borderColor: '#1cc88a',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {beginAtZero: true},
+                x: {ticks: {maxRotation: 45, minRotation: 45}}
+            }
+        }
+    });
 
-                                                    // Biểu đồ Số khách hàng mới
-                                                    const newCustomerLabels = '${newCustomerData}' ? JSON.parse('${newCustomerData}').timeLabels : [];
-                                                    const newCustomerData = '${newCustomerData}' ? JSON.parse('${newCustomerData}').newCustomers : [];
-                                                    const newCustomerChart = new Chart(document.getElementById('newCustomerChart'), {
-                                                        type: 'bar',
-                                                        data: {
-                                                            labels: newCustomerLabels,
-                                                            datasets: [{
-                                                                    label: 'Khách hàng mới',
-                                                                    data: newCustomerData,
-                                                                    backgroundColor: 'rgba(28, 200, 138, 0.2)',
-                                                                    borderColor: '#1cc88a',
-                                                                    borderWidth: 2,
-                                                                    fill: true
-                                                                }]
-                                                        },
-                                                        options: {
-                                                            responsive: true,
-                                                            maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: {beginAtZero: true},
-                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
-                                                            }
-                                                        }
-                                                    });
+    // Biểu đồ Tồn kho
+    const inventoryLabels = '${inventoryData}' ? JSON.parse('${inventoryData}').productNames : [];
+    const parsedInventoryData = '${inventoryData}' ? JSON.parse('${inventoryData}').stockQuantities : [];
+    const inventoryChart = new Chart(document.getElementById('inventoryChart'), {
+        type: 'bar',
+        data: {
+            labels: inventoryLabels,
+            datasets: [{
+                label: 'Số lượng tồn',
+                data: parsedInventoryData,
+                backgroundColor: 'rgba(246, 194, 62, 0.2)',
+                borderColor: '#f6c23e',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {beginAtZero: true},
+                x: {ticks: {maxRotation: 45, minRotation: 45}}
+            }
+        }
+    });
 
-                                                    // Biểu đồ Tồn kho
-                                                    const inventoryLabels = '${inventoryData}' ? JSON.parse('${inventoryData}').productNames : [];
-                                                    const inventoryData = '${inventoryData}' ? JSON.parse('${inventoryData}').stockQuantities : [];
-                                                    const inventoryChart = new Chart(document.getElementById('inventoryChart'), {
-                                                        type: 'bar',
-                                                        data: {
-                                                            labels: inventoryLabels,
-                                                            datasets: [{
-                                                                    label: 'Số lượng tồn',
-                                                                    data: inventoryData,
-                                                                    backgroundColor: 'rgba(246, 194, 62, 0.2)',
-                                                                    borderColor: '#f6c23e',
-                                                                    borderWidth: 1
-                                                                }]
-                                                        },
-                                                        options: {
-                                                            responsive: true,
-                                                            maintainAspectRatio: false,
-                                                            scales: {
-                                                                y: {beginAtZero: true},
-                                                                x: {ticks: {maxRotation: 45, minRotation: 45}}
-                                                            }
-                                                        }
-                                                    });
+    $(".filter-form select").on("change", function () {
+        $(this).closest("form").submit();
+    });
 
-                                                    $(".filter-form select").on("change", function () {
-                                                        $(this).closest("form").submit();
-                                                    });
+    $("#content").css("opacity", 1);
+</script>
 
-                                                    $("#content").css("opacity", 1);
-                                                });
-        </script>
     </body>
 </html>
