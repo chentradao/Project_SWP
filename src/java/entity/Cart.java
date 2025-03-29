@@ -18,6 +18,7 @@ public class Cart {
     private String Color;
     private int Price;
     private String Image;
+    private FlashSale flash;
 
     public Cart() {
     }
@@ -34,6 +35,13 @@ public class Cart {
         this.Image = Image;
     }
 
+    public FlashSale getFlash() {
+        return flash;
+    }
+
+    public void setFlash(FlashSale flash) {
+        this.flash = flash;
+    }
     public String getIdentityCode() {
         return IdentityCode;
     }

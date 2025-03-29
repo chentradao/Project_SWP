@@ -2,6 +2,23 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group/>
+=======
+        <group>
+<<<<<<< Updated upstream
+            <file>file:/D:/Project_SWP/src/java/entity/Order.java</file>
+            <file>file:/D:/Project_SWP/web/staff_list.jsp</file>
+            <file>file:/D:/Project_SWP/src/java/controller/ListCustomer.java</file>
+            <file>file:/D:/Project_SWP/src/java/entity/Accounts.java</file>
+            <file>file:/D:/Project_SWP/src/java/controller/ListStaff.java</file>
+            <file>file:/D:/Project_SWP/src/java/model/DAOOrder.java</file>
+            <file>file:/D:/Project_SWP/src/java/model/DAOAccounts.java</file>
+=======
+            <file>file:/H:/kì%205/PRN212/Project_SWP/web/jsp/CreateFlashSale.jsp</file>
+            <file>file:/H:/kì%205/PRN212/Project_SWP/web/jsp/ShoppingFlashSale.jsp</file>
+>>>>>>> Stashed changes
+        </group>
+>>>>>>> 6c64a85d5b6ee2c37f21f60c078dbeea1b9618ac
     </open-files>
 </project-private>

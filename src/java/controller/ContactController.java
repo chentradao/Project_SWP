@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
@@ -11,77 +7,59 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import model.EmailHandler;
 
-/**
- *
- * @author Administrator
- */
 @WebServlet(name = "ContactController", urlPatterns = {"/ContactURL"})
 public class ContactController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(true);
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ContactController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ContactController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            String service = request.getParameter("service");
+
+            if (service == null || service.equals("showContact")) {
+                // Hiển thị trang liên hệ
+                request.getRequestDispatcher("/jsp/contact.jsp").forward(request, response);
+            } else if (service.equals("submitFeedback")) {
+                // Xử lý khi người dùng gửi biểu mẫu liên hệ
+                String name = request.getParameter("Name");
+                String email = request.getParameter("Email");
+                String subject = request.getParameter("Subject");
+                String message = request.getParameter("Message");
+
+                // Gửi email xác nhận bằng phương thức mới
+                try {
+                    EmailHandler.sendContactConfirmationEmail(email, name, subject, message);
+                } catch (MessagingException ex) {
+                    Logger.getLogger(ContactController.class.getName()).log(Level.SEVERE, "Failed to send contact confirmation email", ex);
+                }
+
+                // Chuyển hướng về trang chính hoặc trang cảm ơn
+                response.sendRedirect("ProductListServlet"); // Hoặc một trang cảm ơn khác
+            }
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Handles contact form submission and email confirmation";
+    }
 }

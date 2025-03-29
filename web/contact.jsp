@@ -69,14 +69,14 @@
                             <div class="review_form_container">
                                 <div class="review_form_title">Liên hệ với chúng tôi</div>
                                 <div class="review_form_content">
-                                    <form action="viewUserFeedback.jsp" id="review_form" class="review_form">
+                                    <form action="ContactURL?service=submitFeedback" id="review_form" class="review_form" method="post">
                                         <div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
-									<input type="text" class="review_form_input" placeholder="Name" required="required">
-									<input type="email" class="review_form_input" placeholder="E-mail" required="required">
-									<input type="text" class="review_form_input" placeholder="Subject">
-								</div>
-                                        <textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
-                                        <button type="submit" class="review_form_button">Gửi phản thông tin của bạn</button>
+                                            <input type="text" class="review_form_input" placeholder="Tên" name="Name" required="required">
+                                            <input type="email" class="review_form_input" placeholder="E-mail" name="Email" required="required">
+                                            <input type="text" class="review_form_input" placeholder="Chủ đề" name="Subject">
+                                        </div>
+                                        <textarea class="review_form_text" name="Message" placeholder="Phản hồi của bạn "></textarea>
+                                        <button type="submit" class="review_form_button">Gửi phản hồi về dịch vụ</button>
                                     </form>
                                 </div>
                             </div>
@@ -163,8 +163,6 @@
                     </div>
                 </div>
             </div>
-
-            
 
             <!-- Footer -->
 

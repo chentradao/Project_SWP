@@ -596,7 +596,7 @@
                                                                     <div class="admin-reply mt-2 ms-md-4 ms-2">
                                                                         <div class="d-flex align-items-center mb-2">
                                                                             <div class="admin-badge bg-brown text-white px-2 py-1 rounded-pill me-2">
-                                                                                <i class="bi bi-person-check-fill me-1"></i>Admin
+                                                                                <i class="bi bi-person-check-fill me-1"></i>Dịch vụ chăm sóc khách hàng
                                                                             </div>
                                                                             <small class="text-muted">
                                                                                 <i class="bi bi-clock me-1"></i>${feedback.feedbackReply.replyDate}
@@ -609,7 +609,7 @@
                                                                 </c:if>
 
                                                                 <c:if test="${empty feedback.feedbackReply}">
-                                                                    <c:if test="${currentUser != null and (currentUser.role eq 'Admin' or currentUser.role eq 'Staff')}">
+                                                                    <c:if test="${currentUser != null and (currentUser.role eq 'admin' or currentUser.role eq 'staff')}">
                                                                         <div class="reply-form mt-3 ms-md-4 ms-2">
                                                                             <form action="ReplyFeedbackController" method="post">
                                                                                 <input type="hidden" name="feedbackID" value="${feedback.feedbackID}">
@@ -619,13 +619,13 @@
                                                                                         <i class="bi bi-reply-fill"></i>
                                                                                     </span>
                                                                                     <textarea name="replyText" class="form-control brown-focus" rows="2" 
-                                                                                              placeholder="Enter your reply" required></textarea>
+                                                                                              placeholder="Nhập phản hồi của bạn" required></textarea>
                                                                                     <button type="submit" class="btn btn-brown">
-                                                                                        <i class="bi bi-send-fill me-1"></i>Send
+                                                                                        <i class="bi bi-send-fill me-1"></i>Gửi
                                                                                     </button>
                                                                                 </div>
                                                                                 <div class="form-text text-muted small">
-                                                                                    <i class="bi bi-info-circle me-1"></i>Feedback will be displayed publicly below this review.
+                                                                                    <i class="bi bi-info-circle me-1"></i>Tin nhắn này sẽ được để dưới dạng công khai
                                                                                 </div>
                                                                             </form>
                                                                         </div>

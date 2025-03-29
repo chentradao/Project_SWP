@@ -27,10 +27,33 @@ public class Accounts {
     private int OrderQuality;
     private int TotalSpending;
     private int AccountStatus;
-
+    private int countOrder;
+    private Date lastOrderDate;
+    
     public Accounts() {
     }
 
+    public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String Role, String Image, String GoogleID, Date CreateDate, int OrderQuality, int TotalSpending, int AccountStatus, int countOrder, Date lastOrderDate) {
+        this.AccountID = AccountID;
+        this.UserName = UserName;
+        this.Password = Password;
+        this.FullName = FullName;
+        this.Gender = Gender;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Address = Address;
+        this.Role = Role;
+        this.Image = Image;
+        this.GoogleID = GoogleID;
+        this.CreateDate = CreateDate;
+        this.OrderQuality = OrderQuality;
+        this.TotalSpending = TotalSpending;
+        this.AccountStatus = AccountStatus;
+        this.countOrder = countOrder;
+        this.lastOrderDate = lastOrderDate;
+    }
+
+    
     public Accounts(int AccountID, String UserName, String Password, String FullName, String Gender, String Phone, String Email, String Address, String Role, String Image, String GoogleID, Date CreateDate, int OrderQuality, int TotalSpending, int AccountStatus) {
         this.AccountID = AccountID;
         this.UserName = UserName;
@@ -169,6 +192,22 @@ public class Accounts {
         this.AccountStatus = AccountStatus;
     }
 
+    public int getCountOrder() {
+        return countOrder;
+    }
+
+    public void setCountOrder(int countOrder) {
+        this.countOrder = countOrder;
+    }
+
+    public Date getLastOrderDate() {
+        return lastOrderDate;
+    }
+
+    public void setLastOrderDate(Date lastOrderDate) {
+        this.lastOrderDate = lastOrderDate;
+    }
+    
     /**
      *
      * @return

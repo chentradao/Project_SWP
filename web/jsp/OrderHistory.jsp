@@ -85,7 +85,7 @@
                         for (Order order : vector) {
                 %>
                 <div class="overflow-x-auto border-b mb-5">
-                    <a href="#">
+                    <a href="OrderDetailURL?service=orderDetail&oid=<%=order.getOrderID()%>">
                     <div class="order-header p-4 border-b">
                         <span>ID đơn hàng: <%=order.getOrderID()%></span>
                         <span>Ngày tạo đơn: <%=order.getOrderDate()%></span>
@@ -128,10 +128,11 @@
                     <div class="p-4 flex justify-between items-center flex-row-reverse">
                         <p class="total">Tổng <%=order.getOrderDetail().size()%> mặt hàng: <%=formatter.format(order.getTotalCost())%>đ</p>
                         <div class="flex space-x-2">
-                            <%if(order.getOrderStatus() == 1 || order.getOrderStatus() == 2){%>
+                            <%if(order.getOrderStatus() == 1 ){%>
                             <button
-                                class="order_button_2">
-                                Cập Nhật 
+                                class="order_button_2"
+                                onclick="window.open('https://zalo.me/0926310999', '_blank')">
+                                Liên hệ với người bán 
                             </button>
                             <button type="button"
                                     class="order_button_2"
@@ -139,6 +140,12 @@
                                     data-status="<%=order.getOrderStatus()%>"
                                     onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)">
                                 Hủy Đơn Hàng
+                            </button>
+                            <%}if(order.getOrderStatus() == 2){%>
+                            <button
+                                class="order_button_2"
+                                onclick="window.open('https://zalo.me/0926310999', '_blank')">
+                                Liên hệ với người bán 
                             </button>
                             <%}else if(order.getOrderStatus() == 3){%>
                             <button

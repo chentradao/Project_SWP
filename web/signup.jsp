@@ -8,10 +8,13 @@
 
         <!-- MATERIAL DESIGN ICONIC FONT -->
         <link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
-
-        <!-- STYLE CSS -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+        <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <link rel="stylesheet" href="css/style.css">
-        
+
         <style>
             ::placeholder {
                 font-size: 12px;
@@ -36,6 +39,15 @@
     </head>
 
     <body>
+        <!-- Header -->
+
+        <%@ include file="/header.jsp" %>
+
+        <!-- Menu -->
+
+        <%@ include file="/menu.jsp" %>
+
+        <!-- Home -->
         <div class="wrapper" style="background-image: url('P_images/login.jpg');">
             <div class="inner">
                 <form action="signup" method="POST">
@@ -109,5 +121,11 @@
                 </form>
             </div>
         </div>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="styles/bootstrap4/popper.js"></script>
+        <script src="styles/bootstrap4/bootstrap.min.js"></script>
+        <script src="plugins/easing/easing.js"></script>
+        <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        <script src="js/cart_custom.js"></script>
     </body>
 </html>

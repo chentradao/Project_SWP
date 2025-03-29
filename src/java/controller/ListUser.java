@@ -61,7 +61,7 @@ public class ListUser extends HttpServlet {
         baseQuery += " ORDER BY " + sortBy + " " + sortOrder;
 
         // Lấy tổng số bản ghi
-        List<Accounts> allAccounts = dao.getAllAccounts1(baseQuery);
+        List<Accounts> allAccounts = dao.getAllAccounts(baseQuery);
         int totalRecords = allAccounts.size();
 
         // Tính tổng số trang

@@ -10,8 +10,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,12 +65,13 @@ public class DAOProductDetail extends DBConnection {
     
     public ProductDetail getProDetailbyID(int ID){
         ProductDetail pro = null;
-        String sql = "Select * from ProductDetail Where ID=" +ID;
+        String sql = "Select * from ProductDetail pd join Products p ON p.ProductID = pd.ProductID Where ID=" +ID;
         try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
             if(rs.next()){
                 pro = new ProductDetail(
-                        rs.getInt("ID"), 
+                        rs.getInt("ID"),
+                        rs.getString("ProductName"),
                         rs.getInt("ProductID"),
                         rs.getString("IdentityCode"),
                         rs.getString("Size"), 
@@ -178,6 +181,33 @@ public class DAOProductDetail extends DBConnection {
         }
 
         return productDetail; // Trả về đối tượng ProductDetail (hoặc null nếu không tìm thấy)
+    }
+    public Vector<ProductDetail> getProductDetail(String sql){
+        Vector<ProductDetail> vector = new Vector<>();
+        try {
+            Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = state.executeQuery(sql);
+            while (rs.next()) {
+                int ID = rs.getInt("ID");
+                    String productName = rs.getString("ProductName");
+                    int productId = rs.getInt("ProductID");
+                    String IdentityCode = rs.getString("IdentityCode");
+                    String Size = rs.getString("Size");
+                    String Color = rs.getString("Color");
+                    int quantity = rs.getInt("Quantity");
+                    int soldQuantity = rs.getInt("SoldQuantity");
+                    java.sql.Date date = rs.getDate("DateCreate");
+                    int ImportPrice = rs.getInt("ImportPrice");
+                    int Price = rs.getInt("Price");
+                    String Image = rs.getString("Image");
+                    int productStatus = rs.getInt("ProductStatus");
+                    ProductDetail pd = new ProductDetail(ID, productName, productId, IdentityCode, Size, Color, quantity, soldQuantity, date, ImportPrice, Price, Image, productStatus);
+                    vector.add(pd);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOProductDetail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vector;
     }
     public List<ProductResponse> getProductsWithFilter(int page, int pageSize,
             Integer minPrice, Integer maxPrice, String size, String color,

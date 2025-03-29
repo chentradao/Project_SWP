@@ -81,28 +81,6 @@ public boolean deleteAccount(String username) {
     return list;
 }
 
-public List<Accounts> getAllAccounts1(String query) {
-    List<Accounts> list = new ArrayList<>();
-    try {
-        PreparedStatement ps = conn.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Accounts acc = new Accounts();
-            acc.setUserName(rs.getString("userName"));
-            acc.setFullName(rs.getString("fullName"));
-            acc.setPhone(rs.getString("phone"));
-            acc.setEmail(rs.getString("email"));
-            acc.setAddress(rs.getString("address"));
-            acc.setCreateDate(rs.getDate("CreateDate"));
-            acc.setRole(rs.getString("role"));
-            acc.setAccountStatus(rs.getInt("accountStatus"));
-            list.add(acc);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return list;
-}
     
     // Phương thức mới để lấy dữ liệu theo trang
     public List<Accounts> getAccountsByPage(int start, int pageSize) {
@@ -521,28 +499,31 @@ public List<Accounts> getAllAccounts1(String query) {
     Vector<Accounts> vector = new Vector<>();
     String sql = "SELECT a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, a.Role, "
             + "a.Image, a.GoogleID, a.CreateDate, a.AccountStatus, "
-            + "COUNT(o.OrderID) AS OrderQuality, COALESCE(SUM(o.TotalCost), 0) AS TotalSpending "
+            + "COUNT(o.OrderID) AS OrderQuality, COALESCE(SUM(o.TotalCost), 0) AS TotalSpending, "
+            + "(SELECT TOP 1 OrderDate FROM Orders WHERE CustomerID = a.AccountID ORDER BY OrderDate DESC) AS LastOrderDate "
             + "FROM Accounts a "
             + "LEFT JOIN Orders o ON a.AccountID = o.CustomerID "
             + "WHERE a.Role = 'Customer' ";
-    
+
     if (!search.isEmpty()) {
         sql += "AND (a.FullName LIKE ? OR a.Phone LIKE ? OR a.Email LIKE ?) ";
     }
     if (status != null && !status.isEmpty()) {
         sql += "AND a.AccountStatus = ? ";
     }
-    
+
     sql += "GROUP BY a.AccountID, a.UserName, a.Password, a.FullName, a.Gender, a.Phone, a.Email, a.Address, "
             + "a.Role, a.Image, a.GoogleID, a.CreateDate, a.AccountStatus "
             + "ORDER BY ";
-    
+
     if ("OrderQuality".equalsIgnoreCase(sortBy)) {
         sql += "COUNT(o.OrderID) ";
     } else if ("TotalSpending".equalsIgnoreCase(sortBy)) {
         sql += "COALESCE(SUM(o.TotalCost), 0) ";
+    } else if ("LastOrderDate".equalsIgnoreCase(sortBy)) {
+        sql += "(SELECT TOP 1 OrderDate FROM Orders WHERE CustomerID = a.AccountID ORDER BY OrderDate DESC) ";
     } else {
-        sql += "a.AccountID "; // Mặc định sort theo AccountID nếu sortBy không hợp lệ
+        sql += "a." + sortBy + " ";
     }
     sql += sortOrder.equalsIgnoreCase("desc") ? "DESC " : "ASC ";
     sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -555,31 +536,33 @@ public List<Accounts> getAllAccounts1(String query) {
             ps.setString(paramIndex++, "%" + search + "%");
         }
         if (status != null && !status.isEmpty()) {
-            ps.setInt(paramIndex++, Integer.parseInt(status)); // Chuyển status thành int vì AccountStatus là int
+            ps.setInt(paramIndex++, Integer.parseInt(status));
         }
         ps.setInt(paramIndex++, offset);
         ps.setInt(paramIndex++, pageSize);
-        
+
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            int AccountID = rs.getInt("AccountID");
-            String UserName = rs.getString("UserName");
-            String Password = rs.getString("Password");
-            String FullName = rs.getString("FullName");
-            String Gender = rs.getString("Gender");
-            String Phone = rs.getString("Phone");
-            String Email = rs.getString("Email");
-            String Address = rs.getString("Address");
-            String Role = rs.getString("Role");
-            String Image = rs.getString("Image");
-            String GoogleID = rs.getString("GoogleID");
-            Date CreateDate = rs.getDate("CreateDate");
-            int AccountStatus = rs.getInt("AccountStatus");
-            int OrderQuality = rs.getInt("OrderQuality");
-            double TotalSpending = rs.getDouble("TotalSpending");
+            int accountID = rs.getInt("AccountID");
+            String userName = rs.getString("UserName");
+            String password = rs.getString("Password");
+            String fullName = rs.getString("FullName");
+            String gender = rs.getString("Gender");
+            String phone = rs.getString("Phone");
+            String email = rs.getString("Email");
+            String address = rs.getString("Address");
+            String role = rs.getString("Role");
+            String image = rs.getString("Image");
+            String googleID = rs.getString("GoogleID");
+            Date createDate = rs.getDate("CreateDate");
+            int accountStatus = rs.getInt("AccountStatus");
+            int orderQuality = rs.getInt("OrderQuality");
+            double totalSpending = rs.getDouble("TotalSpending");
+            Date lastOrderDate = rs.getDate("LastOrderDate");
 
-            Accounts acc = new Accounts(AccountID, UserName, Password, FullName, Gender,
-                    Phone, Email, Address, Role, Image, GoogleID, CreateDate, OrderQuality, (int) TotalSpending, AccountStatus);
+            Accounts acc = new Accounts(accountID, userName, password, fullName, gender, phone, email, address, role, 
+                    image, googleID, createDate, orderQuality, (int) totalSpending, accountStatus);
+            acc.setLastOrderDate(lastOrderDate); // Gán trực tiếp lastOrderDate
             vector.add(acc);
         }
     } catch (SQLException ex) {

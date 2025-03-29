@@ -347,7 +347,7 @@ section
 
 .main_nav
 {
-	padding-left: 252px;
+	padding-left: 60px;
 	-webkit-transform: translateY(4px);
 	-moz-transform: translateY(4px);
 	-ms-transform: translateY(4px);
@@ -357,7 +357,7 @@ section
 .main_nav ul li
 {
 	display: inline-block;
-	margin-right: 50px;
+	margin-right: 10px;
 }
 .main_nav ul li:last-child
 {
@@ -388,7 +388,7 @@ section
 .search
 {
 	display: inline-block;
-	width: 260px;
+	width: 150px;
 	-webkit-transform: translateY(2px);
 	-moz-transform: translateY(2px);
 	-ms-transform: translateY(2px);
@@ -436,8 +436,8 @@ section
 .shopping
 {
 	display: inline-block;
-	margin-left: 111px;
-	padding-right: 161px;
+	margin-left: 40px;
+	padding-right: 100px;
 	-webkit-transform: translateY(-2px);
 	-moz-transform: translateY(-2px);
 	-ms-transform: translateY(-2px);
