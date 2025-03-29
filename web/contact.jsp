@@ -70,7 +70,13 @@
                                 <div class="review_form_title">Liên hệ với chúng tôi</div>
                                 <div class="review_form_content">
                                     <form action="viewUserFeedback.jsp" id="review_form" class="review_form">
-                                        <button type="submit" class="review_form_button">Gửi phản hồi về dịch vụ</button>
+                                        <div class="d-flex flex-md-row flex-column align-items-start justify-content-between">
+									<input type="text" class="review_form_input" placeholder="Name" required="required">
+									<input type="email" class="review_form_input" placeholder="E-mail" required="required">
+									<input type="text" class="review_form_input" placeholder="Subject">
+								</div>
+                                        <textarea class="review_form_text" name="review_form_text" placeholder="Message"></textarea>
+                                        <button type="submit" class="review_form_button">Gửi phản thông tin của bạn</button>
                                     </form>
                                 </div>
                             </div>
@@ -158,34 +164,7 @@
                 </div>
             </div>
 
-            <!-- Newsletter -->
-
-            <div class="newsletter">
-                <div class="newsletter_content">
-                    <div class="newsletter_image" style="background-image:url(images/newsletter.jpg)"></div>
-                    <div class="container">
-                        <div class="row newsletter_row">
-                            <div class="col">
-                                <div class="section_title_container text-center">
-                                    <div class="section_subtitle">Đăng kí ngay</div>
-                                    <div class="section_title">Đăng kí để nhận mã giảm giá 20%</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row newsletter_container">
-                            <div class="col-lg-10 offset-lg-1">
-                                <div class="newsletter_form_container">
-                                    <form action="#">
-                                        <input type="email" class="newsletter_input" required="required" placeholder="E-mail here">
-                                        <button type="submit" class="newsletter_button">subscribe</button>
-                                    </form>
-                                </div>
-                                <div class="newsletter_text">Integer ut imperdiet erat. Quisque ultricies lectus tellus, eu tristique magna pharetra nec. Fusce vel lorem libero. Integer ex mi, facilisis sed nisi ut, vestib ulum ultrices nulla. Aliquam egestas tempor leo.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
             <!-- Footer -->
 

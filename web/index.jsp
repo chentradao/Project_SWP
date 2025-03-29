@@ -186,12 +186,9 @@
                                                     <img src="images/shopping-bag-white.svg" alt="">
                                                 </div>
                                             </a>
-                                            <form action="${pageContext.request.contextPath}/addToWishlist" method="post">
-                                                <input type="hidden" name="productId" value="${product.productId}" />
-                                                <button type="submit" class="product_fav product_option" style="border: none; background: none; cursor: pointer;">
-                                                    +
-                                                </button>
-                                            </form>
+                                            <button type="submit" onclick="window.location.href = 'addToWishlist?productId=${product.productId}'" class="product_fav product_option" style="border: none; background: none; cursor: pointer;">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -347,7 +344,7 @@
             </footer>
         </div>
         <style>
-            
+
             .product-container {
                 margin-top: 20px;
                 display: flex;
@@ -435,7 +432,7 @@
 
 
 
-        </style>
+        </style>    
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
         <script src="styles/bootstrap4/bootstrap.min.js"></script>
