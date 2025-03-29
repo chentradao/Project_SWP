@@ -198,8 +198,10 @@
                                     <span class="text-green-800">Đang Diễn Ra</span>
                                     <% } else if(flashSale.getStatus() == 2) { %>
                                     <span class="text-red-800">Sắp Diễn Ra</span>
-                                    <% }  else if(flashSale.getStatus() == 0) { %>
+                                    <% } else if(flashSale.getStatus() == 0) { %>
                                     <span class="text-red-800">Đã Diễn Ra</span>
+                                    <% } else if(flashSale.getStatus() == 4) { %>
+                                    <span class="text-red-800">Đã Hết Hàng</span>
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-3 w-[60px]">

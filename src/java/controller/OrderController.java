@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import model.DAOAccountVoucher;
+import model.DAOFlashSale;
 import model.DAOOrder;
 import model.DAOProductDetail;
 import model.DAOVoucher;
@@ -163,6 +164,7 @@ public class OrderController extends HttpServlet {
     private void sendOrderConfirmationEmail(HttpSession session, String name, String address, int discount, String phone, String email, int shipping, int total, String note) {
         NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN")); // Sử dụng getNumberInstance thay vì getCurrencyInstance
         DAOProductDetail da = new DAOProductDetail();
+        DAOFlashSale fls = new DAOFlashSale();
         formatter.setGroupingUsed(true); // Bật tính năng nhóm số
         Voucher voucher = (Voucher) session.getAttribute("voucher");
         String subject = "ESTÉE LAUDER - Xác nhận đơn hàng!";
@@ -218,6 +220,14 @@ public class OrderController extends HttpServlet {
         }
         int subtotal = 0;
         for (Cart cart : vector) {
+            FlashSale flashsale = (FlashSale) session.getAttribute("flash_" + cart.getID());
+            if(flashsale != null){
+            flashsale.setQuantity(flashsale.getQuantity() - 1);
+            if(flashsale.getQuantity() - 1 == 0){
+                flashsale.setStatus(4);
+            }
+            fls.updateFlashSale(flashsale);
+            }
             session.removeAttribute("flash_"+cart.getID());
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"

@@ -36,8 +36,8 @@
                 background-color: #f0f0f0;
             }
             .suggestion-item img {
-                width: 40px;
-                height: 40px;
+                width: auto;
+                height: 50px;
                 object-fit: cover;
                 margin-right: 10px;
                 border-radius: 4px;

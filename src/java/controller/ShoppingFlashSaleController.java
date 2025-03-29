@@ -40,17 +40,17 @@ public class ShoppingFlashSaleController extends HttpServlet {
         DAOCart d = new DAOCart();
         try (PrintWriter out = response.getWriter()) {
             String service = request.getParameter("service");
-            
-            if(service.equals("BuyNow")){
+
+            if (service.equals("BuyNow")) {
                 int fid = Integer.parseInt(request.getParameter("fid"));
                 FlashSale flash = dao.findFSByID(fid);
                 session.setAttribute("flash", "true");
-                session.setAttribute("flash_"+flash.getProductID(), flash);
+                session.setAttribute("flash_" + flash.getProductID(), flash);
                 Cart newCart = d.getCart(flash.getProductID());
                 if (session.getAttribute(flash.getProductID() + "") == null) {
                     newCart.setQuantity(1);
                     session.setAttribute(flash.getProductID() + "", newCart);
-                    cartQuantiry +=1 ;
+                    cartQuantiry += 1;
                 } else {
                     Cart oldCart = (Cart) session.getAttribute(flash.getProductID() + "");
                     oldCart.setQuantity(oldCart.getQuantity() + 1);
@@ -59,12 +59,12 @@ public class ShoppingFlashSaleController extends HttpServlet {
                 session.setAttribute("cartQuantiry", cartQuantiry);
                 response.sendRedirect(request.getHeader("Referer"));
             }
-            
+
             if (service.equals("flashSale")) {
                 // Lấy ngày và khung giờ từ request (nếu có)
                 String timeFrame = request.getParameter("timeFrame");
                 int selectedTimeFrame = 1;
-                if(timeFrame != null){
+                if (timeFrame != null) {
                     selectedTimeFrame = Integer.parseInt(timeFrame);
                 }
                 // Truy vấn danh sách Flash Sale theo ngày và khung giờ
@@ -72,7 +72,8 @@ public class ShoppingFlashSaleController extends HttpServlet {
                         + "FROM FlashSale\n"
                         + "WHERE StartTime >= CAST(GETDATE() AS DATE)\n"
                         + " AND EndTime < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))\n"
-                        + " AND TimeFrame = "+selectedTimeFrame;
+                        + " AND TimeFrame = " + selectedTimeFrame + "\n"
+                        + " AND Status <> 4";
                 Vector<FlashSale> vector = dao.getFlashSale(sql);
 
                 // Lấy thông tin sản phẩm cho từng Flash Sale

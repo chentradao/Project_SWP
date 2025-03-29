@@ -70,18 +70,28 @@
 .main_nav ul li
 {
     display: inline-block;
-    margin-right: 30px;
+    margin-right: 10px;
 }
             .shopping
 {
     display: inline-block;
-    margin-left: 100px;
+    margin-left: 40px;
     padding-right: 100px;
     -webkit-transform: translateY(-2px);
     -moz-transform: translateY(-2px);
     -ms-transform: translateY(-2px);
     -o-transform: translateY(-2px);
     transform: translateY(-2px);
+}
+.search
+{
+    display: inline-block;
+    width: 150px;
+    -webkit-transform: translateY(2px);
+    -moz-transform: translateY(2px);
+    -ms-transform: translateY(2px);
+    -o-transform: translateY(2px);
+    transform: translateY(2px);
 }
         </style>
     </head>

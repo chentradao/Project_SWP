@@ -22,7 +22,6 @@
         <div class="logo"><a href="${pageContext.request.contextPath}/ProductListServlet">Estée Lauder</a></div>
         <nav class="main_nav">
             <ul>
-                <li><a href="${pageContext.request.contextPath}/ProductListServlet">Trang chủ</a></li>
                 <li><a href="ShoppingFlashSaleURL?service=flashSale">Flash Sale</a></li>
                     <% for (Category category : categories) { %>
                 <li class="nav-item dropdown">
@@ -45,7 +44,7 @@
         <div class="header_content ml-auto">
             <div class="search header_search">
                 <form action="${pageContext.request.contextPath}/search.jsp" method="GET" id="searchForm">
-                    <input type="search" name="keyword" class="search_input" placeholder="Tìm kiếm sản phẩm..."  onclick="redirectToSearch()">
+                    <input type="search" name="keyword" class="search_input" placeholder="Tìm kiếm "  onclick="redirectToSearch()">
                     <button type="submit" id="search_button" class="search_button"><img src="images/magnifying-glass.svg" alt=""></button>
                 </form>
             </div>

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import entity.Accounts;
 import entity.Cart;
+import entity.FlashSale;
 import entity.Order;
 import entity.ProductDetail;
 import entity.Voucher;
@@ -28,6 +29,7 @@ import model.EmailHandler;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+import model.DAOFlashSale;
 import model.DAOOrder;
 import model.DAOProductDetail;
 import model.DAOVoucher;
@@ -43,6 +45,7 @@ public class PaymentStatusServlet extends HttpServlet {
             throws ServletException, IOException {
         DAOProductDetail da = new DAOProductDetail();
         DAOVoucher d = new DAOVoucher();
+        DAOFlashSale fls = new DAOFlashSale();
         HttpSession session = request.getSession(true);
 
         String CustomerName = (String) session.getAttribute("CustomerName");
@@ -146,6 +149,14 @@ public class PaymentStatusServlet extends HttpServlet {
         }
         int subtotal = 0;
         for (Cart cart : vector) {
+            FlashSale flashsale = (FlashSale) session.getAttribute("flash_" + cart.getID());
+            if(flashsale != null){
+            flashsale.setQuantity(flashsale.getQuantity() - 1);
+            if(flashsale.getQuantity() - 1 == 0){
+                flashsale.setStatus(4);
+            }
+            fls.updateFlashSale(flashsale);
+            }
             session.removeAttribute("flash_"+cart.getID());
             content += "<tr>"
                     + "    <td style=\"padding:4px;\">" + cart.getProductName() + "</td>"
