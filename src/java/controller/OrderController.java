@@ -103,7 +103,7 @@ public class OrderController extends HttpServlet {
                     String ShipAddress = address + ", " + ward + ", " + district + ", " + city;
                     int Discount = Integer.parseInt(request.getParameter("discount"));
                     String Note = request.getParameter("Note");
-                    int OrderStatus = 1;
+                    int OrderStatus = 0;
 
                     String PaymentMethod = request.getParameter("payment");
                     if (PaymentMethod.equalsIgnoreCase("cod")) {

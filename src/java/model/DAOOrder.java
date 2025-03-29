@@ -318,7 +318,7 @@ public class DAOOrder extends DBConnection {
         ResultSet rs = getData(sqlCheck);
         try {
             if (rs.next()) {
-                changeStatus(oid, 0);
+                changeStatus(oid, -1);
                 return 0;
             }
             String sql = "Delete from Orders where OrderID=" + oid;

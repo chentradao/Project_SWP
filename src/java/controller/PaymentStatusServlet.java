@@ -76,7 +76,7 @@ public class PaymentStatusServlet extends HttpServlet {
         d.updateVoucherByHank(voucher);
         }
         DAOOrder dao = new DAOOrder();
-        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, "VNPay", 1);
+        Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, "VNPay", 0);
         int n = dao.insertOrder(o);
         session.removeAttribute("flash");
         System.out.println(Email);

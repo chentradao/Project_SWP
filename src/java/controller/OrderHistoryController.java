@@ -85,7 +85,7 @@ public class OrderHistoryController extends HttpServlet {
                 // Tổng số bản ghi
                 String countQuery = "SELECT COUNT(*) FROM Orders WHERE CustomerID = " + acc.getAccountID();
                 if (status != null && !status.isEmpty()) {
-                    countQuery += " AND OrderStatus = " + status;
+                    countQuery += " AND OrderStatus In (" + status +")";
                 }
                 int totalRecords = dao.getTotalOrders(countQuery);
                 int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
@@ -101,7 +101,7 @@ public class OrderHistoryController extends HttpServlet {
                 // Truy vấn dữ liệu (sắp xếp mặc định theo OrderDate DESC)
                 String sql = "SELECT * FROM Orders WHERE CustomerID = " + acc.getAccountID();
                 if (status != null && !status.isEmpty()) {
-                    sql += " AND OrderStatus = " + status;
+                    sql += " AND OrderStatus In (" + status +")";
                 }
                 sql += " ORDER BY OrderID DESC OFFSET " + start + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY";
                 Vector<Order> vector = dao.getOrders(sql);

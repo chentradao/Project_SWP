@@ -61,20 +61,20 @@
                    class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= status == null || status.isEmpty() ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
                     Tất cả
                 </a>
-                <a href="OrderHistoryURL?service=orderHistory&status=1" 
-                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "1".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                <a href="OrderHistoryURL?service=orderHistory&status=0,1" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "0".equals(status) || "1".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
                     Đang Chờ
                 </a>
-                <a href="OrderHistoryURL?service=orderHistory&status=2" 
-                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "2".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                <a href="OrderHistoryURL?service=orderHistory&status=2,3,4" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "2".equals(status) || "3".equals(status) || "4".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
                     Vận Chuyển
                 </a>
-                <a href="OrderHistoryURL?service=orderHistory&status=3" 
-                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "3".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                <a href="OrderHistoryURL?service=orderHistory&status=5" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "5".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
                     Hoàn Thành
                 </a>
-                <a href="OrderHistoryURL?service=orderHistory&status=0" 
-                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "0".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
+                <a href="OrderHistoryURL?service=orderHistory&status=-1,7" 
+                   class="block w-full text-center m-2 px-4 py-2 rounded-lg <%= "-1".equals(status) || "7".equals(status) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300" %>">
                     Đã Hủy
                 </a>
             </div>
@@ -86,20 +86,28 @@
                 %>
                 <div class="overflow-x-auto border-b mb-5">
                     <a href="OrderDetailURL?service=orderDetail&oid=<%=order.getOrderID()%>">
-                    <div class="order-header p-4 border-b">
-                        <span>ID đơn hàng: <%=order.getOrderID()%></span>
-                        <span>Ngày tạo đơn: <%=order.getOrderDate()%></span>
-                        <% if (order.getOrderStatus() == 1) { %>
-                        <span class=" px-4 py-3 text-gray-800">Đang Chờ</span>
-                        <% } else if (order.getOrderStatus() == 2) { %>
-                        <span class="px-4 py-3 text-green-800">Vận Chuyển</span>
-                        <% } else if (order.getOrderStatus() == 3) { %>
-                        <span class="px-4 py-3 text-green-800">Hoàn Thành</span>
-                        <% } else if (order.getOrderStatus() == 0) { %>
-                        <span class="px-4 py-3 text-red-800">Đã Hủy</span>
-                        <% } %>
-                    </div>
-                </a>
+                        <div class="order-header p-4 border-b">
+                            <span>ID đơn hàng: <%=order.getOrderID()%></span>
+                            <span>Ngày tạo đơn: <%=order.getOrderDate()%></span>
+                            <% if (order.getOrderStatus() == 0) { %>
+                            <span class="px-4 py-3 text-gray-800">Đang chờ duyệt</span>
+                            <% } else if (order.getOrderStatus() == 1) { %>
+                            <span class="px-4 py-3 text-gray-800">Chưa tiếp nhận</span>
+                            <% } else if (order.getOrderStatus() == 2) { %>
+                            <span class="px-4 py-3 text-green-800">Đã tiếp nhận</span>
+                            <% } else if (order.getOrderStatus() == 3) { %>
+                            <span class="px-4 py-3 text-green-800">Đã lấy hàng</span>
+                            <% } else if (order.getOrderStatus() == 4) { %>
+                            <span class="px-4 py-3 text-blue-800">Đang giao hàng</span>
+                            <% } else if (order.getOrderStatus() == 5) { %>
+                            <span class="px-4 py-3 text-blue-800">Đã giao hàng</span>
+                            <% } else if (order.getOrderStatus() == -1) { %>
+                            <span class="px-4 py-3 text-red-800">Hủy đơn hàng</span>
+                            <% } else if (order.getOrderStatus() == 7) { %>
+                            <span class="px-4 py-3 text-red-800">Không lấy được hàng</span>
+                            <% } %>
+                        </div>
+                    </a>
                     <!-- Hiển thị danh sách sản phẩm từ OrderDetail -->
                     <% for (OrderDetail detail : order.getOrderDetail()) {
                     int subtotal =detail.getUnitPrice() * detail.getQuantity();
@@ -128,7 +136,7 @@
                     <div class="p-4 flex justify-between items-center flex-row-reverse">
                         <p class="total">Tổng <%=order.getOrderDetail().size()%> mặt hàng: <%=formatter.format(order.getTotalCost())%>đ</p>
                         <div class="flex space-x-2">
-                            <%if(order.getOrderStatus() == 1 ){%>
+                            <%if(order.getOrderStatus() == 1 || order.getOrderStatus() == 0 ){%>
                             <button
                                 class="order_button_2"
                                 onclick="window.open('https://zalo.me/0926310999', '_blank')">
@@ -141,13 +149,13 @@
                                     onclick="checkStatusAndShowPopup('<%=order.getOrderID()%>', <%=order.getOrderStatus()%>)">
                                 Hủy Đơn Hàng
                             </button>
-                            <%}if(order.getOrderStatus() == 2){%>
+                            <%}if(order.getOrderStatus() == 2 || order.getOrderStatus() == 3 || order.getOrderStatus() == 4){%>
                             <button
                                 class="order_button_2"
                                 onclick="window.open('https://zalo.me/0926310999', '_blank')">
                                 Liên hệ với người bán 
                             </button>
-                            <%}else if(order.getOrderStatus() == 3){%>
+                            <%}else if(order.getOrderStatus() == 5){%>
                             <button
                                 type="button"
                                 class="order_button_2"
@@ -158,7 +166,7 @@
                                 class="order_button_2">
                                 Đánh Giá
                             </button>
-                            <%}else if(order.getOrderStatus() == 0){%>
+                            <%}else if(order.getOrderStatus() == -1 || order.getOrderStatus() == 7){%>
                             <button
                                 type="button"
                                 class="order_button_2"
