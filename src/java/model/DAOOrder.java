@@ -213,6 +213,7 @@ public class DAOOrder extends DBConnection {
                 row.put("ShipAddress", rs.getString("ShipAddress"));
                 row.put("PaymentMethod", rs.getString("PaymentMethod"));
                 row.put("TotalQuantity", rs.getInt("TotalQuantity"));
+                row.put("TotalCost",rs.getInt("TotalCost"));
                 
                 list.add(row);
 

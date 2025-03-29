@@ -146,7 +146,7 @@
                     </div>
                     <div class="form-group">
                         <label>Tác giả:</label>
-                        <input type="number" id="blogAuthor" name="blogAuthor" required>
+                        <input type="number" id="blogAuthor" name="blogAuthor">
                     </div>
                     <div class="form-group">
                         <label>Trạng thái:</label>

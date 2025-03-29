@@ -86,7 +86,7 @@ public class GHTKServlet extends HttpServlet {
             while (productRs.next()) {
                 JSONObject product = new JSONObject();
                 product.put("name", productRs.getString("ProductName"));
-                product.put("weight", 0.5); // Giá trị mặc định do không có trong DB
+                product.put("weight", 0.2); // Giá trị mặc định do không có trong DB
                 product.put("quantity", productRs.getInt("Quantity"));
                 product.put("product_code", productRs.getInt("ProductID"));
                 productArray.put(product);
@@ -149,7 +149,7 @@ public class GHTKServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 Accounts acc = (Accounts) session.getAttribute("acc");
                 String orderCode = registerOrderGHTK(orderID,acc.getAccountID());
-                response.sendRedirect("managerDashboard.jsp");
+                request.getRequestDispatcher("manager").forward(request, response);
 
             } else if ("status".equals(action)) {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));

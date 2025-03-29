@@ -230,7 +230,7 @@
                                             <c:if test="${loop.index == startIndex || order.OrderID != orderList[loop.index - 1].OrderID}">
                                                 <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.ShipAddress}</td>
                                                 <td style="border: 1px solid black; padding: 8px; text-align: right;" rowspan="${rowspan}">
-                                                    <fmt:formatNumber type="currency" currencyCode="VND" value="${order.TotalAmount}" />
+                                                    <fmt:formatNumber type="currency" currencyCode="VND" value="${order.TotalCost}" />
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
                                                     <c:choose>
