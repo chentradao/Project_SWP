@@ -60,29 +60,7 @@
     </style>
 </head>
 <body id="page-top">
-    <header class="header_inner d-flex flex-row align-items-center justify-content-between" style="height: 120px; font-size: 16px; padding: 0px 64px 0px 60px">
-        <div class="logo">
-            <a href="index.jsp" class="logo">Estée Lauder</a>
-        </div>
-        <nav class="main_nav flex-grow-1 text-center">
-            <ul class="navbar-nav d-flex flex-row justify-content-center" style="font-size: 18px; font-weight: bold; gap: 20px;">
-                <li class="nav-item"><a class="nav-link text-dark" href="OrderManagementServlet?service=order">Quản lý đơn hàng</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý quảng cáo</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý kho hàng</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý khách hàng</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
-            </ul>
-        </nav>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                ${sessionScope.acc.fullName}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="manager.html">Thông tin tài khoản</a>
-                <a class="dropdown-item" href="blank.html">Đăng xuất</a>
-            </div>
-        </div>
-    </header>
+    <%@ include file="AminHeader.jsp" %>
     <div class="dashboard-container">
         <h1>Dashboard Quản lý đơn hàng</h1>
         <table>

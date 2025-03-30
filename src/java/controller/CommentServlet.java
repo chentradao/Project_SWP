@@ -24,7 +24,7 @@ import model.DAOComment;
  */
 @WebServlet(name="CommentServlet", urlPatterns={"/comment"})
 public class CommentServlet extends HttpServlet {
-    DAOComment dao = new DAOComment();
+   DAOComment dao = new DAOComment();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -43,7 +43,7 @@ public class CommentServlet extends HttpServlet {
             }
             
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 

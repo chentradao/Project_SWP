@@ -63,36 +63,7 @@
 
     </style>
     <body>
-        <header class="header_inner d-flex flex-row align-items-center justify-content-between" style="height: 120px; font-size: 16px; padding: 0px 64px 0px 60px">
-            <div class="logo">
-                <a href="index.jsp" class="logo">Estée Lauder</a>
-            </div>
-
-            <nav class="main_nav flex-grow-1 text-center">
-                <ul class="navbar-nav d-flex flex-row justify-content-center" style="font-size: 18px; font-weight: bold; gap: 20px;">
-                    <li class="nav-item"><a class="nav-link text-dark" href="ghtkservlet?action=order">Quản lý đơn hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý quảng cáo</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="index.jsp">Quản lý kho hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="ListCus">Quản lý khách hàng</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="BlogManager?service=listAllBlogs">Quản lý bài đăng</a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${sessionScope.acc.fullName}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="profile">Thông tin tài khoản</a>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.acc}">
-                            <a id="dropdown-item" class="dropdown-item" href="login?ac=logout">Đăng xuất</a>
-                        </c:when>
-                    </c:choose>
-
-                </div>
-            </div>
-        </header>
+        <%@ include file="AminHeader.jsp" %>
 
         <div class="super_container">
             <div class="body">

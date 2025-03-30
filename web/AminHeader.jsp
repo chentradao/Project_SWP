@@ -55,7 +55,7 @@
             <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/staff/products">Kho hàng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/slider">Quảng Cáo</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/FlashSaleURL?service=flashSaleList">FlashSale</a></li>
-            <li><a href="<%= request.getContextPath() %>/Blog?service=listAllBlogs">Bài đăng</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/BlogManager?service=listAllBlogs">Bài đăng</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/ListCus">Tài khoản</a></li>
             <li class="nav-item"><a class="nav-link text-dark" href="<%= request.getContextPath() %>/feedbacks">Phản hồi khách hàng</a></li>
         </ul>
