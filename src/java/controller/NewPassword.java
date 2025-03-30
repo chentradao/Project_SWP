@@ -33,7 +33,7 @@ public class NewPassword extends HttpServlet {
         if (newPassword != null && confPassword != null && newPassword.equals(confPassword)) {
             // Kiểm tra tính hợp lệ của mật khẩu
             if (!isValidPassword(newPassword)) {
-                request.setAttribute("status", "invalidPassword");
+                request.setAttribute("status", " Mật khẩu phải có ít nhất 6 ký tự bao gồm ký tự in hoa, in thường và số.");
                 dispatcher = request.getRequestDispatcher("newPassword.jsp"); // Quay lại trang nhập mật khẩu mới
                 dispatcher.forward(request, response);
                 return;

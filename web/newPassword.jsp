@@ -42,6 +42,11 @@
                             </div>
                             <div class="pt-3 pb-3">
                                 <form class="form-horizontal" action="newPassword" method="POST">
+                                    <!-- Thông báo lỗi -->
+                                    <c:if test="${not empty status}">
+                                        <div class="alert alert-danger">${status}</div>
+                                    </c:if>
+
                                     <!-- User Name Input -->
                                     <div class="form-group row justify-content-center px-3">
                                         <div class="col-9 px-0">
@@ -62,29 +67,28 @@
                                     <div class="form-group row justify-content-center">
                                         <button type="submit" class="btn btn-success">Đặt lại mật khẩu</button>
                                     </div>
-
                                 </form>
                             </div>
-                            <!-- Alternative Login -->
-                            <div class="mx-0 px-0 bg-light">
+                        </div>
+                        <!-- Alternative Login -->
+                        <div class="mx-0 px-0 bg-light">
 
-                                <!-- Horizontal Line -->
-                                <div class="px-4 pt-5">
-                                    <hr>
+                            <!-- Horizontal Line -->
+                            <div class="px-4 pt-5">
+                                <hr>
+                            </div>
+                            <!-- Register Now -->
+                            <div class="pt-2">
+                                <div class="row justify-content-center">
+                                    <h5>
+                                        Chưa có tài khoản ?<span><a href="signup.jsp"
+                                                                    class="text-danger"> Đăng kí ngay</a></span>
+                                    </h5>
                                 </div>
-                                <!-- Register Now -->
-                                <div class="pt-2">
-                                    <div class="row justify-content-center">
-                                        <h5>
-                                            Chưa có tài khoản ?<span><a href="signup.jsp"
-                                                                        class="text-danger"> Đăng kí ngay</a></span>
-                                        </h5>
-                                    </div>
-                                    <div
-                                        class="row justify-content-center align-items-center pt-4 pb-5">
-                                        <div class="col-4">
+                                <div
+                                    class="row justify-content-center align-items-center pt-4 pb-5">
+                                    <div class="col-4">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -93,8 +97,9 @@
                 </div>
             </div>
         </div>
-        <script type='text/javascript'
-        src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
+    </div>
+    <script type='text/javascript'
+    src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
 
-    </body>
+</body>
 </html>
