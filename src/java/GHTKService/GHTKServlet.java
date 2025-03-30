@@ -35,7 +35,7 @@ public class GHTKServlet extends HttpServlet {
         return DriverManager.getConnection(dbURL, user, pass);
     }
 
-    private String registerOrderGHTK(int orderID,int StaffID) throws Exception {
+    private String registerOrderGHTK(int orderID, int StaffID) throws Exception {
         Connection conn = getConnection();
         String orderCode = null;
 
@@ -115,7 +115,7 @@ public class GHTKServlet extends HttpServlet {
 
             JSONObject jsonResponse = new JSONObject(response);
             if (jsonResponse.getBoolean("success")) {
-                orderCode = jsonResponse.getJSONObject("order").getString("label");                
+                orderCode = jsonResponse.getJSONObject("order").getString("label");
                 String updateSQL = "UPDATE Orders SET orderCode = ?, OrderStatus = ?, StaffID = ? WHERE OrderID = ?";
                 PreparedStatement updateStmt = conn.prepareStatement(updateSQL);
                 updateStmt.setString(1, orderCode);
@@ -145,11 +145,15 @@ public class GHTKServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String action = request.getParameter("action");
             if ("register".equals(action)) {
-                int orderID = Integer.parseInt(request.getParameter("orderID"));
                 HttpSession session = request.getSession();
                 Accounts acc = (Accounts) session.getAttribute("acc");
-                String orderCode = registerOrderGHTK(orderID,acc.getAccountID());
-                request.getRequestDispatcher("manager").forward(request, response);
+                if (acc == null) {
+                    response.sendRedirect("login.jsp");
+                } else {
+                    int orderID = Integer.parseInt(request.getParameter("orderID"));
+                    String orderCode = registerOrderGHTK(orderID, acc.getAccountID());
+                    request.getRequestDispatcher("manager").forward(request, response);
+                }
 
             } else if ("status".equals(action)) {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
@@ -163,7 +167,7 @@ public class GHTKServlet extends HttpServlet {
                     System.out.println(orderCode);
                     out.print(orderCode);
                 }
-                
+
             } else if ("order".equals(action)) {
                 Vector<Order> vectorOrder = daoOrder.getOrders("select * from Orders where OrderCode IS NOT NULL");
                 for (Order order : vectorOrder) {

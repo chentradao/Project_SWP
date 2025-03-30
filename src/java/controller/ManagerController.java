@@ -49,7 +49,7 @@ public class ManagerController extends HttpServlet {
             }
             
             if(sortBy == null){
-                sortBy = "orderCode";
+                sortBy = "OrderID";
             }
             
             if(sortOrder == null){

@@ -78,19 +78,15 @@
             .five-star {
                 background-color: #4CAF50;
             }
-
             .four-star {
                 background-color: #8BC34A;
             }
-
             .three-star {
                 background-color: #FFC107;
             }
-
             .two-star {
                 background-color: #FF9800;
             }
-
             .one-star {
                 background-color: #F44336;
             }
@@ -142,17 +138,16 @@
                 .rating-row {
                     flex-wrap: wrap;
                 }
-
                 .rating-label {
                     width: 70px;
                     font-size: 14px;
                 }
-
                 .rating-count {
                     width: 80px;
                     font-size: 13px;
                 }
             }
+
             /* Brown theme custom styling */
             :root {
                 --brown-primary: #8B5A2B;
@@ -165,69 +160,55 @@
             .text-brown {
                 color: var(--brown-primary);
             }
-
             .bg-brown {
                 background-color: var(--brown-primary);
             }
-
             .btn-brown {
                 background-color: var(--brown-primary);
                 color: white;
                 border: none;
                 transition: all 0.3s;
             }
-
             .btn-brown:hover, .btn-brown:focus {
                 background-color: var(--brown-dark);
                 color: white;
             }
-
             .btn-outline-brown {
                 color: var(--brown-secondary);
                 border-color: var(--brown-light);
                 background-color: white;
             }
-
             .btn-outline-brown:hover {
                 background-color: var(--brown-very-light);
                 color: var(--brown-dark);
                 border-color: var(--brown-secondary);
             }
-
             .btn-check:checked + .btn-outline-brown {
                 background-color: var(--brown-primary);
                 color: white;
                 border-color: var(--brown-primary);
             }
-
             .brown-focus:focus {
                 border-color: var(--brown-light);
                 box-shadow: 0 0 0 0.25rem rgba(139, 90, 43, 0.25);
             }
-
             .feedback-form {
                 border-color: var(--brown-light);
                 background-color: white;
                 border-radius: 10px;
             }
-
             .input-group-text {
                 border: none;
             }
-
             .form-control {
                 border: 1px solid #E5D3B9;
             }
-
             .rating-stars .btn {
                 min-width: 45px;
             }
-
-            /* Better hover effect for stars */
             .rating-stars .btn-outline-brown:hover {
                 transform: scale(1.1);
             }
-
 
             .rating-stars {
                 display: flex;
@@ -246,7 +227,6 @@
             .rating-stars .star.selected {
                 color: gold;
             }
-
 
             .review_image1 img {
                 width: 100px;
@@ -319,24 +299,18 @@
                     transform: translateY(0);
                 }
             }
-
         </style>
         <div class="super_container">
 
-
             <!-- Header -->
-
             <%@ include file="header.jsp" %>
 
-
             <!-- Menu -->
-
             <%@ include file="menu.jsp" %>
 
             <c:set var="currentUser" value="${sessionScope.acc}" />
 
             <!-- Home -->
-
             <div class="home">
                 <div class="home_background parallax-window" data-parallax="scroll" data-image-src="P_images/categories.jpg" data-speed="0.8"></div>
                 <div class="container">
@@ -361,7 +335,6 @@
             </div>
 
             <!-- Product -->
-
             <div class="product">
                 <div class="container">
                     <div class="row">
@@ -376,24 +349,19 @@
                         </div>
                     </div>
                     <div class="row product_row">
-
                         <!-- Product Image -->
                         <div class="col-lg-7">
                             <div class="product_image">
                                 <div class="product_image_large">
-                                    <!-- Use the dynamic product image -->
                                     <img src="${productDetail.image}" alt="${productDetail.productName}">
                                 </div>
-                                <!-- Optionally, add thumbnails if available -->
                             </div>
                         </div>
 
                         <!-- Product Content -->
                         <div class="col-lg-5">
                             <div class="product_content">
-                                <!-- Dynamic product name -->
                                 <div class="product_name">${productDetail.productName}</div>
-                                <!-- Dynamic product price (format as needed) -->
                                 <div class="product_price">${productDetail.price} VND</div>
                                 <div class="rating rating_4" data-rating="4">
                                     <i class="fa fa-star"></i>
@@ -402,21 +370,17 @@
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
                                 </div>
-                                <!-- In Stock -->
                                 <div class="in_stock_container">
                                     <div class="in_stock in_stock_true"></div>
                                     <span>còn hàng</span>
                                 </div>
-                                <!-- Dynamic product description -->
                                 <div class="product_text">
                                     <p>${productDetail.description}</p>
                                 </div>
-                                <!-- Display product details such as size and color -->
                                 <div class="product_details">
                                     <p><strong>Kích cỡ:</strong> ${productDetail.size}</p>
                                     <p><strong>Màu:</strong> ${productDetail.color}</p>
                                 </div>
-
                                 <div class="button cart_button">
                                     <a href="javascript:history.back()">Quay lại</a>
                                 </div>
@@ -424,16 +388,10 @@
                         </div>
                     </div>
 
-
-
-
-
                     <!-- Review Statistics Section -->
                     <div class="container">
                         <div class="card shadow-sm p-4 mb-5">
                             <h2 class="mb-4 fw-bold">Đánh giá tổng quan</h2>
-
-                            <!-- Star Distribution -->
                             <div class="mb-4">
                                 <!-- 5 Stars -->
                                 <div class="row mb-2 align-items-center">
@@ -452,7 +410,6 @@
                                         <small class="text-muted">${stats.fiveStar}</small>
                                     </div>
                                 </div>
-
                                 <!-- 4 Stars -->
                                 <div class="row mb-2 align-items-center">
                                     <div class="col-md-2 col-3">
@@ -470,7 +427,6 @@
                                         <small class="text-muted">${stats.fourStar}</small>
                                     </div>
                                 </div>
-
                                 <!-- 3 Stars -->
                                 <div class="row mb-2 align-items-center">
                                     <div class="col-md-2 col-3">
@@ -488,7 +444,6 @@
                                         <small class="text-muted">${stats.threeStar}</small>
                                     </div>
                                 </div>
-
                                 <!-- 2 Stars -->
                                 <div class="row mb-2 align-items-center">
                                     <div class="col-md-2 col-3">
@@ -506,7 +461,6 @@
                                         <small class="text-muted">${stats.twoStar}</small>
                                     </div>
                                 </div>
-
                                 <!-- 1 Star -->
                                 <div class="row mb-2 align-items-center">
                                     <div class="col-md-2 col-3">
@@ -525,13 +479,11 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Average Rating -->
                             <div class="text-center p-3 bg-light rounded">
                                 <div class="mb-2">
                                     <c:set var="fullStars" value="${Math.floor(stats.averageStars)}" />
                                     <c:set var="hasHalfStar" value="${stats.averageStars % 1 >= 0.5}" />
-
                                     <c:forEach begin="1" end="5" var="i">
                                         <c:choose>
                                             <c:when test="${i <= fullStars}">
@@ -551,8 +503,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Reviews -->
 
+                    <!-- Reviews -->
                     <div class="row">
                         <div class="col">
                             <div class="reviews">
@@ -562,7 +514,6 @@
                                         <c:choose>
                                             <c:when test="${not empty feedbacks}">
                                                 <c:forEach var="feedback" items="${feedbacks}">
-                                                    <!-- Review -->
                                                     <li class="review clearfix">
                                                         <div class="review_content">
                                                             <div class="review_name">
@@ -575,10 +526,10 @@
                                                                 <c:forEach var="i" begin="1" end="5">
                                                                     <c:choose>
                                                                         <c:when test="${i <= feedback.rateStar}">
-                                                                            <i class="fa fa-star" style="color: gold;"></i>  
+                                                                            <i class="fa fa-star" style="color: gold;"></i>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <i class="fa fa-star-o"></i> 
+                                                                            <i class="fa fa-star-o"></i>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </c:forEach>
@@ -589,8 +540,6 @@
                                                             <div class="review_text">
                                                                 <p>${feedback.feedback}</p>
                                                             </div>
-
-
                                                             <div class="mt-3">
                                                                 <c:if test="${not empty feedback.feedbackReply}">
                                                                     <div class="admin-reply mt-2 ms-md-4 ms-2">
@@ -607,7 +556,6 @@
                                                                         </div>
                                                                     </div>
                                                                 </c:if>
-
                                                                 <c:if test="${empty feedback.feedbackReply}">
                                                                     <c:if test="${currentUser != null and (currentUser.role eq 'admin' or currentUser.role eq 'staff')}">
                                                                         <div class="reply-form mt-3 ms-md-4 ms-2">
@@ -632,8 +580,6 @@
                                                                     </c:if>
                                                                 </c:if>
                                                             </div>
-
-
                                                         </div>
                                                     </li>
                                                 </c:forEach>
@@ -648,8 +594,8 @@
                         </div>
                     </div>
 
+                    <!-- Feedback Form -->
                     <c:if test="${currentUser != null && currentUser.role == 'Customer'}">
-
                         <div class="feedback-form card p-4 mt-4 shadow">
                             <h3 class="mb-4 fw-bold text-brown">Để lại phản hồi của bạn</h3>
                             <form action="submitFeedback" method="post" enctype="multipart/form-data">
@@ -669,9 +615,7 @@
                                     </div>
                                 </div>
 
-
                                 <input type="hidden" name="productId" value="${param.productId}">
-
 
                                 <!-- Star Rating -->
                                 <div class="mb-4">
@@ -679,16 +623,12 @@
                                     <div class="rating-stars d-flex flex-row-reverse justify-content-end">
                                         <input type="radio" id="star5" name="rateStar" value="5" class="btn-check">
                                         <label for="star5" class="star" data-value="5"><i class="bi bi-star-fill"></i></label>
-
                                         <input type="radio" id="star4" name="rateStar" value="4" class="btn-check">
                                         <label for="star4" class="star" data-value="4"><i class="bi bi-star-fill"></i></label>
-
                                         <input type="radio" id="star3" name="rateStar" value="3" class="btn-check">
                                         <label for="star3" class="star" data-value="3"><i class="bi bi-star-fill"></i></label>
-
                                         <input type="radio" id="star2" name="rateStar" value="2" class="btn-check">
                                         <label for="star2" class="star" data-value="2"><i class="bi bi-star-fill"></i></label>
-
                                         <input type="radio" id="star1" name="rateStar" value="1" class="btn-check">
                                         <label for="star1" class="star" data-value="1"><i class="bi bi-star-fill"></i></label>
                                     </div>
@@ -696,7 +636,6 @@
                                         Đánh giá của bạn: <span id="selected-rating">0</span> sao
                                     </div>
                                 </div>
-
 
                                 <!-- Feedback -->
                                 <div class="mb-4">
@@ -711,14 +650,10 @@
                             </form>
                         </div>
                     </c:if>
-
-
-
-                </div>		
+                </div>
             </div>
 
             <!-- Footer -->
-
             <footer class="footer">
                 <div class="container">
                     <div class="row">
@@ -742,16 +677,16 @@
                                     <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                                 </ul>
                             </div>
-                            <div class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            <div class="copyright">
                                 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </footer>
         </div>
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Include Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="styles/bootstrap4/popper.js"></script>
@@ -760,7 +695,6 @@
         <script src="plugins/parallax-js-master/parallax.min.js"></script>
         <script src="js/product_custom.js"></script>
         <script>
-
                                     document.addEventListener("DOMContentLoaded", function () {
                                         const stars = document.querySelectorAll(".rating-stars .star");
                                         const ratingDisplay = document.getElementById("selected-rating");
@@ -790,13 +724,20 @@
                                                 }
                                             });
                                         }
-                                    });
 
+                                        // Kiểm tra khi gửi biểu mẫu
+                                        document.querySelector('form[action="submitFeedback"]').addEventListener('submit', function (event) {
+                                            const rateStar = document.querySelector('input[name="rateStar"]:checked');
+                                            if (!rateStar) {
+                                                event.preventDefault();
+                                                alert('Vui lòng chọn số sao trước khi gửi phản hồi!');
+                                            }
+                                        });
+                                    });
 
                                     function previewImage(event) {
                                         const input = event.target;
                                         const preview = document.getElementById('imagePreview');
-
                                         if (input.files && input.files[0]) {
                                             const reader = new FileReader();
                                             reader.onload = function (e) {

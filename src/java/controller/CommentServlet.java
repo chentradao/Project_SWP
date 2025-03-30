@@ -39,6 +39,7 @@ public class CommentServlet extends HttpServlet {
             else{
                 Comment com = new Comment(acc.getAccountID(), id, comment, acc.getFullName(), java.sql.Date.valueOf(LocalDate.now()));
             dao.insertComment(com);
+                System.out.println(com);
             response.sendRedirect("Blog?service=displayBlog&id="+id);
             }
             

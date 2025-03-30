@@ -33,7 +33,7 @@ public class UserDetail extends HttpServlet {
             throws ServletException, IOException {
         // Lấy tham số username từ URL
         String username = request.getParameter("username");
-        
+
         // Kiểm tra nếu username không tồn tại
         if (username == null || username.isEmpty()) {
             response.sendRedirect("ListUser");
@@ -49,9 +49,14 @@ public class UserDetail extends HttpServlet {
             response.sendRedirect("ListUser");
             return;
         }
+        String referer = request.getHeader("Referer");
+        if (referer == null || referer.contains("userDetail")) {
+            referer = "ListUser";
+        }
 
         // Truyền dữ liệu sang JSP
         request.setAttribute("account", account);
+        request.setAttribute("returnTo", referer);
         request.getRequestDispatcher("user_detail.jsp").forward(request, response);
     }
 

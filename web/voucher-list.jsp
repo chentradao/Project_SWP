@@ -46,7 +46,7 @@
     </head>
     <body>
         <div class="super_container">
-            <%@include file="header.jsp" %>
+            <%@ include file="AminHeader.jsp" %>
 
             <div class="main-content mt-5">
                 <h1>Danh sách Voucher</h1>
@@ -89,7 +89,7 @@
         new SimpleDateFormat("dd/MM/yyyy").format(voucher.getEndDate()) : "N/A" %>
                                 </td>
                                 <td class="<%= voucher.getStatus() == 1 ? "status-active" : "status-inactive" %>">
-                                    <%= voucher.getStatus() == 1 ? "Hoạt động" : "Không hoạt động" %>
+                                    <%= voucher.getStatus() == 1 ? "Hoạt động" : (voucher.getStatus() == 2 ? "Riêng tư" : "Không hoạt động") %>
                                 </td>
                                 <td>
                                     <a href="VoucherController?action=edit&id=<%= voucher.getVoucherID() %>" 

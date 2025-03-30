@@ -210,20 +210,21 @@
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
                                                     <c:choose>
-                                                        <c:when test="${order.OrderStatus == 1}">Đang lấy hàng</c:when>
-                                                        <c:when test="${order.OrderStatus == 2}">Đang giao hàng</c:when>
-                                                        <c:when test="${order.OrderStatus == 3}">Đã giao hàng thành công</c:when>
-                                                        <c:when test="${order.OrderStatus == 4}">Giao hàng thất bại</c:when>
-                                                        <c:when test="${order.OrderStatus == 5}">Đang hoàn hàng</c:when>
-                                                        <c:when test="${order.OrderStatus == 6}">Đã hoàn hàng thành công</c:when>
-                                                        <c:when test="${order.OrderStatus == 7}">Hủy đơn hàng</c:when>
-                                                        <c:when test="${order.OrderStatus == 8}">Chờ xác nhận</c:when>
+                                                        <c:when test="${order.OrderStatus == 1}">Chưa tiếp nhận</c:when>
+                                                        <c:when test="${order.OrderStatus == 2}">Đã tiếp nhận</c:when>
+                                                        <c:when test="${order.OrderStatus == 3}">Đã lấy hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 4}">Đang giao hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 5}">Đã giao hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == -1}">Đã hủy</c:when>
+                                                        <c:when test="${order.OrderStatus == 7}">Không lấy được hàng</c:when>
+                                                        <c:when test="${order.OrderStatus == 8}">Khác</c:when>
+                                                        <c:when test="${order.OrderStatus == 0}">Chờ xác nhận</c:when>
                                                         <c:otherwise>Không xác định</c:otherwise>
                                                     </c:choose>
                                                 </td>
                                                 <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">${order.PaymentMethod}</td>
                                                 <td style="border: 1px solid black; padding: 8px; text-align: center;" rowspan="${rowspan}">
-                                                    <c:if test="${order.OrderStatus == 1}">
+                                                    <c:if test="${order.OrderStatus == 0}">
                                                         <form action="ghtkservlet" method="get" style="display: inline;">
                                                             <input type="hidden" name="action" value="register" />
                                                             <input type="hidden" name="orderID" value="${order.OrderID}" />

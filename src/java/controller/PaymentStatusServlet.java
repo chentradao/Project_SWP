@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.AccountVoucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -29,6 +30,7 @@ import model.EmailHandler;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+import model.DAOAccountVoucher;
 import model.DAOFlashSale;
 import model.DAOOrder;
 import model.DAOProductDetail;
@@ -46,6 +48,7 @@ public class PaymentStatusServlet extends HttpServlet {
         DAOProductDetail da = new DAOProductDetail();
         DAOVoucher d = new DAOVoucher();
         DAOFlashSale fls = new DAOFlashSale();
+        DAOAccountVoucher av = new DAOAccountVoucher();
         HttpSession session = request.getSession(true);
 
         String CustomerName = (String) session.getAttribute("CustomerName");
@@ -78,6 +81,10 @@ public class PaymentStatusServlet extends HttpServlet {
         DAOOrder dao = new DAOOrder();
         Order o = new Order(CustomerID, CustomerName, OrderDate, null, ShippingFee, TotalCost, Email, Phone, ShipAddress, Discount, Note, null, "VNPay", 0);
         int n = dao.insertOrder(o);
+        if (VoucherID > 1 || acc != null) {
+                            AccountVoucher accv = new AccountVoucher(VoucherID, acc.getAccountID());
+                            av.insertAccountVoucher(accv);
+                        }
         session.removeAttribute("flash");
         System.out.println(Email);
         if (n > 0) {

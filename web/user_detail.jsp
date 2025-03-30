@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <a href="ListUser" class="back-button">Quay lại</a>
+            <a href="${returnTo}" class="back-button">Quay lại</a>
         </div>
 
         <!-- Scripts -->
