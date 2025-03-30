@@ -282,119 +282,112 @@
         <script src="js/cart_custom.js"></script>
 
         <script>
-    $(document).ready(function () {
-        // Biểu đồ doanh thu (sale-revenue)
-        var salesData = '${jsonData}';
-        var data = salesData ? JSON.parse(salesData) : [];
-        const saleRevenueChart = new Chart(document.getElementById('sale-revenue').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: data.length ? data.map(sale => sale.label) : ['No Data'],
-                datasets: [{
-                    label: 'Doanh thu (VND)',
-                    data: data.length ? data.map(sale => sale.totalCost) : [0],
-                    backgroundColor: 'rgba(0, 156, 255, 0.5)',
-                    borderColor: 'rgba(0, 156, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-        });
+                            // Biểu đồ Doanh thu
+                            const revenueLabels = '${revenueLabels}' ? JSON.parse('${revenueLabels}') : [];
+                            const revenueData = '${revenueData}' ? JSON.parse('${revenueData}') : [];
+                            const revenueChart = new Chart(document.getElementById('revenueChart'), {
+                                type: 'bar',
+                                data: {
+                                    labels: revenueLabels,
+                                    datasets: [{
+                                            label: 'Doanh thu (VND)',
+                                            data: revenueData,
+                                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                            borderColor: 'rgba(54, 162, 235, 1)',
+                                            borderWidth: 1
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {beginAtZero: true, ticks: {callback: value => value.toLocaleString('vi-VN') + ' VND'}},
+                                        x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                    }
+                                }
+                            });
 
-        // Biểu đồ trạng thái đơn hàng (order-pie-chart)
-        const orderPieChart = new Chart(document.getElementById('order-pie-chart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ["Đơn Hoàn Thành", "Đơn Chờ Xác Nhận", "Đơn Đang Giao", "Đơn Đã Hủy", "Đơn Hoàn Trả"],
-                datasets: [{
-                    label: 'Số lượng đơn',
-                    data: [
-                        ${completed.size()},
-                        ${waiting.size()},
-                        ${shipping.size()},
-                        ${cancelled.size()},
-                        ${cancelled.size()}
-                    ],
-                    backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)', 'rgba(153, 102, 255, 0.5)'],
-                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(153, 102, 255, 1)'],
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+                            // Biểu đồ Doanh thu theo Danh mục
+                            const categoryLabels = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categories : [];
+                            const categoryData = '${categoryRevenueData}' ? JSON.parse('${categoryRevenueData}').categoryRevenue : [];
+                            const categoryRevenueChart = new Chart(document.getElementById('categoryRevenueChart'), {
+                                type: 'pie',
+                                data: {
+                                    labels: categoryLabels,
+                                    datasets: [{
+                                            label: 'Doanh thu (VND)',
+                                            data: categoryData,
+                                            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                                            borderColor: '#fff',
+                                            borderWidth: 1
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        tooltip: {callbacks: {label: context => `${context.label}: ${context.parsed.toLocaleString('vi-VN')} VND`}}
+                                    }
+                                }
+                            });
 
-        // Biểu đồ doanh thu đã nhận (revenue-pie-chart)
-        const revenuePieChart = new Chart(document.getElementById('revenue-pie-chart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ["Doanh thu đã nhận", "Doanh thu chưa nhận"],
-                datasets: [{
-                    label: 'Doanh thu (VND)',
-                    data: [${EarnedRevenue != null ? EarnedRevenue : 0}, ${UpcomingRevunue != null ? UpcomingRevunue : 0}],
-                    backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 206, 86, 0.5)'],
-                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 206, 86, 1)'],
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+                            // Biểu đồ Số khách hàng mới
+                            const newCustomerLabels = '${newCustomerData}' ? JSON.parse('${newCustomerData}').timeLabels : [];
+                            const parsedNewCustomerData = '${newCustomerData}' ? JSON.parse('${newCustomerData}').newCustomers : [];
+                            const newCustomerChart = new Chart(document.getElementById('newCustomerChart'), {
+                                type: 'bar',
+                                data: {
+                                    labels: newCustomerLabels,
+                                    datasets: [{
+                                            label: 'Khách hàng mới',
+                                            data: parsedNewCustomerData,
+                                            backgroundColor: 'rgba(28, 200, 138, 0.2)',
+                                            borderColor: '#1cc88a',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {beginAtZero: true},
+                                        x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                    }
+                                }
+                            });
 
-        // Biểu đồ sản phẩm bán chạy (bestSoldChart)
-        var labels = [];
-        var dataValues = [];
-        <c:choose>
-            <c:when test="${not empty productSales}">
-                <c:forEach var="entry" items="${productSales}">
-                    labels.push("${entry.key}");
-                    dataValues.push(${entry.value});
-                </c:forEach>
-            </c:when>
-            <c:otherwise>
-                labels.push("No Data");
-                dataValues.push(0);
-            </c:otherwise>
-        </c:choose>
-        const bestSoldChart = new Chart(document.getElementById('bestSoldChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Số lượng bán ra',
-                    data: dataValues,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 90 } },
-                    y: { beginAtZero: true, suggestedMin: 0, ticks: { stepSize: 1, precision: 0 } }
-                }
-            }
-        });
+                            // Biểu đồ Tồn kho
+                            const inventoryLabels = '${inventoryData}' ? JSON.parse('${inventoryData}').productNames : [];
+                            const parsedInventoryData = '${inventoryData}' ? JSON.parse('${inventoryData}').stockQuantities : [];
+                            const inventoryChart = new Chart(document.getElementById('inventoryChart'), {
+                                type: 'bar',
+                                data: {
+                                    labels: inventoryLabels,
+                                    datasets: [{
+                                            label: 'Số lượng tồn',
+                                            data: parsedInventoryData,
+                                            backgroundColor: 'rgba(246, 194, 62, 0.2)',
+                                            borderColor: '#f6c23e',
+                                            borderWidth: 1
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {beginAtZero: true},
+                                        x: {ticks: {maxRotation: 45, minRotation: 45}}
+                                    }
+                                }
+                            });
 
-        // Kích hoạt form submit khi thay đổi dropdown
-        $(".filter-form select").on("change", function () {
-            $(this).closest("form").submit();
-        });
+                            $(".filter-form select").on("change", function () {
+                                $(this).closest("form").submit();
+                            });
 
-        // Hiển thị nội dung khi trang tải xong
-        $(window).on('load', function () {
-            $("#content").css("opacity", 1);
-        });
-
-        // Toggle sidebar
-        $("#sidebarToggle, #sidebarToggleTop").on("click", function (e) {
-            e.preventDefault();
-            $(".sidebar").toggleClass("toggled");
-            $("#content-wrapper").toggleClass("toggled");
-        });
-    });
-    </script>
+                            $("#content").css("opacity", 1);
+        </script>
 
     </body>
 </html>

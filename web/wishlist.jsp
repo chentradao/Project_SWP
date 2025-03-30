@@ -83,80 +83,12 @@
     <body>
         <div class="super_container">
             <!-- Header -->
-            <header class="header">
-                <div class="header_inner d-flex flex-row align-items-center justify-content-start">
-                    <div class="logo"><a href="ProductListServlet">Estée Lauder</a></div>
-                    <nav class="main_nav">
-                        <ul>
-                            <li><a href="ProductListServlet">Home</a></li>
-                            <li><a href="categories.jsp">Chăm sóc da</a></li>
-                            <li><a href="categories.jsp">Trang điểm</a></li>
-                            <li><a href="categories.jsp">Nước Hoa</a></li>
-                            <li><a href="categories.jsp">Chăm sóc mắt</a></li>
-                        </ul>
-                    </nav>
-                    <div class="header_content ml-auto">
-                        <div class="search header_search">
-                            <form action="#">
-                                <input type="search" class="search_input" required="required">
-                                <button type="submit" id="search_button" class="search_button"><img src="images/magnifying-glass.svg" alt=""></button>
-                            </form>
-                        </div>
-                        <div class="shopping">
-                            <!-- Cart -->
-                            <a href="CartURL?service=showCart">
-                                <div class="cart">
-                                    <img src="images/shopping-bag.svg" alt="">
-                                    <div class="cart_num_container">
-                                        <div class="cart_num_inner">
-                                            <div class="cart_num">1</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Star -->
-                            <a href="${pageContext.request.contextPath}/getwishlist">
-                                <div class="star">
-                                    <img src="images/star.svg" alt="">
-                                    <div class="star_num_container">
-                                        <div class="star_num_inner">
-                                            <div class="star_num">0</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Avatar -->
-                            <a href="login.jsp">
-                                <div class="avatar">
-                                    <img src="images/avatar.svg" alt="">
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
-                </div>
-            </header>   
+
+            <%@ include file="/header.jsp" %>
 
             <!-- Menu -->
-            <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
-                <div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
-                <div class="logo menu_mm"><a href="homepage.jsp">Estée Lauder</a></div>
-                <div class="search">
-                    <form action="product.html">
-                        <input type="search" class="search_input menu_mm" required="required">
-                        <button type="submit" id="search_button_menu" class="search_button menu_mm"><img class="menu_mm" src="images/magnifying-glass.svg" alt=""></button>
-                    </form>
-                </div>
-                <nav class="menu_nav">
-                    <ul class="menu_mm">
-                        <li class="menu_mm"><a href="ProductListServlet">Home</a></li>
-                        <li class="menu_mm"><a href="categories.jsp">Chăm sóc da</a></li>
-                        <li class="menu_mm"><a href="categories.jsp">Trang điểm</a></li>
-                        <li class="menu_mm"><a href="categories.jsp">Nước hoa</a></li>
-                        <li class="menu_mm"><a href="categories.jsp">Chăm sóc mắt</a></li>
-                    </ul>
-                </nav>
-            </div>
+
+            <%@ include file="/menu.jsp" %>
 
             <!-- Home -->
             <div class="home">
