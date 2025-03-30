@@ -45,7 +45,7 @@
         if (acc == null) {
             response.sendRedirect("login.jsp");
         }
-        if (acc.getRole().equals("staff")) { %>
+        else if (acc.getRole().equals("staff")) { %>
         <div class="logo">
         <a href="manager">Estée Lauder</a>
         </div>

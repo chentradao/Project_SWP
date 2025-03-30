@@ -65,13 +65,13 @@ public class ChangeStatusServlet extends HttpServlet {
         DAOAccounts adb = new DAOAccounts();
         adb.changeStatus(status, username);
 
-        if ("ListStaff".equals(returnTo)) {
-            request.getRequestDispatcher("ListStaff").forward(request, response);
+        if ("ListStaff".equals(returnTo)) { 
+            response.sendRedirect("ListStaff");
         }else if ("ListCustomer".equals(returnTo)) {
-            request.getRequestDispatcher("ListCustomer").forward(request, response);
+            response.sendRedirect("ListCustomer");
         }
           else {
-            request.getRequestDispatcher("ListUser").forward(request, response);
+            response.sendRedirect("ListUser");
         }
     }
 

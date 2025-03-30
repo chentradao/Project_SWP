@@ -19,10 +19,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
         <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+        <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+        <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
+        <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/categories.css">
         <link rel="stylesheet" type="text/css" href="styles/OrderDetail.css">
         <link rel="stylesheet" type="text/css" href="styles/responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             .time-frame-btn {
@@ -177,7 +182,40 @@
             </div>
             <% } %>
         </div>
-
+        <footer class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col text-center">
+                            <div class="footer_logo"><a href="ProductListServlet">Estée Lauder</a></div>
+                            <nav class="footer_nav">
+                                <ul>
+                                    <li><a href="ProductListServlet">Trang chủ</a></li>
+                                    <li><a href="categories.jsp">Chăm sóc da</a></li>
+                                    <li><a href="categories.jsp">Trang điểm</a></li>
+                                    <li><a href="categories.jsp">Nước hoa</a></li>
+                                    <li><a href="contact.html">Chăm sóc mắt</a></li>
+                                </ul>
+                            </nav>
+                            <div class="footer_social">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-reddit-alien" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="copyright">
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> 
+                                All rights reserved | This template is made with 
+                                <i class="fa fa-heart-o" aria-hidden="true"></i> by 
+                                <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         <script>
             // Danh sách khung giờ (theo giờ 24h)
             const timeFrames = [

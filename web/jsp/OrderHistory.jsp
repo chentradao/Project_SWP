@@ -211,7 +211,7 @@
                         </div>
                         <h3 class="text-lg font-medium text-gray-700 mb-2">Không có đơn hàng nào được tìm thấy</h3>
                         <p class="text-gray-500 max-w-md">Bạn chưa mua bất kỳ đơn hàng nào. Hãy đặt đơn đầu tiên ngay hôm nay để nhận ưu đãi đặc biệt!</p>
-                        <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                        <a href="product-list?" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
                             <i class="fas fa-plus mr-1"></i> Mua đơn hàng đầu tiên của bạn
                         </a>
                     </div>

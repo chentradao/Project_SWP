@@ -22,6 +22,7 @@
         <link rel="stylesheet" type="text/css" href="styles/cart.css">
         <link rel="stylesheet" type="text/css" href="styles/cart_responsive.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             .newsletter_button {
                 display: block; /* Đảm bảo button chiếm toàn bộ chiều ngang của container cha nếu cần */
@@ -228,7 +229,7 @@
                             </div>
                             <h3 class="text-lg font-medium text-gray-700 mb-2">Không có sản phẩm nào được tìm thấy</h3>
                             <p class="text-gray-500 max-w-md">Bạn chưa thêm bất kỳ sản phẩm nào vào giỏ hàng. Hãy đặt đơn ngay hôm nay để nhận ưu đãi đặc biệt!</p>
-                            <a href="categories.jsp" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                            <a href="product-list?" class="mt-4 text-blue-600 hover:text-blue-800 font-medium">
                                 <i class="fas fa-plus mr-1"></i> Thêm sản phẩm vào giỏ hàng
                             </a>
                         </div>
@@ -238,7 +239,7 @@
                                 <div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
                                     <button type="button" class="button_clear cart_button" id="clearCartBtn">Xóa Giỏ Hàng</button>
                                     <button class="button_update cart_button" type="submit" name="submit" value="Update Cart">Cập Nhật</button>
-                                    <button type="button" class="button_update cart_button_2 ml-md-auto" onclick="window.location.href = 'categories.jsp?'">Xem Thêm Sản Phẩm</button>					</div>
+                                    <button type="button" class="button_update cart_button_2 ml-md-auto" onclick="window.location.href = 'product-list?'">Xem Thêm Sản Phẩm</button>					</div>
                             </div>
                         </div>
                         <div class="popup_clear">
